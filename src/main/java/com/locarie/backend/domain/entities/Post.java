@@ -1,5 +1,6 @@
-package com.locarie.backend.entities;
+package com.locarie.backend.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "posts")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Post {
     @Id
     private Long id;

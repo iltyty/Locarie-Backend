@@ -1,7 +1,7 @@
 package com.locarie.backend.repositories;
 
 import com.locarie.backend.TestDataUtil;
-import com.locarie.backend.entities.User;
+import com.locarie.backend.domain.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

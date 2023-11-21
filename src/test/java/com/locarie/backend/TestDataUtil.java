@@ -1,7 +1,7 @@
 package com.locarie.backend;
 
-import com.locarie.backend.entities.Post;
-import com.locarie.backend.entities.User;
+import com.locarie.backend.domain.entities.Post;
+import com.locarie.backend.domain.entities.User;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;

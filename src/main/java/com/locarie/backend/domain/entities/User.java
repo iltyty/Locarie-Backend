@@ -1,8 +1,11 @@
-package com.locarie.backend.entities;
+package com.locarie.backend.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.locarie.backend.serialization.JtsPointDeserializer;
+import com.locarie.backend.serialization.JtsPointSerializer;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +18,18 @@ import org.locationtech.jts.geom.Point;
 @Builder
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user-id-generator"
+    )
+    @SequenceGenerator(
+            name = "user-id-generator",
+            sequenceName = "user_id_seq",
+            allocationSize = 1
+    )
     private Long id;
     private Type type;
     private String username;
@@ -31,7 +44,11 @@ public class User {
     private Integer openMinute;   // business opening minute
     private Integer closeHour;    // business closing hour
     private Integer closeMinute;  // business closing minute
+
+    @JsonSerialize(using = JtsPointSerializer.class)
+    @JsonDeserialize(using = JtsPointDeserializer.class)
     private Point location;       // business location
+
     private String locationName;  // business location description
 
     public enum Type {

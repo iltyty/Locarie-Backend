@@ -1,6 +1,6 @@
 package com.locarie.backend.repositories;
 
-import com.locarie.backend.entities.User;
+import com.locarie.backend.domain.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
