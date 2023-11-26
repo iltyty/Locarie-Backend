@@ -18,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Transactional
-public class UserEntityRepositoryTests {
+public class UserRepositoryTests {
 
     @Autowired
     private UserRepository underTests;
 
     @Test
     void testPlainUserCreateAndQuery() {
-        UserEntity user = TestDataUtil.newPlainUser();
+        UserEntity user = TestDataUtil.newPlainUserEntity();
         underTests.save(user);
         Optional<UserEntity> result = underTests.findById(user.getId());
         assertThat(result.isPresent()).isTrue();
@@ -34,7 +34,7 @@ public class UserEntityRepositoryTests {
 
     @Test
     void testBusinessUserCreateAndQuery() {
-        UserEntity user = TestDataUtil.newBusinessUserJoleneHornsey();
+        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
         underTests.save(user);
         Optional<UserEntity> result = underTests.findById(user.getId());
         assertThat(result.isPresent()).isTrue();
@@ -43,7 +43,7 @@ public class UserEntityRepositoryTests {
 
     @Test
     void testGetUserByEmail() {
-        UserEntity user = TestDataUtil.newBusinessUserJoleneHornsey();
+        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
         underTests.save(user);
         Optional<UserEntity> result = underTests.emailEquals(user.getEmail());
         assertThat(result.isPresent()).isTrue();

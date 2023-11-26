@@ -1,7 +1,7 @@
 package com.locarie.backend.repositories;
 
 import com.locarie.backend.TestDataUtil;
-import com.locarie.backend.domain.entities.Post;
+import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,15 @@ public class PostRepositoryTests {
 
     @Test
     void testPostCreateAndQuery() {
-        UserEntity user = TestDataUtil.newBusinessUserJoleneHornsey();
-        Post post = TestDataUtil.newPostJoleneHornsey1(user);
+        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
+        user.setId(null);
+        PostEntity post = TestDataUtil.newPostJoleneHornsey1(user);
+        post.setId(null);
+
         underTests.save(post);
-        Optional<Post> result = underTests.findById(post.getId());
+        Optional<PostEntity> result = underTests.findById(post.getId());
         assertThat(result.isPresent()).isTrue();
-        assertThat(result.get()).isEqualTo(post);
+        assertThat(result.get().getTitle()).isEqualTo(post.getTitle());
+        assertThat(result.get().getContent()).isEqualTo(post.getContent());
     }
 }

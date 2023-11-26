@@ -30,7 +30,7 @@ class UserControllerTests {
 
     @Test
     void testUserSerialization() throws JsonProcessingException {
-        UserEntity user = TestDataUtil.newBusinessUserJoleneHornsey();
+        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
         String userJson = mapper.writeValueAsString(user);
         UserEntity deserializedUser = mapper.readValue(userJson, UserEntity.class);
         assertThat(user).isEqualTo(deserializedUser);

@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.generator.EventType;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -16,18 +19,20 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Post {
+public class PostEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    private Long time;  // post publish time in seconds
-
+    @CurrentTimestamp(event = EventType.INSERT)
+    private Instant time;  // post publish time in seconds
+    @Column(nullable = false)
     private String title;
-
+    @Column(nullable = false)
     private String content;
 
     @ElementCollection(fetch = FetchType.EAGER)

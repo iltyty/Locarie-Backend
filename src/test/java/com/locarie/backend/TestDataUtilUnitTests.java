@@ -12,11 +12,11 @@ public class TestDataUtilUnitTests {
 
     @Test
     void testNewUserRegistrationDtoGeneratedCorrectly() {
-        UserEntity user = TestDataUtil.newPlainUser();
+        UserEntity user = TestDataUtil.newPlainUserEntity();
         UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
         assertThat(dto.getPassword()).isEqualTo(user.getPassword());
 
-        user = TestDataUtil.newBusinessUserJoleneHornsey();
+        user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
         dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         assertThat(dto.getPassword()).isEqualTo(user.getPassword());
     }

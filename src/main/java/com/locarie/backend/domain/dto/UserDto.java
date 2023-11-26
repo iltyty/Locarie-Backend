@@ -20,6 +20,7 @@ public class UserDto {
     private Long id;
     private Type type;
     private String username;
+    private String password;
     private String email;
     private String avatarUrl;
     // The following fields are only valid for business users
