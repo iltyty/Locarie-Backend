@@ -1,5 +1,6 @@
 package com.locarie.backend;
 
+import com.locarie.backend.domain.dto.UserLoginDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.Post;
 import com.locarie.backend.domain.entities.UserEntity;
@@ -35,6 +36,14 @@ public class TestDataUtil {
         return registrationDtoMapper.mapTo(newPlainUser());
     }
 
+    public static UserLoginDto newPlainUserLoginDto() {
+        UserEntity user = newPlainUser();
+        return UserLoginDto.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .build();
+    }
+
     public static UserEntity newBusinessUserJoleneHornsey() {
         Point location = newLocation(51.560595, -0.116913);
         return UserEntity.builder()
@@ -60,6 +69,14 @@ public class TestDataUtil {
 
     public static UserRegistrationDto newBusinessUserRegistrationDtoJoleneHornsey() {
         return registrationDtoMapper.mapTo(newBusinessUserJoleneHornsey());
+    }
+
+    public static UserLoginDto newBusinessUserLoginDtoJoleneHornsey() {
+        UserEntity user = newBusinessUserJoleneHornsey();
+        return UserLoginDto.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .build();
     }
 
     public static Post newPostJoleneHornsey1(final UserEntity user) {

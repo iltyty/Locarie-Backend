@@ -2,6 +2,7 @@ package com.locarie.backend.services.impl;
 
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.UserLoginDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
@@ -32,4 +33,13 @@ class UserServiceImplTest {
         assertThat(result.isPresent()).isTrue();
     }
 
+    @Test
+    void testUserLogin() {
+        UserRegistrationDto registrationDto = TestDataUtil.newPlainUserRegistrationDto();
+        UserLoginDto loginDto = TestDataUtil.newPlainUserLoginDto();
+        UserDto user = underTests.register(registrationDto);
+        String token = underTests.login(loginDto);
+        assertThat(token).isNotEmpty();
+        System.out.println(token);
+    }
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class PostRepositoryIntegrationTests {
+public class PostRepositoryTests {
 
     @Autowired
     private PostRepository underTests;

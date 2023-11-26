@@ -7,3 +7,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+jwt:
+  issuer: locarie
+  secret: lulu-locarie
+  expiration: 259200  # unit: s, 30 days

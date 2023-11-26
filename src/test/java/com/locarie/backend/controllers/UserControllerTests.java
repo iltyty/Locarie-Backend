@@ -71,4 +71,46 @@ class UserControllerTests {
                         .value(is(dto.getLocation().getX()), Double.class)
         );
     }
+
+    @Test
+    void testLoginReturnsHttpOk() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    void testLoginReturnsJwtToken() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$").isString()
+        );
+    }
 }
