@@ -1,7 +1,9 @@
 package com.locarie.backend;
 
+import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.Post;
-import com.locarie.backend.domain.entities.User;
+import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.mapper.impl.UserEntityRegistrationDtoMapperImpl;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -11,26 +13,36 @@ import java.util.List;
 
 public class TestDataUtil {
     private static final GeometryFactory geometryFactory = new GeometryFactory();
+    private static final UserEntityRegistrationDtoMapperImpl registrationDtoMapper =
+            new UserEntityRegistrationDtoMapperImpl();
 
     public static Point newLocation(double latitude, double longitude) {
         return geometryFactory.createPoint(new Coordinate(longitude, latitude));
     }
 
-    public static User newPlainUser() {
-        return User.builder()
+    public static UserEntity newPlainUser() {
+        return UserEntity.builder()
                 .id(1L)
-                .type(User.Type.PLAIN)
+                .type(UserEntity.Type.PLAIN)
                 .username("Tony Stark")
+                .password("12345678")
+                .email("tonystark@avengers.com")
                 .avatarUrl("https://picsum.photos/200/200")
                 .build();
     }
 
-    public static User newBusinessUserJoleneHornsey() {
+    public static UserRegistrationDto newPlainUserRegistrationDto() {
+        return registrationDtoMapper.mapTo(newPlainUser());
+    }
+
+    public static UserEntity newBusinessUserJoleneHornsey() {
         Point location = newLocation(51.560595, -0.116913);
-        return User.builder()
+        return UserEntity.builder()
                 .id(2L)
-                .type(User.Type.BUSINESS)
+                .type(UserEntity.Type.BUSINESS)
                 .username("Jolene Hornsey")
+                .password("88888888")
+                .email("jolene-hornsey@bigjo.com")
                 .avatarUrl("https://picsum.photos/200/200")
                 .coverUrl("https://picsum.photos/800/450")
                 .homepageUrl("https://www.bigjobakery.com/")
@@ -46,7 +58,11 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static Post newPostJoleneHornsey1(final User user) {
+    public static UserRegistrationDto newBusinessUserRegistrationDtoJoleneHornsey() {
+        return registrationDtoMapper.mapTo(newBusinessUserJoleneHornsey());
+    }
+
+    public static Post newPostJoleneHornsey1(final UserEntity user) {
         return Post.builder()
                 .id(1L)
                 .user(user)
@@ -59,7 +75,7 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static Post newPostJoleneHornsey2(final User user) {
+    public static Post newPostJoleneHornsey2(final UserEntity user) {
         return Post.builder()
                 .id(2L)
                 .user(user)

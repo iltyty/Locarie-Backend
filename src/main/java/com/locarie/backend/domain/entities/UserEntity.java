@@ -19,7 +19,7 @@ import org.locationtech.jts.geom.Point;
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -31,8 +31,14 @@ public class User {
             allocationSize = 1
     )
     private Long id;
+    @Column(nullable = false)
     private Type type;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
+    private String password;
+    @Column(nullable = false)
+    private String email;
     private String avatarUrl;
     // The following fields are only valid for business users
     private String coverUrl;

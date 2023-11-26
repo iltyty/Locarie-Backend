@@ -3,7 +3,6 @@ package com.locarie.backend.domain.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.locarie.backend.domain.entities.User;
 import com.locarie.backend.serialization.JtsPointDeserializer;
 import com.locarie.backend.serialization.JtsPointSerializer;
 import lombok.AllArgsConstructor;
@@ -19,8 +18,9 @@ import org.locationtech.jts.geom.Point;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
     private Long id;
-    private User.Type type;
+    private Type type;
     private String username;
+    private String email;
     private String avatarUrl;
     // The following fields are only valid for business users
     private String coverUrl;

@@ -1,8 +1,7 @@
 package com.locarie.backend.controllers;
 
 import com.locarie.backend.domain.dto.UserDto;
-import com.locarie.backend.domain.entities.User;
-import com.locarie.backend.mapper.Mapper;
+import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +16,13 @@ public class UserController {
 
     private final UserService service;
 
-    private final Mapper<User, UserDto> mapper;
-
-    public UserController(UserService service, Mapper<User, UserDto> mapper) {
+    public UserController(UserService service) {
         this.service = service;
-        this.mapper = mapper;
     }
 
-    @PostMapping()
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        User user = mapper.mapFrom(userDto);
-        User savedUser = service.createUser(user);
-        return new ResponseEntity<>(mapper.mapTo(savedUser), HttpStatus.CREATED);
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> register(@RequestBody UserRegistrationDto dto) {
+        UserDto savedUser = service.register(dto);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 }

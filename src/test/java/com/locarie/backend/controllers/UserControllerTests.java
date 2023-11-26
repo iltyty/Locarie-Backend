@@ -3,7 +3,9 @@ package com.locarie.backend.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
-import com.locarie.backend.domain.entities.User;
+import com.locarie.backend.domain.dto.UserRegistrationDto;
+import com.locarie.backend.domain.entities.UserEntity;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,7 +20,8 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerIntegrationTest {
+@Transactional
+class UserControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -27,18 +30,19 @@ class UserControllerIntegrationTest {
 
     @Test
     void testUserSerialization() throws JsonProcessingException {
-        User user = TestDataUtil.newBusinessUserJoleneHornsey();
+        UserEntity user = TestDataUtil.newBusinessUserJoleneHornsey();
         String userJson = mapper.writeValueAsString(user);
-        User deserializedUser = mapper.readValue(userJson, User.class);
+        UserEntity deserializedUser = mapper.readValue(userJson, UserEntity.class);
         assertThat(user).isEqualTo(deserializedUser);
     }
 
     @Test
-    void testCreateUserReturnsHttpCreated() throws Exception {
-        User user = TestDataUtil.newBusinessUserJoleneHornsey();
-        String userJson = mapper.writeValueAsString(user);
+    void testRegisterReturnsHttpCreated() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users")
+                MockMvcRequestBuilders.post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson)
         ).andExpect(
@@ -47,12 +51,12 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void testCreateUserReturnsUser() throws Exception {
-        User user = TestDataUtil.newBusinessUserJoleneHornsey();
-        user.setId(null);
-        String userJson = mapper.writeValueAsString(user);
+    void testRegisterReturnsUser() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users")
+                MockMvcRequestBuilders.post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson)
         ).andExpect(
@@ -61,10 +65,10 @@ class UserControllerIntegrationTest {
                 MockMvcResultMatchers.jsonPath("$.username").value("Jolene Hornsey")
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.location.latitude")
-                        .value(is(user.getLocation().getY()), Double.class)
+                        .value(is(dto.getLocation().getY()), Double.class)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.location.longitude")
-                        .value(is(user.getLocation().getX()), Double.class)
+                        .value(is(dto.getLocation().getX()), Double.class)
         );
     }
 }

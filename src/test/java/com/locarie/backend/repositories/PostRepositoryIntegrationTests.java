@@ -2,7 +2,7 @@ package com.locarie.backend.repositories;
 
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.entities.Post;
-import com.locarie.backend.domain.entities.User;
+import com.locarie.backend.domain.entities.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ public class PostRepositoryIntegrationTests {
 
     @Test
     void testPostCreateAndQuery() {
-        User user = TestDataUtil.newBusinessUserJoleneHornsey();
+        UserEntity user = TestDataUtil.newBusinessUserJoleneHornsey();
         Post post = TestDataUtil.newPostJoleneHornsey1(user);
         underTests.save(post);
         Optional<Post> result = underTests.findById(post.getId());

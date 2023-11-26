@@ -22,7 +22,7 @@ public class Post {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     private Long time;  // post publish time in seconds
 

@@ -1,27 +1,27 @@
 package com.locarie.backend.mapper.impl;
 
 import com.locarie.backend.domain.dto.UserDto;
-import com.locarie.backend.domain.entities.User;
+import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapperImpl implements Mapper<User, UserDto> {
+public class UserEntityDtoMapperImpl implements Mapper<UserEntity, UserDto> {
 
     private final ModelMapper modelMapper;
 
-    public UserMapperImpl(ModelMapper modelMapper) {
+    public UserEntityDtoMapperImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public UserDto mapTo(User user) {
+    public UserDto mapTo(UserEntity user) {
         return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public User mapFrom(UserDto userDto) {
-        return modelMapper.map(userDto, User.class);
+    public UserEntity mapFrom(UserDto userDto) {
+        return modelMapper.map(userDto, UserEntity.class);
     }
 }
