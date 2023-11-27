@@ -46,4 +46,10 @@ public class UserServiceImpl implements UserService {
         }
         return jwtUtil.generateToken(user.get());
     }
+
+    @Override
+    public Optional<UserDto> getUser(Long id) {
+        Optional<UserEntity> result = repository.findById(id);
+        return result.map(mapper::mapTo);
+    }
 }

@@ -113,4 +113,59 @@ class UserControllerTests {
                 MockMvcResultMatchers.jsonPath("$").isString()
         );
     }
+
+    @Test
+    void testGetUserReturnsHttpOk() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/users/1")
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    void testGetUserReturnsHttpNotFound() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/users/1")
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    void testGetUserReturnsUser() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/users/1")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.username").value(dto.getUsername())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.location.latitude")
+                        .value(is(dto.getLocation().getY()), Double.class)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.location.longitude")
+                        .value(is(dto.getLocation().getX()), Double.class)
+        );
+    }
 }

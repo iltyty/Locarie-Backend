@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -26,7 +26,7 @@ class UserServiceImplTest {
     private UserServiceImpl underTests;
 
     @Test
-    void testUserRegistration() {
+    void testRegistration() {
         UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
         UserDto user = underTests.register(dto);
         Optional<UserEntity> result = repository.findById(user.getId());
@@ -34,12 +34,22 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testUserLogin() {
+    void testLogin() {
         UserRegistrationDto registrationDto = TestDataUtil.newPlainUserRegistrationDto();
         UserLoginDto loginDto = TestDataUtil.newPlainUserLoginDto();
-        UserDto user = underTests.register(registrationDto);
+        underTests.register(registrationDto);
         String token = underTests.login(loginDto);
         assertThat(token).isNotEmpty();
         System.out.println(token);
+    }
+
+    @Test
+    void testGetUser() {
+        UserRegistrationDto registrationDto =
+                TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        UserDto user = underTests.register(registrationDto);
+        Optional<UserDto> result = underTests.getUser(user.getId());
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get()).isEqualTo(user);
     }
 }
