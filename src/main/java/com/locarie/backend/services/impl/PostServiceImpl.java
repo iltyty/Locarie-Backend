@@ -7,6 +7,8 @@ import com.locarie.backend.repositories.PostRepository;
 import com.locarie.backend.services.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -24,5 +26,11 @@ public class PostServiceImpl implements PostService {
         PostEntity post = mapper.mapFrom(dto);
         PostEntity savedPost = repository.save(post);
         return mapper.mapTo(savedPost);
+    }
+
+    @Override
+    public Optional<PostDto> getPost(Long id) {
+        Optional<PostEntity> result = repository.findById(id);
+        return result.map(mapper::mapTo);
     }
 }

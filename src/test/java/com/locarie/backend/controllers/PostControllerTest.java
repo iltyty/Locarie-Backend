@@ -38,4 +38,84 @@ class PostControllerTest {
                 MockMvcResultMatchers.status().isCreated()
         );
     }
+
+    @Test
+    void testCreateReturnsPost() throws Exception {
+        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
+        userDto.setId(null);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
+        postDto.setId(null);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/posts")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(postDto))
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").exists()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value(postDto.getTitle())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.content").value(postDto.getContent())
+        );
+    }
+
+    @Test
+    void testGetReturnsHttpOk() throws Exception {
+        // data preparation
+        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
+        userDto.setId(null);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
+        postDto.setId(null);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/posts")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(postDto))
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/posts/1")
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    void testGetReturnsHttpNotFound() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/posts/1")
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    void testGetReturnsPost() throws Exception {
+        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
+        userDto.setId(null);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
+        postDto.setId(null);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/posts")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(postDto))
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/posts/11")
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").exists()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value(postDto.getTitle())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.content").value(postDto.getContent()));
+    }
 }

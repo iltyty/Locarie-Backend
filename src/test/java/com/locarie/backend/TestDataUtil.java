@@ -124,7 +124,8 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static PostDto newPostDtoJoleneHornsey2(final UserEntity user) {
+    public static PostDto newPostDtoJoleneHornsey2(final UserDto dto) {
+        UserEntity user = userEntityDtoMapper.mapFrom(dto);
         return postEntityDtoMapper.mapTo(newPostJoleneHornsey2(user));
     }
 }

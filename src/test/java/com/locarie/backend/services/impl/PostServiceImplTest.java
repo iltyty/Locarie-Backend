@@ -49,4 +49,18 @@ class PostServiceImplTest {
         assertThat(post.isPresent()).isTrue();
         assertThat(post.get()).isEqualTo(mapper.mapFrom(savedDto));
     }
+
+    @Test
+    void testGetPost() {
+        // data preparation
+        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
+        userDto.setId(null);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
+        postDto.setId(null);
+
+        PostDto savedDto = underTests.create(postDto);
+        Optional<PostDto> result = underTests.getPost(savedDto.getId());
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get()).isEqualTo(savedDto);
+    }
 }

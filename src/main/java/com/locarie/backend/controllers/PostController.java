@@ -22,4 +22,11 @@ public class PostController {
     public ResponseEntity<PostDto> create(@RequestBody PostDto dto) {
         return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> get(@PathVariable Long id) {
+        return service.getPost(id)
+                .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
