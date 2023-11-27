@@ -3,6 +3,7 @@ package com.locarie.backend.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
+import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import jakarta.transaction.Transactional;
@@ -28,16 +29,7 @@ class UserControllerTests {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Test
-    void testUserSerialization() throws JsonProcessingException {
-        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
-        String userJson = mapper.writeValueAsString(user);
-        UserEntity deserializedUser = mapper.readValue(userJson, UserEntity.class);
-        assertThat(user).isEqualTo(deserializedUser);
-    }
-
-    @Test
-    void testRegisterReturnsHttpCreated() throws Exception {
+    private String registerPlainUser() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
         dto.setId(null);
         String userJson = mapper.writeValueAsString(dto);
@@ -48,6 +40,34 @@ class UserControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         );
+        return userJson;
+    }
+
+    private String registerBusinessUserJoleneHornsey() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        String userJson = mapper.writeValueAsString(dto);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+        return userJson;
+    }
+
+    @Test
+    void testUserSerialization() throws JsonProcessingException {
+        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
+        String userJson = mapper.writeValueAsString(user);
+        UserEntity deserializedUser = mapper.readValue(userJson, UserEntity.class);
+        assertThat(user).isEqualTo(deserializedUser);
+    }
+
+    @Test
+    void testRegisterReturnsHttpCreated() throws Exception {
+        registerPlainUser();
     }
 
     @Test
@@ -74,16 +94,7 @@ class UserControllerTests {
 
     @Test
     void testLoginReturnsHttpOk() throws Exception {
-        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        );
+        String userJson = registerPlainUser();
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -95,16 +106,7 @@ class UserControllerTests {
 
     @Test
     void testLoginReturnsJwtToken() throws Exception {
-        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        );
+        String userJson = registerBusinessUserJoleneHornsey();
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -115,17 +117,41 @@ class UserControllerTests {
     }
 
     @Test
-    void testGetUserReturnsHttpOk() throws Exception {
-        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
+    void testListUsersReturnsHttpOk() throws Exception {
+        String userJson1 = registerPlainUser();
+        String userJson2 = registerBusinessUserJoleneHornsey();
+        UserDto userDto1 = mapper.readValue(userJson1, UserDto.class);
+        UserDto userDto2 = mapper.readValue(userJson2, UserDto.class);
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                MockMvcRequestBuilders.get("/api/v1/users")
         ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].username").value(userDto1.getUsername())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].email").value(userDto1.getEmail())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].password").value(userDto1.getPassword())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].avatarUrl").value(userDto1.getAvatarUrl())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].username").value(userDto2.getUsername())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].location.latitude")
+                        .value(is(userDto2.getLocation().getY()), Double.class)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].location.longitude")
+                        .value(is(userDto2.getLocation().getX()), Double.class)
         );
+    }
+
+    @Test
+    void testGetUserReturnsHttpOk() throws Exception {
+        registerPlainUser();
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/users/1")
         ).andExpect(
@@ -144,16 +170,8 @@ class UserControllerTests {
 
     @Test
     void testGetUserReturnsUser() throws Exception {
-        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        );
+        String userJson = registerBusinessUserJoleneHornsey();
+        UserRegistrationDto dto = mapper.readValue(userJson, UserRegistrationDto.class);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/users/1")
         ).andExpect(

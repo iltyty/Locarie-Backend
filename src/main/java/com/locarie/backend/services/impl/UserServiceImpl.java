@@ -10,7 +10,9 @@ import com.locarie.backend.services.UserService;
 import com.locarie.backend.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -45,6 +47,13 @@ public class UserServiceImpl implements UserService {
             return "";
         }
         return jwtUtil.generateToken(user.get());
+    }
+
+    @Override
+    public List<UserDto> listUsers() {
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
+                .map(mapper::mapTo)
+                .toList();
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -31,6 +33,11 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public List<UserDto> listUsers() {
+        return service.listUsers();
     }
 
     @GetMapping("/{id}")

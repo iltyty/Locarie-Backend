@@ -5,6 +5,7 @@ import com.locarie.backend.domain.dto.UserLoginDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -15,4 +16,6 @@ public interface UserService {
     String login(UserLoginDto dto);
 
     Optional<UserDto> getUser(Long id);
+
+    List<UserDto> listUsers();
 }

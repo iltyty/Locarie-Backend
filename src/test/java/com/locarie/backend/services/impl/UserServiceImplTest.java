@@ -44,7 +44,19 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetUser() {
+    void testList() {
+        UserRegistrationDto registrationDto1 =
+                TestDataUtil.newPlainUserRegistrationDto();
+        UserRegistrationDto registrationDto2 =
+                TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        UserDto userDto1 = underTests.register(registrationDto1);
+        UserDto userDto2 = underTests.register(registrationDto2);
+        assertThat(underTests.listUsers()).contains(userDto1);
+        assertThat(underTests.listUsers()).contains(userDto2);
+    }
+
+    @Test
+    void testGet() {
         UserRegistrationDto registrationDto =
                 TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         UserDto user = underTests.register(registrationDto);
