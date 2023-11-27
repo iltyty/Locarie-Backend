@@ -5,10 +5,11 @@ import com.locarie.backend.services.PostService;
 import com.locarie.backend.services.impl.PostServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
@@ -23,9 +24,14 @@ public class PostController {
         return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public List<PostDto> list() {
+        return service.list();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> get(@PathVariable Long id) {
-        return service.getPost(id)
+        return service.get(id)
                 .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

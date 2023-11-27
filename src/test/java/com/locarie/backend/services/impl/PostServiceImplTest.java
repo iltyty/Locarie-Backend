@@ -36,30 +36,44 @@ class PostServiceImplTest {
         this.mapper = mapper;
     }
 
-    @Test
-    void testCreate() {
+    private PostDto createPostJoleneHornsey1() {
         // data preparation
         UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
         userDto.setId(null);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
+        return underTests.create(postDto);
+    }
 
-        PostDto savedDto = underTests.create(postDto);
+    private PostDto createPostJoleneHornsey2() {
+        // data preparation
+        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
+        userDto.setId(null);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
+        postDto.setId(null);
+        return underTests.create(postDto);
+    }
+
+    @Test
+    void testCreate() {
+        PostDto savedDto = createPostJoleneHornsey1();
         Optional<PostEntity> post = repository.findById(savedDto.getId());
         assertThat(post.isPresent()).isTrue();
         assertThat(post.get()).isEqualTo(mapper.mapFrom(savedDto));
     }
 
     @Test
-    void testGetPost() {
-        // data preparation
-        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
-        userDto.setId(null);
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
-        postDto.setId(null);
+    void testList() {
+        PostDto savedDto1 = createPostJoleneHornsey1();
+        PostDto savedDto2 = createPostJoleneHornsey2();
+        assertThat(underTests.list()).contains(savedDto1);
+        assertThat(underTests.list()).contains(savedDto2);
+    }
 
-        PostDto savedDto = underTests.create(postDto);
-        Optional<PostDto> result = underTests.getPost(savedDto.getId());
+    @Test
+    void testGet() {
+        PostDto savedDto = createPostJoleneHornsey2();
+        Optional<PostDto> result = underTests.get(savedDto.getId());
         assertThat(result.isPresent()).isTrue();
         assertThat(result.get()).isEqualTo(savedDto);
     }

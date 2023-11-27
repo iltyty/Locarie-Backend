@@ -7,7 +7,9 @@ import com.locarie.backend.repositories.PostRepository;
 import com.locarie.backend.services.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -29,8 +31,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Optional<PostDto> getPost(Long id) {
+    public Optional<PostDto> get(Long id) {
         Optional<PostEntity> result = repository.findById(id);
         return result.map(mapper::mapTo);
+    }
+
+    @Override
+    public List<PostDto> list() {
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .map(mapper::mapTo)
+                .toList();
     }
 }

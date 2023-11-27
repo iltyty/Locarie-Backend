@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,7 +15,7 @@ import java.util.List;
 public class PostDto {
     private Long id;
     private UserDto user;
-    private Instant time;
+    private Date time;
     private String title;
     private String content;
     private List<String> imageUrls;

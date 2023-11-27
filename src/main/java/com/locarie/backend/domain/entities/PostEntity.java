@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.generator.EventType;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -29,7 +29,7 @@ public class PostEntity {
     private UserEntity user;
 
     @CurrentTimestamp(event = EventType.INSERT)
-    private Instant time;  // post publish time in seconds
+    private Date time;  // post publish time
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
