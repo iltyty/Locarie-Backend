@@ -4,6 +4,7 @@ import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserLoginDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody UserRegistrationDto dto) {
+    public ResponseEntity<UserDto> register(
+            @Valid @RequestBody UserRegistrationDto dto
+    ) {
         UserDto savedUser = service.register(dto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDto dto) {
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto dto) {
         String token = service.login(dto);
         if (token.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

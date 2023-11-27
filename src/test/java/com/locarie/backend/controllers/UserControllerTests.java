@@ -133,8 +133,6 @@ class UserControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].email").value(userDto1.getEmail())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].password").value(userDto1.getPassword())
-        ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].avatarUrl").value(userDto1.getAvatarUrl())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[1].id").isNumber()
