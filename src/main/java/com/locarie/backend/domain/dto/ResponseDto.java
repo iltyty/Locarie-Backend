@@ -1,6 +1,7 @@
 package com.locarie.backend.domain.dto;
 
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class ResponseDto<T> {
@@ -26,6 +27,7 @@ public class ResponseDto<T> {
         return response;
     }
 
+    @Getter
     public enum StatusCode {
         SUCCESS(0, "success"), FAIL(1, "fail");
 
@@ -36,14 +38,6 @@ public class ResponseDto<T> {
         StatusCode(int code, String message) {
             this.code = code;
             this.message = message;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getMessage() {
-            return message;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.locarie.backend.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.ResponseDto;
@@ -31,7 +32,7 @@ class UserControllerTests {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private String registerPlainUser() throws Exception {
+    private UserRegistrationDto registerPlainUser() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
         dto.setId(null);
         String userJson = mapper.writeValueAsString(dto);
@@ -41,11 +42,17 @@ class UserControllerTests {
                         .content(userJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
+        ).andDo(
+                result -> {
+                    String content = result.getResponse().getContentAsString();
+                    UserDto savedUserDto = mapper.readValue(content, UserDto.class);
+                    dto.setId(savedUserDto.getId());
+                }
         );
-        return userJson;
+        return dto;
     }
 
-    private String registerBusinessUserJoleneHornsey() throws Exception {
+    private UserRegistrationDto registerBusinessUserJoleneHornsey() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         dto.setId(null);
         String userJson = mapper.writeValueAsString(dto);
@@ -55,8 +62,15 @@ class UserControllerTests {
                         .content(userJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
+        ).andDo(
+                result -> {
+                    String content = result.getResponse().getContentAsString();
+                    JsonNode dataNode = mapper.readTree(content).get("data");
+                    UserDto savedUserDto = mapper.treeToValue(dataNode, UserDto.class);
+                    dto.setId(savedUserDto.getId());
+                }
         );
-        return userJson;
+        return dto;
     }
 
     @Test
@@ -150,64 +164,72 @@ class UserControllerTests {
 
     @Test
     void testLoginReturnsHttpOk() throws Exception {
-        String userJson = registerPlainUser();
+        UserRegistrationDto dto = registerPlainUser();
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                        .content(mapper.writeValueAsString(dto))
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
+        ).andDo(
+                result -> System.out.println(result.getResponse().getContentAsString())
         );
     }
 
     @Test
     void testLoginReturnsJwtToken() throws Exception {
-        String userJson = registerBusinessUserJoleneHornsey();
+        UserRegistrationDto dto = registerBusinessUserJoleneHornsey();
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                        .content(mapper.writeValueAsString(dto))
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$").isString()
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data").isString()
         );
     }
 
     @Test
-    void testListUsersReturnsHttpOk() throws Exception {
-        String userJson1 = registerPlainUser();
-        String userJson2 = registerBusinessUserJoleneHornsey();
-        UserDto userDto1 = mapper.readValue(userJson1, UserDto.class);
-        UserDto userDto2 = mapper.readValue(userJson2, UserDto.class);
+    void testListUsersReturnsUserList() throws Exception {
+        UserRegistrationDto userDto1 = registerPlainUser();
+        UserRegistrationDto userDto2 = registerBusinessUserJoleneHornsey();
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/users")
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].id").isNumber()
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].username").value(userDto1.getUsername())
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].email").value(userDto1.getEmail())
+                MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].avatarUrl").value(userDto1.getAvatarUrl())
+                MockMvcResultMatchers.jsonPath("$.data[0].username").value(userDto1.getUsername())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].id").isNumber()
+                MockMvcResultMatchers.jsonPath("$.data[0].email").value(userDto1.getEmail())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].username").value(userDto2.getUsername())
+                MockMvcResultMatchers.jsonPath("$.data[0].avatarUrl").value(userDto1.getAvatarUrl())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].location.latitude")
+                MockMvcResultMatchers.jsonPath("$.data[1].id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data[1].username").value(userDto2.getUsername())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data[1].location.latitude")
                         .value(is(userDto2.getLocation().getY()), Double.class)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].location.longitude")
+                MockMvcResultMatchers.jsonPath("$.data[1].location.longitude")
                         .value(is(userDto2.getLocation().getX()), Double.class)
         );
     }
 
     @Test
     void testGetUserReturnsHttpOk() throws Exception {
-        registerPlainUser();
+        UserRegistrationDto dto = registerPlainUser();
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/users/1")
+                MockMvcRequestBuilders.get("/api/v1/users/" + dto.getId())
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         );
@@ -224,19 +246,24 @@ class UserControllerTests {
 
     @Test
     void testGetUserReturnsUser() throws Exception {
-        String userJson = registerBusinessUserJoleneHornsey();
-        UserRegistrationDto dto = mapper.readValue(userJson, UserRegistrationDto.class);
+        UserRegistrationDto dto = registerBusinessUserJoleneHornsey();
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/users/1")
+                MockMvcRequestBuilders.get("/api/v1/users/" + dto.getId())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+                MockMvcResultMatchers.status().isOk()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.username").value(dto.getUsername())
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.location.latitude")
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.location.latitude")
                         .value(is(dto.getLocation().getY()), Double.class)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.location.longitude")
+                MockMvcResultMatchers.jsonPath("$.data.location.longitude")
                         .value(is(dto.getLocation().getX()), Double.class)
         );
     }
