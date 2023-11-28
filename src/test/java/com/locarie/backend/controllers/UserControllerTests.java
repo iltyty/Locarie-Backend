@@ -3,10 +3,12 @@ package com.locarie.backend.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
+import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import jakarta.transaction.Transactional;
+import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -71,6 +73,56 @@ class UserControllerTests {
     }
 
     @Test
+    void testRegisterReturnsValidationError() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
+        dto.setUsername(null);
+        dto.setPassword(null);
+        dto.setEmail(null);
+        dto.setType(null);
+        String userJson = mapper.writeValueAsString(dto);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.status").value(1)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data").isEmpty()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("username is mandatory"))
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("password is mandatory"))
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("email is mandatory"))
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("type = PLAIN/BUSINESS is mandatory"))
+        );
+
+        dto.setUsername("TempUsername");
+        dto.setPassword("12");
+        dto.setEmail("TempEmail@Unknown.com");
+        dto.setType(UserDto.Type.PLAIN);
+        userJson = mapper.writeValueAsString(dto);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.status").value(1)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data").isEmpty()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("password must be between 6 and 20 characters"))
+        );
+    }
+
+    @Test
     void testRegisterReturnsUser() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         dto.setId(null);
@@ -80,14 +132,18 @@ class UserControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.username").value("Jolene Hornsey")
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.location.latitude")
+                MockMvcResultMatchers.jsonPath("$.data.id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.location.latitude")
                         .value(is(dto.getLocation().getY()), Double.class)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.location.longitude")
+                MockMvcResultMatchers.jsonPath("$.data.location.longitude")
                         .value(is(dto.getLocation().getX()), Double.class)
         );
     }
