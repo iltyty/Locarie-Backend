@@ -107,7 +107,7 @@ public class TestDataUtil {
     }
 
     public static PostDto newPostDtoJoleneHornsey1(final UserDto dto) {
-        UserEntity user = userEntityDtoMapper.mapFrom(dto);
+        UserEntity user = dto != null ? userEntityDtoMapper.mapFrom(dto) : null;
         return postEntityDtoMapper.mapTo(newPostJoleneHornsey1(user));
     }
 
@@ -125,7 +125,7 @@ public class TestDataUtil {
     }
 
     public static PostDto newPostDtoJoleneHornsey2(final UserDto dto) {
-        UserEntity user = userEntityDtoMapper.mapFrom(dto);
+        UserEntity user = dto != null ? userEntityDtoMapper.mapFrom(dto) : null;
         return postEntityDtoMapper.mapTo(newPostJoleneHornsey2(user));
     }
 }

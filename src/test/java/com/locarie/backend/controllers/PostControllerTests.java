@@ -1,9 +1,10 @@
 package com.locarie.backend.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.PostDto;
-import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.ResponseDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,7 @@ class PostControllerTests {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private PostDto createPostJoleneHornsey1() throws Exception {
-        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
-        userDto.setId(null);
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(null);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
         mockMvc.perform(
@@ -37,7 +36,8 @@ class PostControllerTests {
         ).andDo(
                 result -> {
                     String content = result.getResponse().getContentAsString();
-                    PostDto savedPostDto = objectMapper.readValue(content, PostDto.class);
+                    JsonNode dataNode = objectMapper.readTree(content).get("data");
+                    PostDto savedPostDto = objectMapper.treeToValue(dataNode, PostDto.class);
                     postDto.setId(savedPostDto.getId());
                 }
         );
@@ -45,9 +45,7 @@ class PostControllerTests {
     }
 
     private PostDto createPostJoleneHornsey2() throws Exception {
-        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
-        userDto.setId(null);
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(null);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
         mockMvc.perform(
@@ -59,7 +57,8 @@ class PostControllerTests {
         ).andDo(
                 result -> {
                     String content = result.getResponse().getContentAsString();
-                    PostDto savedPostDto = objectMapper.readValue(content, PostDto.class);
+                    JsonNode dataNode = objectMapper.readTree(content).get("data");
+                    PostDto savedPostDto = objectMapper.treeToValue(dataNode, PostDto.class);
                     postDto.setId(savedPostDto.getId());
                 }
         );
@@ -73,9 +72,7 @@ class PostControllerTests {
 
     @Test
     void testCreateReturnsPost() throws Exception {
-        UserDto userDto = TestDataUtil.newBusinessUserDtoJoleneHornsey();
-        userDto.setId(null);
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(null);
         postDto.setId(null);
 
         mockMvc.perform(
@@ -85,11 +82,11 @@ class PostControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.id").exists()
+                MockMvcResultMatchers.jsonPath("$.data.id").exists()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.title").value(postDto.getTitle())
+                MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.content").value(postDto.getContent())
+                MockMvcResultMatchers.jsonPath("$.data.content").value(postDto.getContent())
         );
     }
 
@@ -111,7 +108,11 @@ class PostControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$").isEmpty()
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data").isEmpty()
         );
     }
 
@@ -124,17 +125,21 @@ class PostControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].id").value(postDto1.getId())
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].title").value(postDto1.getTitle())
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].content").value(postDto1.getContent())
+                MockMvcResultMatchers.jsonPath("$.data[0].id").value(postDto1.getId())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].id").value(postDto2.getId())
+                MockMvcResultMatchers.jsonPath("$.data[0].title").value(postDto1.getTitle())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].title").value(postDto2.getTitle())
+                MockMvcResultMatchers.jsonPath("$.data[0].content").value(postDto1.getContent())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].content").value(postDto2.getContent())
+                MockMvcResultMatchers.jsonPath("$.data[1].id").value(postDto2.getId())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data[1].title").value(postDto2.getTitle())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data[1].content").value(postDto2.getContent())
         );
     }
 
@@ -151,7 +156,7 @@ class PostControllerTests {
     @Test
     void testGetReturnsHttpNotFound() throws Exception {
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/posts/1")
+                MockMvcRequestBuilders.get("/api/v1/posts/0")
         ).andExpect(
                 MockMvcResultMatchers.status().isNotFound()
         );
@@ -165,10 +170,14 @@ class PostControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.id").value(postDto.getId())
+                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.title").value(postDto.getTitle())
+                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.content").value(postDto.getContent()));
+                MockMvcResultMatchers.jsonPath("$.data.id").value(postDto.getId())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.data.content").value(postDto.getContent()));
     }
 }
