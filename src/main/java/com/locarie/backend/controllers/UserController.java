@@ -23,8 +23,9 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(
-            @Valid @RequestBody UserRegistrationDto dto
+            @Valid UserRegistrationDto dto
     ) {
+        System.out.println(dto.getAvatar().getOriginalFilename());
         UserDto savedUser = service.register(dto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }

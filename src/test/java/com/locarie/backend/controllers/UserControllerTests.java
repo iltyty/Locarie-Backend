@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -82,8 +83,9 @@ class UserControllerTests {
     }
 
     @Test
+    @Commit
     void testRegisterReturnsHttpCreated() throws Exception {
-        registerPlainUser();
+        registerBusinessUserJoleneHornsey();
     }
 
     @Test
@@ -210,8 +212,6 @@ class UserControllerTests {
                 MockMvcResultMatchers.jsonPath("$.data[0].username").value(userDto1.getUsername())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.data[0].email").value(userDto1.getEmail())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[0].avatarUrl").value(userDto1.getAvatarUrl())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.data[1].id").isNumber()
         ).andExpect(

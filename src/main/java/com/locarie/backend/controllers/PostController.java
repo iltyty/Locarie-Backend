@@ -25,7 +25,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDto> list() {
+    public List<PostDto> list(@PathVariable("lat") Double lat, @PathVariable("lng") Double lng) {
         return service.list();
     }
 

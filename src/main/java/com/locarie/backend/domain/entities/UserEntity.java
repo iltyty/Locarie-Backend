@@ -54,6 +54,7 @@ public class UserEntity {
 
     @JsonSerialize(using = JtsPointSerializer.class)
     @JsonDeserialize(using = JtsPointDeserializer.class)
+    @Column(columnDefinition = "Point")
     private Point location;       // business location
 
     private String locationName;  // business location description
