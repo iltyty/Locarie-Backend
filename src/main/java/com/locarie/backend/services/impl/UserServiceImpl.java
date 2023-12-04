@@ -8,11 +8,10 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.UserService;
 import com.locarie.backend.util.JwtUtil;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,12 +20,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final Mapper<UserEntity, UserDto> mapper;
 
-    public UserServiceImpl(JwtUtil jwtUtil, UserRepository repository, Mapper<UserEntity, UserDto> mapper) {
+    public UserServiceImpl(
+            JwtUtil jwtUtil, UserRepository repository, Mapper<UserEntity, UserDto> mapper) {
         this.jwtUtil = jwtUtil;
         this.repository = repository;
         this.mapper = mapper;
     }
-
 
     @Override
     public UserEntity createUser(UserEntity user) {

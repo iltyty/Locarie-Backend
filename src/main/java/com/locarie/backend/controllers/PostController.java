@@ -3,11 +3,10 @@ package com.locarie.backend.controllers;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.services.PostService;
 import com.locarie.backend.services.impl.PostServiceImpl;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -33,8 +32,7 @@ public class PostController {
     public List<PostDto> listNearby(
             @RequestParam(value = "latitude") double latitude,
             @RequestParam(value = "longitude") double longitude,
-            @RequestParam(value = "distance") int distance
-    ) {
+            @RequestParam(value = "distance") int distance) {
         return service.listNearby(latitude, longitude, distance);
     }
 

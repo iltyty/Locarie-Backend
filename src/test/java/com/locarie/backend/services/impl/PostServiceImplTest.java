@@ -1,5 +1,7 @@
 package com.locarie.backend.services.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.dto.UserDto;
@@ -8,6 +10,8 @@ import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.repositories.PostRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.locationtech.jts.geom.Point;
@@ -15,28 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-
 @SpringBootTest
 @Transactional
 @ExtendWith(SpringExtension.class)
 class PostServiceImplTest {
 
-    @Autowired
-    private PostRepository postRepository;
+    @Autowired private PostRepository postRepository;
 
-    @Autowired
-    private PostServiceImpl underTests;
+    @Autowired private PostServiceImpl underTests;
 
-    @Autowired
-    private UserServiceImpl userService;
+    @Autowired private UserServiceImpl userService;
 
-    @Autowired
-    private PostEntityDtoMapper mapper;
+    @Autowired private PostEntityDtoMapper mapper;
 
     private PostDto createPostJoleneHornsey1() {
         UserRegistrationDto userDto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();

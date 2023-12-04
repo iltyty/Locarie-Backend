@@ -9,5 +9,4 @@ public class LocarieBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(LocarieBackendApplication.class, args);
     }
-
 }

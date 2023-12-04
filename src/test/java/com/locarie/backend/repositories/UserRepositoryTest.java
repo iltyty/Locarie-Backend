@@ -1,7 +1,10 @@
 package com.locarie.backend.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.entities.UserEntity;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +13,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Transactional
 public class UserRepositoryTest {
 
-    @Autowired
-    private UserRepository underTests;
+    @Autowired private UserRepository underTests;
 
     @Test
     void testPlainUserCreateAndQuery() {

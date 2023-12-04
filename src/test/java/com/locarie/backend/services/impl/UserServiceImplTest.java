@@ -1,5 +1,7 @@
 package com.locarie.backend.services.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserLoginDto;
@@ -7,23 +9,18 @@ import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 class UserServiceImplTest {
 
-    @Autowired
-    private UserRepository repository;
+    @Autowired private UserRepository repository;
 
-    @Autowired
-    private UserServiceImpl underTests;
+    @Autowired private UserServiceImpl underTests;
 
     @Test
     void testRegistration() {
@@ -44,8 +41,7 @@ class UserServiceImplTest {
 
     @Test
     void testList() {
-        UserRegistrationDto registrationDto1 =
-                TestDataUtil.newPlainUserRegistrationDto();
+        UserRegistrationDto registrationDto1 = TestDataUtil.newPlainUserRegistrationDto();
         UserRegistrationDto registrationDto2 =
                 TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         UserDto userDto1 = underTests.register(registrationDto1);

@@ -29,7 +29,8 @@ public class ResponseDto<T> {
 
     @Getter
     public enum StatusCode {
-        SUCCESS(0, "success"), FAIL(1, "fail");
+        SUCCESS(0, "success"),
+        FAIL(1, "fail");
 
         private final int code;
 

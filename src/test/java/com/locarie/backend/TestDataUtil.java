@@ -10,19 +10,20 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
 import com.locarie.backend.mapper.impl.UserEntityRegistrationDtoMapperImpl;
+import java.util.Arrays;
+import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class TestDataUtil {
     private static final GeometryFactory geometryFactory = new GeometryFactory();
-    private static final Mapper<UserEntity, UserDto> userEntityDtoMapper = new UserEntityDtoMapperImpl();
+    private static final Mapper<UserEntity, UserDto> userEntityDtoMapper =
+            new UserEntityDtoMapperImpl();
     private static final Mapper<UserEntity, UserRegistrationDto> registrationDtoMapper =
             new UserEntityRegistrationDtoMapperImpl();
-    private static final Mapper<PostEntity, PostDto> postEntityDtoMapper = new PostEntityDtoMapper();
+    private static final Mapper<PostEntity, PostDto> postEntityDtoMapper =
+            new PostEntityDtoMapper();
 
     public static Point newLocation(double latitude, double longitude) {
         return geometryFactory.createPoint(new Coordinate(longitude, latitude));
@@ -49,10 +50,7 @@ public class TestDataUtil {
 
     public static UserLoginDto newPlainUserLoginDto() {
         UserEntity user = newPlainUserEntity();
-        return UserLoginDto.builder()
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .build();
+        return UserLoginDto.builder().email(user.getEmail()).password(user.getPassword()).build();
     }
 
     public static UserEntity newBusinessUserEntityJoleneHornsey() {
@@ -67,7 +65,9 @@ public class TestDataUtil {
                 .coverUrl("https://picsum.photos/800/450")
                 .homepageUrl("https://www.bigjobakery.com/")
                 .category("Restaurant")
-                .introduction("WE ARE A BAKERY & RESTAURANT WHICH SUPPORT REGENERATIVE FOOD SYSTEMS & ETHICAL FARMING.")
+                .introduction(
+                        "WE ARE A BAKERY & RESTAURANT WHICH SUPPORT REGENERATIVE FOOD SYSTEMS &"
+                                + " ETHICAL FARMING.")
                 .phone("02039156760")
                 .openHour(8)
                 .openMinute(0)
@@ -88,21 +88,18 @@ public class TestDataUtil {
 
     public static UserLoginDto newBusinessUserLoginDtoJoleneHornsey() {
         UserEntity user = newBusinessUserEntityJoleneHornsey();
-        return UserLoginDto.builder()
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .build();
+        return UserLoginDto.builder().email(user.getEmail()).password(user.getPassword()).build();
     }
 
     public static PostEntity newPostJoleneHornsey1(final UserEntity user) {
         return PostEntity.builder()
                 .id(1L)
                 .user(user)
-                .title("On as weekend spesh: Pistachio frangi & orange curd \uD83C\uDF4A\uD83E\uDDE1")
+                .title(
+                        "On as weekend spesh: Pistachio frangi & orange curd"
+                                + " \uD83C\uDF4A\uD83E\uDDE1")
                 .content("On all week: Our Apple & Custard Danish! \uD83C\uDF4F\uD83D\uDC9A")
-                .imageUrls(List.of(
-                        "https://i.ibb.co/82Qw0Tb/Jolene-Hornsey-Post1-1.jpg"
-                ))
+                .imageUrls(List.of("https://i.ibb.co/82Qw0Tb/Jolene-Hornsey-Post1-1.jpg"))
                 .build();
     }
 
@@ -117,10 +114,10 @@ public class TestDataUtil {
                 .user(user)
                 .title("Jaffa Cake & Sunday lunch \uD83E\uDDE1")
                 .content("Today's delight")
-                .imageUrls(Arrays.asList(
-                        "https://i.ibb.co/b7fyLTq/Jolene-Hornsey-Post-2-1.jpg",
-                        "https://i.ibb.co/cYw3z26/Jolene-Hornsey-Post-2-2.jpg"
-                ))
+                .imageUrls(
+                        Arrays.asList(
+                                "https://i.ibb.co/b7fyLTq/Jolene-Hornsey-Post-2-1.jpg",
+                                "https://i.ibb.co/cYw3z26/Jolene-Hornsey-Post-2-2.jpg"))
                 .build();
     }
 

@@ -1,5 +1,8 @@
 package com.locarie.backend.controllers;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +11,9 @@ import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
+
 import jakarta.transaction.Transactional;
+
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +26,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.is;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
     private static final ObjectMapper mapper = new ObjectMapper();
-
-    private static final MockMultipartFile avatar = new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[0]);
+    private static final MockMultipartFile avatar =
+            new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[0]);
+    @Autowired private MockMvc mockMvc;
 
     private static MockPart createUserPart(UserRegistrationDto dto) throws JsonProcessingException {
         String userJson = mapper.writeValueAsString(dto);
@@ -48,19 +48,17 @@ class UserControllerTest {
         dto.setId(null);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                        .file(avatar)
-                        .part(createUserPart(dto))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        ).andDo(
-                result -> {
-                    String content = result.getResponse().getContentAsString();
-                    UserDto savedUserDto = mapper.readValue(content, UserDto.class);
-                    dto.setId(savedUserDto.getId());
-                }
-        );
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .file(avatar)
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andDo(
+                        result -> {
+                            String content = result.getResponse().getContentAsString();
+                            UserDto savedUserDto = mapper.readValue(content, UserDto.class);
+                            dto.setId(savedUserDto.getId());
+                        });
         return dto;
     }
 
@@ -69,20 +67,18 @@ class UserControllerTest {
         dto.setId(null);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                        .file(avatar)
-                        .part(createUserPart(dto))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        ).andDo(
-                result -> {
-                    String content = result.getResponse().getContentAsString();
-                    JsonNode dataNode = mapper.readTree(content).get("data");
-                    UserDto savedUserDto = mapper.treeToValue(dataNode, UserDto.class);
-                    dto.setId(savedUserDto.getId());
-                }
-        );
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .file(avatar)
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andDo(
+                        result -> {
+                            String content = result.getResponse().getContentAsString();
+                            JsonNode dataNode = mapper.readTree(content).get("data");
+                            UserDto savedUserDto = mapper.treeToValue(dataNode, UserDto.class);
+                            dto.setId(savedUserDto.getId());
+                        });
         return dto;
     }
 
@@ -113,26 +109,25 @@ class UserControllerTest {
         dto.setType(null);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                        .file(avatar)
-                        .part(createUserPart(dto))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-
-        ).andExpect(
-                MockMvcResultMatchers.status().isBadRequest()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.status").value(1)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data").isEmpty()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("username is mandatory"))
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("password is mandatory"))
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("email is mandatory"))
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("type = PLAIN/BUSINESS is mandatory"))
-        );
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .file(avatar)
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(new StringContains("username is mandatory")))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(new StringContains("password is mandatory")))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(new StringContains("email is mandatory")))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(new StringContains("type = PLAIN/BUSINESS is mandatory")));
 
         dto.setUsername("TempUsername");
         dto.setPassword("12");
@@ -140,19 +135,18 @@ class UserControllerTest {
         dto.setType(UserDto.Type.PLAIN);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                        .file(avatar)
-                        .part(createUserPart(dto))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-        ).andExpect(
-                MockMvcResultMatchers.status().isBadRequest()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.status").value(1)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data").isEmpty()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(new StringContains("password must be between 6 and 20 characters"))
-        );
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .file(avatar)
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(
+                                        new StringContains(
+                                                "password must be between 6 and 20 characters")));
     }
 
     @Test
@@ -162,126 +156,116 @@ class UserControllerTest {
         String userJson = mapper.writeValueAsString(dto);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                        .file(avatar)
-                        .part(createUserPart(dto))
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.id").isNumber()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.location.latitude")
-                        .value(is(dto.getLocation().getY()), Double.class)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.location.longitude")
-                        .value(is(dto.getLocation().getX()), Double.class)
-        );
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .file(avatar)
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data.location.latitude")
+                                .value(is(dto.getLocation().getY()), Double.class))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data.location.longitude")
+                                .value(is(dto.getLocation().getX()), Double.class));
     }
 
     @Test
     void testLoginReturnsHttpOk() throws Exception {
         UserRegistrationDto dto = registerPlainUser();
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto))
-        ).andExpect(
-                MockMvcResultMatchers.status().isOk()
-        );
+                        MockMvcRequestBuilders.post("/api/v1/users/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(dto)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void testLoginReturnsJwtToken() throws Exception {
         UserRegistrationDto dto = registerBusinessUserJoleneHornsey();
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto))
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data").isString()
-        );
+                        MockMvcRequestBuilders.post("/api/v1/users/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(dto)))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isString());
     }
 
     @Test
     void testListUsersReturnsUserList() throws Exception {
         UserRegistrationDto userDto1 = registerPlainUser();
         UserRegistrationDto userDto2 = registerBusinessUserJoleneHornsey();
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/users")
-        ).andExpect(
-                MockMvcResultMatchers.status().isOk()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[0].username").value(userDto1.getUsername())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[0].email").value(userDto1.getEmail())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[1].id").isNumber()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[1].username").value(userDto2.getUsername())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[1].location.latitude")
-                        .value(is(userDto2.getLocation().getY()), Double.class)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data[1].location.longitude")
-                        .value(is(userDto2.getLocation().getX()), Double.class)
-        );
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data[0].username")
+                                .value(userDto1.getUsername()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data[0].email")
+                                .value(userDto1.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id").isNumber())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data[1].username")
+                                .value(userDto2.getUsername()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data[1].location.latitude")
+                                .value(is(userDto2.getLocation().getY()), Double.class))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data[1].location.longitude")
+                                .value(is(userDto2.getLocation().getX()), Double.class));
     }
 
     @Test
     void testGetUserReturnsHttpOk() throws Exception {
         UserRegistrationDto dto = registerPlainUser();
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/users/" + dto.getId())
-        ).andExpect(
-                MockMvcResultMatchers.status().isOk()
-        );
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/" + dto.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void testGetUserReturnsHttpNotFound() throws Exception {
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/users/1")
-        ).andExpect(
-                MockMvcResultMatchers.status().isNotFound()
-        );
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     void testGetUserReturnsUser() throws Exception {
         UserRegistrationDto dto = registerBusinessUserJoleneHornsey();
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/users/" + dto.getId())
-        ).andExpect(
-                MockMvcResultMatchers.status().isOk()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.message").value(ResponseDto.StatusCode.SUCCESS.getMessage())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.id").isNumber()
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.location.latitude")
-                        .value(is(dto.getLocation().getY()), Double.class)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.data.location.longitude")
-                        .value(is(dto.getLocation().getX()), Double.class)
-        );
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/" + dto.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.message")
+                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername()))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data.location.latitude")
+                                .value(is(dto.getLocation().getY()), Double.class))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.data.location.longitude")
+                                .value(is(dto.getLocation().getX()), Double.class));
     }
 }

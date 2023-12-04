@@ -5,11 +5,10 @@ import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.repositories.PostRepository;
 import com.locarie.backend.services.PostService;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -38,8 +37,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> list() {
-        return StreamSupport
-                .stream(repository.findAll().spliterator(), false)
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
                 .map(mapper::mapTo)
                 .toList();
     }

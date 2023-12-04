@@ -1,27 +1,24 @@
 package com.locarie.backend.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 public class PostRepositoryTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private PostRepository underTests;
+    @Autowired private PostRepository underTests;
 
     @Test
     void testPostCreateAndQuery() {

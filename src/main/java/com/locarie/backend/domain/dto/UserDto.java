@@ -22,34 +22,32 @@ public class UserDto {
 
     private Long id;
 
-    @NotNull(message = "type = PLAIN/BUSINESS is mandatory")
-    private Type type;
+    @NotNull(message = "type = PLAIN/BUSINESS is mandatory") private Type type;
 
-    @NotNull(message = "username is mandatory")
-    @Size(min = 2, max = 20, message = "username must be between 2 and 20 characters")
+    @NotNull(message = "username is mandatory") @Size(min = 2, max = 20, message = "username must be between 2 and 20 characters")
     private String username;
 
-    @NotNull(message = "email is mandatory")
-    private String email;
+    @NotNull(message = "email is mandatory") private String email;
 
     // The following fields are only valid for business users
     private String coverUrl;
-    private String homepageUrl;   // business homepage
-    private String category;      // business category. e.g., cafe/restaurant, hotel, etc.
-    private String introduction;  // business introduction
-    private String phone;         // business phone number
-    private Integer openHour;     // business opening hour
-    private Integer openMinute;   // business opening minute
-    private Integer closeHour;    // business closing hour
-    private Integer closeMinute;  // business closing minute
+    private String homepageUrl; // business homepage
+    private String category; // business category. e.g., cafe/restaurant, hotel, etc.
+    private String introduction; // business introduction
+    private String phone; // business phone number
+    private Integer openHour; // business opening hour
+    private Integer openMinute; // business opening minute
+    private Integer closeHour; // business closing hour
+    private Integer closeMinute; // business closing minute
 
     @JsonSerialize(using = JtsPointSerializer.class)
     @JsonDeserialize(using = JtsPointDeserializer.class)
-    private Point location;       // business location
+    private Point location; // business location
 
-    private String locationName;  // business location description
+    private String locationName; // business location description
 
     public enum Type {
-        PLAIN, BUSINESS
+        PLAIN,
+        BUSINESS
     }
 }

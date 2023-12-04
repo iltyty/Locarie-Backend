@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class UserRegistrationDto extends UserDto {
-    @NotNull(message = "password is mandatory")
-    @Size(min = 6, max = 20, message = "password must be between 6 and 20 characters")
+    @NotNull(message = "password is mandatory") @Size(min = 6, max = 20, message = "password must be between 6 and 20 characters")
     private String password;
 }
