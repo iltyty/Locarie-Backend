@@ -11,4 +11,6 @@ public interface PostService {
     Optional<PostDto> get(Long id);
 
     List<PostDto> list();
+
+    List<PostDto> listNearby(double latitude, double longitude, int distance);
 }

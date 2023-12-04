@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.dto.ResponseDto;
+import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.services.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -18,14 +19,19 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class PostControllerTests {
+class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private UserService userService;
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private PostDto createPostJoleneHornsey1() throws Exception {
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(null);
+        UserDto userDto = userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey());
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
         mockMvc.perform(
@@ -46,7 +52,8 @@ class PostControllerTests {
     }
 
     private PostDto createPostJoleneHornsey2() throws Exception {
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(null);
+        UserDto userDto = userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey());
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
         mockMvc.perform(
@@ -69,11 +76,13 @@ class PostControllerTests {
     @Test
     void testCreateReturnsHttpCreated() throws Exception {
         createPostJoleneHornsey1();
+        createPostJoleneHornsey2();
     }
 
     @Test
     void testCreateReturnsPost() throws Exception {
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(null);
+        UserDto userDto = userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey());
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
 
         mockMvc.perform(

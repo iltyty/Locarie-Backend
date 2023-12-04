@@ -28,5 +28,5 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
                     "where ST_Distance_Sphere(u.location, Point(:longitude, :latitude)) <= :distance",
             nativeQuery = true
     )
-    List<PostEntity> findNearByPosts(double latitude, double longitude, int distance);
+    List<PostEntity> findNearby(double latitude, double longitude, int distance);
 }

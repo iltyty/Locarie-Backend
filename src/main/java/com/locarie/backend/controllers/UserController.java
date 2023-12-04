@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,9 +24,9 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(
-            @Valid UserRegistrationDto dto
+            @Valid @RequestPart("user") UserRegistrationDto dto,
+            @RequestPart("avatar") MultipartFile avatar
     ) {
-        System.out.println(dto.getAvatar().getOriginalFilename());
         UserDto savedUser = service.register(dto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }

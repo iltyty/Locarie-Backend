@@ -25,8 +25,17 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDto> list(@PathVariable("lat") Double lat, @PathVariable("lng") Double lng) {
+    public List<PostDto> list() {
         return service.list();
+    }
+
+    @GetMapping("/nearby")
+    public List<PostDto> listNearby(
+            @RequestParam(value = "latitude") double latitude,
+            @RequestParam(value = "longitude") double longitude,
+            @RequestParam(value = "distance") int distance
+    ) {
+        return service.listNearby(latitude, longitude, distance);
     }
 
     @GetMapping("/{id}")

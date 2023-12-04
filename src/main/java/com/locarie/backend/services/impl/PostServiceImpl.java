@@ -43,4 +43,11 @@ public class PostServiceImpl implements PostService {
                 .map(mapper::mapTo)
                 .toList();
     }
+
+    @Override
+    public List<PostDto> listNearby(double latitude, double longitude, int distance) {
+        return repository.findNearby(latitude, longitude, distance).stream()
+                .map(mapper::mapTo)
+                .toList();
+    }
 }

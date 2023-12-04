@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Transactional
-public class UserRepositoryTests {
+public class UserRepositoryTest {
 
     @Autowired
     private UserRepository underTests;

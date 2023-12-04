@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Commit;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -26,21 +27,31 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class UserControllerTests {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static final MockMultipartFile avatar = new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[0]);
+
+    private static MockPart createUserPart(UserRegistrationDto dto) throws JsonProcessingException {
+        String userJson = mapper.writeValueAsString(dto);
+        MockPart userPart = new MockPart("user", userJson.getBytes());
+        userPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        return userPart;
+    }
 
     private UserRegistrationDto registerPlainUser() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newPlainUserRegistrationDto();
         dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
+
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                        .file(avatar)
+                        .part(createUserPart(dto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         ).andDo(
@@ -56,11 +67,12 @@ class UserControllerTests {
     private UserRegistrationDto registerBusinessUserJoleneHornsey() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
+
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                        .file(avatar)
+                        .part(createUserPart(dto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         ).andDo(
@@ -83,9 +95,13 @@ class UserControllerTests {
     }
 
     @Test
-    @Commit
-    void testRegisterReturnsHttpCreated() throws Exception {
+    void testRegisterBusinessUserReturnsHttpCreated() throws Exception {
         registerBusinessUserJoleneHornsey();
+    }
+
+    @Test
+    void testRegisterPlainUserReturnsHttpCreated() throws Exception {
+        registerPlainUser();
     }
 
     @Test
@@ -95,12 +111,13 @@ class UserControllerTests {
         dto.setPassword(null);
         dto.setEmail(null);
         dto.setType(null);
-        String userJson = mapper.writeValueAsString(dto);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                        .file(avatar)
+                        .part(createUserPart(dto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+
         ).andExpect(
                 MockMvcResultMatchers.status().isBadRequest()
         ).andExpect(
@@ -121,12 +138,12 @@ class UserControllerTests {
         dto.setPassword("12");
         dto.setEmail("TempEmail@Unknown.com");
         dto.setType(UserDto.Type.PLAIN);
-        userJson = mapper.writeValueAsString(dto);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                        .file(avatar)
+                        .part(createUserPart(dto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(
                 MockMvcResultMatchers.status().isBadRequest()
         ).andExpect(
@@ -143,10 +160,12 @@ class UserControllerTests {
         UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         dto.setId(null);
         String userJson = mapper.writeValueAsString(dto);
+
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
+                MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                        .file(avatar)
+                        .part(createUserPart(dto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.status").value(ResponseDto.StatusCode.SUCCESS.getCode())
         ).andExpect(
@@ -173,8 +192,6 @@ class UserControllerTests {
                         .content(mapper.writeValueAsString(dto))
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
-        ).andDo(
-                result -> System.out.println(result.getResponse().getContentAsString())
         );
     }
 

@@ -40,7 +40,6 @@ class UserServiceImplTest {
         underTests.register(registrationDto);
         String token = underTests.login(loginDto);
         assertThat(token).isNotEmpty();
-        System.out.println(token);
     }
 
     @Test
