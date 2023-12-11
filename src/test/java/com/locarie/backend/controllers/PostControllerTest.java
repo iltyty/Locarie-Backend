@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -22,12 +23,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class PostControllerTest {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final MockMultipartFile avatar =
+            new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
     @Autowired private MockMvc mockMvc;
     @Autowired private UserService userService;
 
     private PostDto createPostJoleneHornsey1() throws Exception {
         UserDto userDto =
-                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey());
+                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
@@ -49,7 +52,7 @@ class PostControllerTest {
 
     private PostDto createPostJoleneHornsey2() throws Exception {
         UserDto userDto =
-                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey());
+                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
@@ -78,7 +81,7 @@ class PostControllerTest {
     @Test
     void testCreateReturnsPost() throws Exception {
         UserDto userDto =
-                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey());
+                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
 

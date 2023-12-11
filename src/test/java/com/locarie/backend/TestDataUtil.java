@@ -10,11 +10,16 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
 import com.locarie.backend.mapper.impl.UserEntityRegistrationDtoMapperImpl;
-import java.util.Arrays;
-import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class TestDataUtil {
     private static final GeometryFactory geometryFactory = new GeometryFactory();
@@ -124,5 +129,26 @@ public class TestDataUtil {
     public static PostDto newPostDtoJoleneHornsey2(final UserDto dto) {
         UserEntity user = dto != null ? userEntityDtoMapper.mapFrom(dto) : null;
         return postEntityDtoMapper.mapTo(newPostJoleneHornsey2(user));
+    }
+
+    public static MultiValueMap<String, String> objectToMultiValueMap(Object object)
+            throws IllegalAccessException {
+        if (object == null) {
+            return null;
+        }
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        Class<?> currentClass = object.getClass();
+
+        while (currentClass != null) {
+            for (Field field : currentClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value = field.get(object);
+                if (value != null) {
+                    map.put(field.getName(), Collections.singletonList(value.toString()));
+                }
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        return map;
     }
 }

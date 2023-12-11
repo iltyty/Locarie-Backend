@@ -7,11 +7,15 @@ import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.UserService;
+import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.util.JwtUtil;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,22 +24,26 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final Mapper<UserEntity, UserDto> mapper;
 
+    private final StorageService storageService;
+
     public UserServiceImpl(
-            JwtUtil jwtUtil, UserRepository repository, Mapper<UserEntity, UserDto> mapper) {
+            JwtUtil jwtUtil, UserRepository repository, Mapper<UserEntity, UserDto> mapper, StorageService storageService) {
         this.jwtUtil = jwtUtil;
         this.repository = repository;
         this.mapper = mapper;
+        this.storageService = storageService;
     }
 
     @Override
-    public UserEntity createUser(UserEntity user) {
-        return repository.save(user);
-    }
-
-    @Override
-    public UserDto register(UserRegistrationDto dto) {
+    public UserDto register(UserRegistrationDto dto, MultipartFile avatar) {
         UserEntity user = mapper.mapFrom(dto);
-        UserEntity savedUser = createUser(user);
+        UserEntity savedUser = repository.save(user);
+        if (avatar == null) {
+            return mapper.mapTo(savedUser);
+        }
+        Path avatarPath = storageService.store(avatar, String.format("user_%d/avatar", savedUser.getId()));
+        savedUser.setAvatarUrl(avatarPath.toString());
+        repository.save(savedUser);
         return mapper.mapTo(savedUser);
     }
 

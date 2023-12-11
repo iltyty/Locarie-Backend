@@ -29,6 +29,8 @@ public class UserDto {
 
     @NotNull(message = "email is mandatory") private String email;
 
+    private String avatarUrl;
+
     // The following fields are only valid for business users
     private String coverUrl;
     private String homepageUrl; // business homepage

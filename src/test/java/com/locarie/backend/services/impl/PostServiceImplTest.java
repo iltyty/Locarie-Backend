@@ -1,7 +1,5 @@
 package com.locarie.backend.services.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.dto.UserDto;
@@ -10,19 +8,24 @@ import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.repositories.PostRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Transactional
 @ExtendWith(SpringExtension.class)
 class PostServiceImplTest {
+    private static final MockMultipartFile avatar =
+            new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
 
     @Autowired private PostRepository postRepository;
 
@@ -34,14 +37,14 @@ class PostServiceImplTest {
 
     private PostDto createPostJoleneHornsey1() {
         UserRegistrationDto userDto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        UserDto savedUserDto = userService.register(userDto);
+        UserDto savedUserDto = userService.register(userDto, avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(savedUserDto);
         return underTests.create(postDto);
     }
 
     private PostDto createPostJoleneHornsey2() {
         UserRegistrationDto userDto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        UserDto savedUserDto = userService.register(userDto);
+        UserDto savedUserDto = userService.register(userDto, avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(savedUserDto);
         return underTests.create(postDto);
     }

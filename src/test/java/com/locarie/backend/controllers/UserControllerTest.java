@@ -1,8 +1,5 @@
 package com.locarie.backend.controllers;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,20 +8,20 @@ import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
-
 import jakarta.transaction.Transactional;
-
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.is;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,8 +29,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class UserControllerTest {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final MockMultipartFile avatar =
-            new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[0]);
     @Autowired private MockMvc mockMvc;
 
     private static MockPart createUserPart(UserRegistrationDto dto) throws JsonProcessingException {
@@ -49,7 +44,6 @@ class UserControllerTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                                .file(avatar)
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -68,7 +62,6 @@ class UserControllerTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                                .file(avatar)
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -110,7 +103,6 @@ class UserControllerTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                                .file(avatar)
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -136,7 +128,6 @@ class UserControllerTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                                .file(avatar)
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -157,7 +148,6 @@ class UserControllerTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
-                                .file(avatar)
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(
@@ -180,27 +170,35 @@ class UserControllerTest {
     @Test
     void testLoginReturnsHttpOk() throws Exception {
         UserRegistrationDto dto = registerPlainUser();
+        MultiValueMap<String, String> params = TestDataUtil.objectToMultiValueMap(dto);
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/v1/users/login")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(dto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .params(params)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk()
+                );
     }
 
     @Test
     void testLoginReturnsJwtToken() throws Exception {
         UserRegistrationDto dto = registerBusinessUserJoleneHornsey();
+        MultiValueMap<String, String> params = TestDataUtil.objectToMultiValueMap(dto);
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/v1/users/login")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(dto)))
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .params(params))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
                                 .value(ResponseDto.StatusCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
                                 .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isString());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isNotEmpty())
+                .andDo(result -> {
+                    System.out.println(result.getResponse().getContentAsString());
+                });
     }
 
     @Test

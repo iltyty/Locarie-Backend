@@ -33,11 +33,6 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
             @NonNull Class selectedConverterType,
             @NonNull ServerHttpRequest request,
             @NonNull ServerHttpResponse response) {
-        //        if (body instanceof ResponseEntity<?> responseEntity) {
-        //            HttpStatusCode status = responseEntity.getStatusCode();
-        //            Object responseBody = responseEntity.getBody();
-        //            return new ResponseEntity<>(ResponseDto.success(responseBody), status);
-        //        }
         if (body instanceof String) {
             return objectMapper.writeValueAsString(ResponseDto.success(body));
         }
