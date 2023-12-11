@@ -1,16 +1,15 @@
 package com.locarie.backend.storage.impl;
 
-import com.locarie.backend.storage.config.StorageConfig;
 import com.locarie.backend.storage.StorageService;
+import com.locarie.backend.storage.config.StorageConfig;
 import com.locarie.backend.storage.exceptions.StorageException;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class StorageServiceImpl implements StorageService {
@@ -45,8 +44,11 @@ public class StorageServiceImpl implements StorageService {
             if (file.getOriginalFilename() == null) {
                 throw new StorageException("Failed to store file without a name");
             }
-            Path destinationFile = newRootLocation.resolve(Path.of(file.getOriginalFilename()))
-                    .normalize().toAbsolutePath();
+            Path destinationFile =
+                    newRootLocation
+                            .resolve(Path.of(file.getOriginalFilename()))
+                            .normalize()
+                            .toAbsolutePath();
             if (!destinationFile.getParent().equals(newRootLocation.toAbsolutePath())) {
                 throw new StorageException("Cannot store file outside current directory");
             }

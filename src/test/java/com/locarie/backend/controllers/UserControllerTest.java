@@ -1,5 +1,8 @@
 package com.locarie.backend.controllers;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +12,6 @@ import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import jakarta.transaction.Transactional;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.is;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,10 +175,8 @@ class UserControllerTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/v1/users/login")
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .params(params)
-                )
-                .andExpect(MockMvcResultMatchers.status().isOk()
-                );
+                                .params(params))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -196,9 +195,10 @@ class UserControllerTest {
                                 .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isNotEmpty())
-                .andDo(result -> {
-                    System.out.println(result.getResponse().getContentAsString());
-                });
+                .andDo(
+                        result -> {
+                            System.out.println(result.getResponse().getContentAsString());
+                        });
     }
 
     @Test

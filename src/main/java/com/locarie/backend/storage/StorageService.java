@@ -1,8 +1,7 @@
 package com.locarie.backend.storage;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {
     void init();

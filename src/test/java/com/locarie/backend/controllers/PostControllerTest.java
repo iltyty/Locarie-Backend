@@ -30,7 +30,8 @@ class PostControllerTest {
 
     private PostDto createPostJoleneHornsey1() throws Exception {
         UserDto userDto =
-                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
+                userService.register(
+                        TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
@@ -52,7 +53,8 @@ class PostControllerTest {
 
     private PostDto createPostJoleneHornsey2() throws Exception {
         UserDto userDto =
-                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
+                userService.register(
+                        TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
         postDto.setId(null);
         String postJson = objectMapper.writeValueAsString(postDto);
@@ -81,7 +83,8 @@ class PostControllerTest {
     @Test
     void testCreateReturnsPost() throws Exception {
         UserDto userDto =
-                userService.register(TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
+                userService.register(
+                        TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey(), avatar);
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
 

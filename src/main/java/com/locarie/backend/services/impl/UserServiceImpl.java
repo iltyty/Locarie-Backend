@@ -9,13 +9,12 @@ import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.UserService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.util.JwtUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,7 +26,10 @@ public class UserServiceImpl implements UserService {
     private final StorageService storageService;
 
     public UserServiceImpl(
-            JwtUtil jwtUtil, UserRepository repository, Mapper<UserEntity, UserDto> mapper, StorageService storageService) {
+            JwtUtil jwtUtil,
+            UserRepository repository,
+            Mapper<UserEntity, UserDto> mapper,
+            StorageService storageService) {
         this.jwtUtil = jwtUtil;
         this.repository = repository;
         this.mapper = mapper;
@@ -41,7 +43,8 @@ public class UserServiceImpl implements UserService {
         if (avatar == null) {
             return mapper.mapTo(savedUser);
         }
-        Path avatarPath = storageService.store(avatar, String.format("user_%d/avatar", savedUser.getId()));
+        Path avatarPath =
+                storageService.store(avatar, String.format("user_%d/avatar", savedUser.getId()));
         savedUser.setAvatarUrl(avatarPath.toString());
         repository.save(savedUser);
         return mapper.mapTo(savedUser);

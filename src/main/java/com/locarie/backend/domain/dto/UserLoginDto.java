@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserLoginDto {
-    @NotNull(message = "email is mandatory")
-    private String email;
+    @NotNull(message = "email is mandatory") private String email;
+
     @NotNull(message = "password is mandatory") @Size(min = 6, max = 20, message = "password must be between 6 and 20 characters")
     private String password;
 }

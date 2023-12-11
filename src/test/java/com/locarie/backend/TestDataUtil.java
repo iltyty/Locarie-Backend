@@ -10,16 +10,15 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
 import com.locarie.backend.mapper.impl.UserEntityRegistrationDtoMapperImpl;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class TestDataUtil {
     private static final GeometryFactory geometryFactory = new GeometryFactory();
