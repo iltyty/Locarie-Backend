@@ -2,7 +2,7 @@ package com.locarie.backend;
 
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.dto.UserDto;
-import com.locarie.backend.domain.dto.UserLoginDto;
+import com.locarie.backend.domain.dto.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
@@ -52,9 +52,12 @@ public class TestDataUtil {
         return registrationDtoMapper.mapTo(newPlainUserEntity());
     }
 
-    public static UserLoginDto newPlainUserLoginDto() {
+    public static UserLoginRequestDto newPlainUserLoginDto() {
         UserEntity user = newPlainUserEntity();
-        return UserLoginDto.builder().email(user.getEmail()).password(user.getPassword()).build();
+        return UserLoginRequestDto.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .build();
     }
 
     public static UserEntity newBusinessUserEntityJoleneHornsey() {
@@ -90,9 +93,12 @@ public class TestDataUtil {
         return registrationDtoMapper.mapTo(newBusinessUserEntityJoleneHornsey());
     }
 
-    public static UserLoginDto newBusinessUserLoginDtoJoleneHornsey() {
+    public static UserLoginRequestDto newBusinessUserLoginDtoJoleneHornsey() {
         UserEntity user = newBusinessUserEntityJoleneHornsey();
-        return UserLoginDto.builder().email(user.getEmail()).password(user.getPassword()).build();
+        return UserLoginRequestDto.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .build();
     }
 
     public static PostEntity newPostJoleneHornsey1(final UserEntity user) {

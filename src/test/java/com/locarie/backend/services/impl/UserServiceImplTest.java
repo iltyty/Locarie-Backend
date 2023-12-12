@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.UserDto;
-import com.locarie.backend.domain.dto.UserLoginDto;
+import com.locarie.backend.domain.dto.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.UserLoginResponseDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
@@ -32,10 +33,12 @@ class UserServiceImplTest {
     @Test
     void testLogin() {
         UserRegistrationDto registrationDto = TestDataUtil.newPlainUserRegistrationDto();
-        UserLoginDto loginDto = TestDataUtil.newPlainUserLoginDto();
+        UserLoginRequestDto loginDto = TestDataUtil.newPlainUserLoginDto();
         underTests.register(registrationDto, null);
-        String token = underTests.login(loginDto);
-        assertThat(token).isNotEmpty();
+        UserLoginResponseDto result = underTests.login(loginDto);
+        assertThat(result.getId()).isPositive();
+        assertThat(result.getUsername()).isNotEmpty();
+        assertThat(result.getJwtToken()).isNotEmpty();
     }
 
     @Test

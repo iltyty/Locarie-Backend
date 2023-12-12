@@ -180,7 +180,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testLoginReturnsJwtToken() throws Exception {
+    void testLoginReturnsData() throws Exception {
         UserRegistrationDto dto = registerBusinessUserJoleneHornsey();
         MultiValueMap<String, String> params = TestDataUtil.objectToMultiValueMap(dto);
         mockMvc.perform(
@@ -193,8 +193,11 @@ class UserControllerTest {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
                                 .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isNotEmpty())
                 .andDo(
                         result -> {
                             System.out.println(result.getResponse().getContentAsString());

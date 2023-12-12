@@ -1,7 +1,8 @@
 package com.locarie.backend.services.impl;
 
 import com.locarie.backend.domain.dto.UserDto;
-import com.locarie.backend.domain.dto.UserLoginDto;
+import com.locarie.backend.domain.dto.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.UserLoginResponseDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
@@ -51,12 +52,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto dto) {
+    public UserLoginResponseDto login(UserLoginRequestDto dto) {
         Optional<UserEntity> user = repository.emailEquals(dto.getEmail());
         if (user.isEmpty()) {
-            return "";
+            return null;
         }
-        return jwtUtil.generateToken(user.get());
+        UserEntity result = user.get();
+        return new UserLoginResponseDto(
+                result.getId(), result.getUsername(), jwtUtil.generateToken(result));
     }
 
     @Override
