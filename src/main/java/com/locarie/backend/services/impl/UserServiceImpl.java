@@ -10,12 +10,13 @@ import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.UserService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.util.JwtUtil;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -61,8 +62,16 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         UserEntity result = user.get();
-        return new UserLoginResponseDto(
-                result.getId(), result.getUsername(), jwtUtil.generateToken(result));
+        if (!result.getPassword().equals(dto.getPassword())) {
+            return null;
+        }
+        return UserLoginResponseDto.builder()
+                .id(result.getId())
+                .type(result.getType().toString())
+                .username(result.getUsername())
+                .avatarUrl(result.getAvatarUrl())
+                .jwtToken(jwtUtil.generateToken(result))
+                .build();
     }
 
     @Override
