@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.PostDto;
-import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
+import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.services.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -114,10 +114,10 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
     }
 
@@ -130,10 +130,10 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").value(postDto1.getId()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.data[0].title")
@@ -172,10 +172,10 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(postDto.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
                 .andExpect(

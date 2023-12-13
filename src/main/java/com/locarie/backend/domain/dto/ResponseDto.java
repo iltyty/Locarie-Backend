@@ -1,7 +1,7 @@
 package com.locarie.backend.domain.dto;
 
+import com.locarie.backend.global.ResultCode;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 public class ResponseDto<T> {
@@ -14,31 +14,24 @@ public class ResponseDto<T> {
 
     public static <T> ResponseDto<T> success(T data) {
         ResponseDto<T> response = new ResponseDto<>();
-        response.setStatus(StatusCode.SUCCESS.code);
+        response.setStatus(ResultCode.SUCCESS.getCode());
         response.setData(data);
-        response.setMessage(StatusCode.SUCCESS.message);
+        response.setMessage(ResultCode.SUCCESS.getMessage());
         return response;
     }
 
-    public static <T> ResponseDto<T> fail(String message) {
+    private static <T> ResponseDto<T> fail(int code, String message) {
         ResponseDto<T> response = new ResponseDto<>();
-        response.setStatus(StatusCode.FAIL.code);
+        response.setStatus(code);
         response.setMessage(message);
         return response;
     }
 
-    @Getter
-    public enum StatusCode {
-        SUCCESS(0, "success"),
-        FAIL(1, "fail");
+    public static <T> ResponseDto<T> fail(ResultCode code) {
+        return fail(code.getCode(), code.getMessage());
+    }
 
-        private final int code;
-
-        private final String message;
-
-        StatusCode(int code, String message) {
-            this.code = code;
-            this.message = message;
-        }
+    public static <T> ResponseDto<T> fail(ResultCode code, String message) {
+        return fail(code.getCode(), message);
     }
 }

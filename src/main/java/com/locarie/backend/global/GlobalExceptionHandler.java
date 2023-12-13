@@ -4,13 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.exceptions.UserAlreadyExistsException;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,16 +30,16 @@ public class GlobalExceptionHandler {
         e.getBindingResult()
                 .getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-        return ResponseDto.fail(objectMapper.writeValueAsString(errors));
+        return ResponseDto.fail(ResultCode.RC101, objectMapper.writeValueAsString(errors));
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseDto<String> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
-        return ResponseDto.fail(e.getMessage());
+        return ResponseDto.fail(ResultCode.RC201);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseDto<String> handleException(Exception e) {
-        return ResponseDto.fail(e.getMessage());
+        return ResponseDto.fail(ResultCode.FAIL, e.getMessage());
     }
 }

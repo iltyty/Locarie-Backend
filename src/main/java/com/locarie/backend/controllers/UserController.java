@@ -2,6 +2,7 @@ package com.locarie.backend.controllers;
 
 import com.locarie.backend.domain.dto.*;
 import com.locarie.backend.exceptions.UserAlreadyExistsException;
+import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.services.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -35,9 +36,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseDto<UserLoginResponseDto> login(UserLoginRequestDto dto) {
         UserLoginResponseDto result = service.login(dto);
-        return result == null
-                ? ResponseDto.fail("incorrect email or password")
-                : ResponseDto.success(result);
+        return result == null ? ResponseDto.fail(ResultCode.RC202) : ResponseDto.success(result);
     }
 
     @GetMapping

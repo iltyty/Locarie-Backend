@@ -7,10 +7,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
-import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.global.ResultCode;
 import jakarta.transaction.Transactional;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
@@ -107,7 +107,9 @@ class UserControllerTest {
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(1))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResultCode.RC101.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
@@ -132,7 +134,9 @@ class UserControllerTest {
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(1))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResultCode.RC101.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
@@ -151,10 +155,10 @@ class UserControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername()))
@@ -176,14 +180,14 @@ class UserControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()));
+                                .value(ResultCode.SUCCESS.getCode()));
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
                                 .part(createUserPart(dto))
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.FAIL.getCode()));
+                                .value(ResultCode.RC201.getCode()));
     }
 
     @Test
@@ -207,10 +211,10 @@ class UserControllerTest {
                                 .params(params))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isNotEmpty())
@@ -230,10 +234,10 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.data[0].username")
@@ -273,10 +277,10 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResponseDto.StatusCode.SUCCESS.getCode()))
+                                .value(ResultCode.SUCCESS.getCode()))
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResponseDto.StatusCode.SUCCESS.getMessage()))
+                                .value(ResultCode.SUCCESS.getMessage()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername()))
