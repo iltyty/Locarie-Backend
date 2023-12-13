@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.entities.UserEntity;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,16 @@ public class UserRepositoryTest {
         Optional<UserEntity> result = underTests.findById(user.getId());
         assertThat(result.isPresent()).isTrue();
         assertThat(result.get()).isEqualTo(user);
+    }
+
+    @Test
+    void testRepeatedPlainUserCreation() {
+        UserEntity user = TestDataUtil.newPlainUserEntity();
+        underTests.save(user);
+        underTests.save(user);
+        Iterable<UserEntity> result = underTests.findAll();
+        List<UserEntity> users = StreamSupport.stream(result.spliterator(), false).toList();
+        assertThat(users.size()).isEqualTo(1);
     }
 
     @Test

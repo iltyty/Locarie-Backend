@@ -1,6 +1,7 @@
 package com.locarie.backend.controllers;
 
 import com.locarie.backend.domain.dto.*;
+import com.locarie.backend.exceptions.UserAlreadyExistsException;
 import com.locarie.backend.services.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -22,8 +23,12 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(
             @Valid @RequestPart("user") UserRegistrationDto dto,
-            @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar)
+            throws UserAlreadyExistsException {
         UserDto savedUser = service.register(dto, avatar);
+        if (savedUser == null) {
+            throw new UserAlreadyExistsException("user already exists");
+        }
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 

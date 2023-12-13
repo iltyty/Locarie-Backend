@@ -3,6 +3,7 @@ package com.locarie.backend.global;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.domain.dto.ResponseDto;
+import com.locarie.backend.exceptions.UserAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,6 @@ public class GlobalExceptionHandler {
         this.objectMapper = objectMapper;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseDto<String> handleException(Exception e) {
-        return ResponseDto.fail(e.getMessage());
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseDto<String> handleValidationException(MethodArgumentNotValidException e)
@@ -34,5 +30,15 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseDto.fail(objectMapper.writeValueAsString(errors));
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseDto<String> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+        return ResponseDto.fail(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseDto<String> handleException(Exception e) {
+        return ResponseDto.fail(e.getMessage());
     }
 }

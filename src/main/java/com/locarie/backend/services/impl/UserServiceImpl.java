@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto register(UserRegistrationDto dto, MultipartFile avatar) {
+        if (repository.emailEquals(dto.getEmail()).isPresent()) {
+            return null;
+        }
         UserEntity user = mapper.mapFrom(dto);
         UserEntity savedUser = repository.save(user);
         if (avatar == null) {

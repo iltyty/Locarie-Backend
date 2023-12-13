@@ -35,43 +35,47 @@ class PostServiceImplTest {
 
     @Autowired private PostEntityDtoMapper mapper;
 
-    private PostDto createPostJoleneHornsey1() {
+    private UserDto registerBusinessUserJoleneHornsey() {
         UserRegistrationDto userDto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        UserDto savedUserDto = userService.register(userDto, avatar);
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(savedUserDto);
+        return userService.register(userDto, avatar);
+    }
+
+    private PostDto createPostJoleneHornsey1(final UserDto userDto) {
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         return underTests.create(postDto);
     }
 
-    private PostDto createPostJoleneHornsey2() {
-        UserRegistrationDto userDto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        UserDto savedUserDto = userService.register(userDto, avatar);
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(savedUserDto);
+    private PostDto createPostJoleneHornsey2(final UserDto userDto) {
+        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
         return underTests.create(postDto);
     }
 
     @Test
     void testCreate() {
-        PostDto dto = createPostJoleneHornsey1();
-        Optional<PostEntity> post = postRepository.findById(dto.getId());
+        UserDto userDto = registerBusinessUserJoleneHornsey();
+        PostDto postDto = createPostJoleneHornsey1(userDto);
+        Optional<PostEntity> post = postRepository.findById(postDto.getId());
         assertThat(post.isPresent()).isTrue();
-        assertThat(post.get().getId()).isEqualTo(dto.getId());
+        assertThat(post.get().getId()).isEqualTo(postDto.getId());
     }
 
     @Test
     void testList() {
-        PostDto dto1 = createPostJoleneHornsey1();
-        PostDto dto2 = createPostJoleneHornsey2();
-        assertThat(underTests.list()).contains(dto1);
-        assertThat(underTests.list()).contains(dto2);
+        UserDto userDto = registerBusinessUserJoleneHornsey();
+        PostDto postDto1 = createPostJoleneHornsey1(userDto);
+        PostDto postDto2 = createPostJoleneHornsey2(userDto);
+        assertThat(underTests.list()).contains(postDto1);
+        assertThat(underTests.list()).contains(postDto2);
         assertThat(underTests.list().size()).isEqualTo(2);
     }
 
     @Test
     void testListNearby() {
-        PostDto dto1 = createPostJoleneHornsey1();
-        PostDto dto2 = createPostJoleneHornsey2();
-        Point location1 = dto1.getUser().getLocation();
-        Point location2 = dto2.getUser().getLocation();
+        UserDto userDto = registerBusinessUserJoleneHornsey();
+        PostDto postDto1 = createPostJoleneHornsey1(userDto);
+        PostDto postDto2 = createPostJoleneHornsey2(userDto);
+        Point location1 = postDto1.getUser().getLocation();
+        Point location2 = postDto2.getUser().getLocation();
 
         List<PostDto> result1 = underTests.listNearby(location1.getY(), location1.getX(), 0);
         List<PostDto> result2 = underTests.listNearby(location2.getY(), location2.getX(), 0);
@@ -83,9 +87,10 @@ class PostServiceImplTest {
 
     @Test
     void testGet() {
-        PostDto savedDto = createPostJoleneHornsey2();
-        Optional<PostDto> result = underTests.get(savedDto.getId());
+        UserDto userDto = registerBusinessUserJoleneHornsey();
+        PostDto postDto = createPostJoleneHornsey2(userDto);
+        Optional<PostDto> result = underTests.get(postDto.getId());
         assertThat(result.isPresent()).isTrue();
-        assertThat(result.get()).isEqualTo(savedDto);
+        assertThat(result.get()).isEqualTo(postDto);
     }
 }

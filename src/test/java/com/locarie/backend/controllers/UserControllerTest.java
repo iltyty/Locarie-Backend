@@ -145,8 +145,6 @@ class UserControllerTest {
     void testRegisterReturnsUser() throws Exception {
         UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
         dto.setId(null);
-        String userJson = mapper.writeValueAsString(dto);
-
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/users/register")
                                 .part(createUserPart(dto))
@@ -166,6 +164,26 @@ class UserControllerTest {
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.data.location.longitude")
                                 .value(is(dto.getLocation().getX()), Double.class));
+    }
+
+    @Test
+    void testRepeatedRegisterReturnsError() throws Exception {
+        UserRegistrationDto dto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
+        dto.setId(null);
+        mockMvc.perform(
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResponseDto.StatusCode.SUCCESS.getCode()));
+        mockMvc.perform(
+                        MockMvcRequestBuilders.multipart("/api/v1/users/register")
+                                .part(createUserPart(dto))
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.status")
+                                .value(ResponseDto.StatusCode.FAIL.getCode()));
     }
 
     @Test
