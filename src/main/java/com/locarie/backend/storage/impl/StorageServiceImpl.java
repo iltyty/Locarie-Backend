@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,7 +54,7 @@ public class StorageServiceImpl implements StorageService {
                 throw new StorageException("Cannot store file outside current directory");
             }
             try (InputStream stream = file.getInputStream()) {
-                Files.copy(stream, destinationFile);
+                Files.copy(stream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
             return destinationFile;
         } catch (IOException e) {

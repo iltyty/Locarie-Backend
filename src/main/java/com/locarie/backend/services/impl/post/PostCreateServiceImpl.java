@@ -6,10 +6,14 @@ import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.repositories.PostRepository;
 import com.locarie.backend.services.post.PostCreateService;
 import com.locarie.backend.storage.StorageService;
-import java.util.ArrayList;
-import java.util.List;
+import com.locarie.backend.storage.utils.StorageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("PostCreate")
 public class PostCreateServiceImpl implements PostCreateService {
@@ -27,13 +31,30 @@ public class PostCreateServiceImpl implements PostCreateService {
     }
 
     @Override
-    public PostDto create(PostDto dto) {
-        PostEntity post = mapper.mapFrom(dto);
-        PostEntity savedPost = repository.save(post);
-        return mapper.mapTo(savedPost);
+    public PostDto create(PostDto postDto, MultipartFile[] images) {
+        PostEntity postEntity = createPost(postDto);
+        List<String> imageUrls = savePostImages(postEntity, images);
+        updatePostEntityImageUrls(postEntity, imageUrls);
+        return mapper.mapTo(postEntity);
     }
 
-    private List<String> savePostImages(MultipartFile[] images) {
-        return new ArrayList<>();
+    private List<String> savePostImages(PostEntity postEntity, MultipartFile[] images) {
+        Long postId = postEntity.getId();
+        Long userId = postEntity.getUser().getId();
+        String dirname = StorageUtil.getPostImagesDirname(userId, postId);
+        // ATTENTION: need to return a modifiable list here
+        return Arrays.stream(images)
+                .map(image -> storageService.store(image, dirname).toString())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private PostEntity createPost(PostDto postDto) {
+        PostEntity postEntity = mapper.mapFrom(postDto);
+        return repository.save(postEntity);
+    }
+
+    private void updatePostEntityImageUrls(PostEntity postEntity, List<String> imageUrls) {
+        postEntity.setImageUrls(imageUrls);
+        repository.save(postEntity);
     }
 }

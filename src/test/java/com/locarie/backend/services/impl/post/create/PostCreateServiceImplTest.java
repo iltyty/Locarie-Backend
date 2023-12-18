@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @Transactional
@@ -57,7 +58,7 @@ public class PostCreateServiceImplTest {
                 default:
                     continue;
             }
-            PostDto createdPostDto = underTests.create(postDto);
+            PostDto createdPostDto = underTests.create(postDto, new MultipartFile[0]);
             posts.add(createdPostDto);
         }
         return posts;

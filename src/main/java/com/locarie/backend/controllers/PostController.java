@@ -3,10 +3,12 @@ package com.locarie.backend.controllers;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.services.impl.post.PostServiceImpl;
 import com.locarie.backend.services.post.PostService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -19,8 +21,11 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> create(@RequestBody PostDto dto) {
-        return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
+    public ResponseEntity<PostDto> create(
+            @Valid @RequestPart("post") PostDto dto,
+            @RequestPart("images") MultipartFile[] images) {
+        PostDto savedPostDto = service.create(dto, images);
+        return new ResponseEntity<>(savedPostDto, HttpStatus.CREATED);
     }
 
     @GetMapping

@@ -1,5 +1,6 @@
 package com.locarie.backend.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.TestDataUtil;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -26,6 +29,8 @@ class PostControllerTest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final MockMultipartFile avatar =
             new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
+    private static final MockMultipartFile postImage =
+            new MockMultipartFile("images", "image.jpg", "image/jpeg", new byte[1]);
     @Autowired private MockMvc mockMvc;
     @Autowired private UserService userService;
 
@@ -34,14 +39,20 @@ class PostControllerTest {
         return userService.register(userDto, avatar);
     }
 
+    private static MockPart createPostPart(PostDto postDto) throws JsonProcessingException {
+        String postJson = objectMapper.writeValueAsString(postDto);
+        MockPart postPart = new MockPart("post", postJson.getBytes());
+        postPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        return postPart;
+    }
+
     private PostDto createPostJoleneHornsey1(final UserDto userDto) throws Exception {
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
         postDto.setId(null);
-        String postJson = objectMapper.writeValueAsString(postDto);
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/posts")
-                                .contentType("application/json")
-                                .content(postJson))
+                        MockMvcRequestBuilders.multipart("/api/v1/posts")
+                                .file(postImage)
+                                .part(createPostPart(postDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(
                         result -> {
@@ -57,11 +68,10 @@ class PostControllerTest {
     private PostDto createPostJoleneHornsey2(final UserDto userDto) throws Exception {
         PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
         postDto.setId(null);
-        String postJson = objectMapper.writeValueAsString(postDto);
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/posts")
-                                .contentType("application/json")
-                                .content(postJson))
+                        MockMvcRequestBuilders.multipart("/api/v1/posts")
+                                .file(postImage)
+                                .part(createPostPart(postDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(
                         result -> {
@@ -88,9 +98,9 @@ class PostControllerTest {
         postDto.setId(null);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/posts")
-                                .contentType("application/json")
-                                .content(objectMapper.writeValueAsString(postDto)))
+                        MockMvcRequestBuilders.multipart("/api/v1/posts")
+                                .file(postImage)
+                                .part(createPostPart(postDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
