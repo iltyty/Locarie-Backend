@@ -1,4 +1,4 @@
-package com.locarie.backend.services.impl;
+package com.locarie.backend.services.impl.user;
 
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserLoginRequestDto;
@@ -7,16 +7,15 @@ import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.services.UserService;
+import com.locarie.backend.services.user.UserService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.util.JwtUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {

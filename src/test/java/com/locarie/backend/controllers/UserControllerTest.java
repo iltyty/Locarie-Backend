@@ -11,6 +11,7 @@ import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.global.ResultCode;
+import com.locarie.backend.utils.UserTestsDataCreator;
 import jakarta.transaction.Transactional;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
@@ -78,7 +79,7 @@ class UserControllerTest {
 
     @Test
     void testUserSerialization() throws JsonProcessingException {
-        UserEntity user = TestDataUtil.newBusinessUserEntityJoleneHornsey();
+        UserEntity user = UserTestsDataCreator.newBusinessUserEntityJoleneHornsey();
         String userJson = mapper.writeValueAsString(user);
         UserEntity deserializedUser = mapper.readValue(userJson, UserEntity.class);
         assertThat(user).isEqualTo(deserializedUser);

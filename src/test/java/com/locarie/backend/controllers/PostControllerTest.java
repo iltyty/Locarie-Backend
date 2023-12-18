@@ -7,7 +7,7 @@ import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
-import com.locarie.backend.services.UserService;
+import com.locarie.backend.services.user.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

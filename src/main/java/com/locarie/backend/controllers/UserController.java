@@ -3,7 +3,7 @@ package com.locarie.backend.controllers;
 import com.locarie.backend.domain.dto.*;
 import com.locarie.backend.exceptions.UserAlreadyExistsException;
 import com.locarie.backend.global.ResultCode;
-import com.locarie.backend.services.UserService;
+import com.locarie.backend.services.user.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;

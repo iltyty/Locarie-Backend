@@ -1,4 +1,4 @@
-package com.locarie.backend.services.impl;
+package com.locarie.backend.services.impl.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

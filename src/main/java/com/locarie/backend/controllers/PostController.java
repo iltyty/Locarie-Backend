@@ -1,8 +1,8 @@
 package com.locarie.backend.controllers;
 
 import com.locarie.backend.domain.dto.PostDto;
-import com.locarie.backend.services.PostService;
-import com.locarie.backend.services.impl.PostServiceImpl;
+import com.locarie.backend.services.impl.post.PostServiceImpl;
+import com.locarie.backend.services.post.PostService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,12 +1,10 @@
-package com.locarie.backend.services;
+package com.locarie.backend.services.post;
 
 import com.locarie.backend.domain.dto.PostDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface PostService {
-    PostDto create(PostDto dto);
-
+public interface PostReadService {
     Optional<PostDto> get(Long id);
 
     List<PostDto> list();
