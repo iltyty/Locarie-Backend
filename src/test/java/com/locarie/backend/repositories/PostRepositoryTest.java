@@ -17,40 +17,40 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class PostRepositoryTest {
 
-    @Autowired private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    @Autowired private PostRepository underTests;
+  @Autowired private PostRepository underTests;
 
-    @Test
-    void testPostCreateAndQuery() {
-        UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
-        UserEntity savedUser = userRepository.save(user);
-        PostEntity post = PostEntityCreator.newPostEntityJoleneHornsey1(savedUser);
-        underTests.save(post);
+  @Test
+  void testPostCreateAndQuery() {
+    UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
+    UserEntity savedUser = userRepository.save(user);
+    PostEntity post = PostEntityCreator.newPostEntityJoleneHornsey1(savedUser);
+    underTests.save(post);
 
-        Optional<PostEntity> result = underTests.findById(post.getId());
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getTitle()).isEqualTo(post.getTitle());
-        assertThat(result.get().getContent()).isEqualTo(post.getContent());
-    }
+    Optional<PostEntity> result = underTests.findById(post.getId());
+    assertThat(result.isPresent()).isTrue();
+    assertThat(result.get().getTitle()).isEqualTo(post.getTitle());
+    assertThat(result.get().getContent()).isEqualTo(post.getContent());
+  }
 
-    @Test
-    void testFindNearbyPosts() {
-        UserEntity user1 = UserEntityCreator.businessUserEntityJoleneHornsey();
-        UserEntity savedUser = userRepository.save(user1);
-        PostEntity post = PostEntityCreator.newPostEntityJoleneHornsey1(savedUser);
-        underTests.save(post);
+  @Test
+  void testFindNearbyPosts() {
+    UserEntity user1 = UserEntityCreator.businessUserEntityJoleneHornsey();
+    UserEntity savedUser = userRepository.save(user1);
+    PostEntity post = PostEntityCreator.newPostEntityJoleneHornsey1(savedUser);
+    underTests.save(post);
 
-        Optional<PostEntity> result1 = underTests.findById(post.getId());
-        assertThat(result1.isPresent()).isTrue();
-        assertThat(result1.get().getTitle()).isEqualTo(post.getTitle());
-        assertThat(result1.get().getContent()).isEqualTo(post.getContent());
+    Optional<PostEntity> result1 = underTests.findById(post.getId());
+    assertThat(result1.isPresent()).isTrue();
+    assertThat(result1.get().getTitle()).isEqualTo(post.getTitle());
+    assertThat(result1.get().getContent()).isEqualTo(post.getContent());
 
-        List<PostEntity> result2 = underTests.findNearby(50, 0.1, 0);
-        assertThat(result2.isEmpty()).isTrue();
+    List<PostEntity> result2 = underTests.findNearby(50, 0.1, 0);
+    assertThat(result2.isEmpty()).isTrue();
 
-        UserEntity user2 = UserEntityCreator.businessUserEntityJoleneHornsey();
-        result2 = underTests.findNearby(user2.getLocation().getY(), user2.getLocation().getX(), 0);
-        assertThat(result2.size()).isEqualTo(1);
-    }
+    UserEntity user2 = UserEntityCreator.businessUserEntityJoleneHornsey();
+    result2 = underTests.findNearby(user2.getLocation().getY(), user2.getLocation().getX(), 0);
+    assertThat(result2.size()).isEqualTo(1);
+  }
 }

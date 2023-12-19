@@ -8,13 +8,13 @@ import org.locationtech.jts.geom.Point;
 
 public class JtsPointSerializer extends JsonSerializer<Point> {
 
-    @Override
-    public void serialize(
-            Point point, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-            throws IOException {
-        jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("latitude", point.getY());
-        jsonGenerator.writeNumberField("longitude", point.getX());
-        jsonGenerator.writeEndObject();
-    }
+  @Override
+  public void serialize(
+      Point point, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+      throws IOException {
+    jsonGenerator.writeStartObject();
+    jsonGenerator.writeNumberField("latitude", point.getY());
+    jsonGenerator.writeNumberField("longitude", point.getX());
+    jsonGenerator.writeEndObject();
+  }
 }

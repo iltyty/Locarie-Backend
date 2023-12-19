@@ -13,32 +13,32 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @RestControllerAdvice
 public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    public GlobalResponseAdvice(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+  public GlobalResponseAdvice(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
 
-    @Override
-    public boolean supports(@NonNull MethodParameter returnType, @NonNull Class converterType) {
-        return true;
-    }
+  @Override
+  public boolean supports(@NonNull MethodParameter returnType, @NonNull Class converterType) {
+    return true;
+  }
 
-    @SneakyThrows
-    @Override
-    public Object beforeBodyWrite(
-            Object body,
-            @NonNull MethodParameter returnType,
-            @NonNull MediaType selectedContentType,
-            @NonNull Class selectedConverterType,
-            @NonNull ServerHttpRequest request,
-            @NonNull ServerHttpResponse response) {
-        if (body instanceof String) {
-            return objectMapper.writeValueAsString(ResponseDto.success(body));
-        }
-        if (body instanceof ResponseDto) {
-            return body;
-        }
-        return ResponseDto.success(body);
+  @SneakyThrows
+  @Override
+  public Object beforeBodyWrite(
+      Object body,
+      @NonNull MethodParameter returnType,
+      @NonNull MediaType selectedContentType,
+      @NonNull Class selectedConverterType,
+      @NonNull ServerHttpRequest request,
+      @NonNull ServerHttpResponse response) {
+    if (body instanceof String) {
+      return objectMapper.writeValueAsString(ResponseDto.success(body));
     }
+    if (body instanceof ResponseDto) {
+      return body;
+    }
+    return ResponseDto.success(body);
+  }
 }

@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PostDto {
-    private Long id;
-    private UserDto user;
-    private Date time;
+  private Long id;
+  private UserDto user;
+  private Date time;
 
-    @NotEmpty(message = "title cannot be empty")
-    private String title;
+  @NotEmpty(message = "title cannot be empty")
+  private String title;
 
-    @NotEmpty(message = "content cannot be empty")
-    private String content;
+  @NotEmpty(message = "content cannot be empty")
+  private String content;
 }

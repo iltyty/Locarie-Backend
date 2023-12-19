@@ -15,37 +15,37 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostTestsDataCreator {
-    @Autowired private PostRepository postRepository;
-    @Autowired private PostEntityDtoMapper postEntityDtoMapper;
-    @Autowired private UserRepository userRepository;
+  @Autowired private PostRepository postRepository;
+  @Autowired private PostEntityDtoMapper postEntityDtoMapper;
+  @Autowired private UserRepository userRepository;
 
-    private UserEntity user;
+  private UserEntity user;
 
-    public List<PostDto> givenPosts(String... postNames) {
-        registerBusinessUserJoleneHornsey();
-        List<PostDto> posts = new ArrayList<>();
-        for (String postName : postNames) {
-            PostEntity postEntity;
-            switch (postName) {
-                case "post1":
-                    postEntity = PostEntityCreator.newPostEntityJoleneHornsey1(user);
-                    break;
-                case "post2":
-                    postEntity = PostEntityCreator.newPostEntityJoleneHornsey2(user);
-                    break;
-                default:
-                    continue;
-            }
-            PostEntity savedPostEntity = postRepository.save(postEntity);
-            PostDto savedPostDto = postEntityDtoMapper.mapTo(savedPostEntity);
-            posts.add(savedPostDto);
-        }
-        return posts;
+  public List<PostDto> givenPosts(String... postNames) {
+    registerBusinessUserJoleneHornsey();
+    List<PostDto> posts = new ArrayList<>();
+    for (String postName : postNames) {
+      PostEntity postEntity;
+      switch (postName) {
+        case "post1":
+          postEntity = PostEntityCreator.newPostEntityJoleneHornsey1(user);
+          break;
+        case "post2":
+          postEntity = PostEntityCreator.newPostEntityJoleneHornsey2(user);
+          break;
+        default:
+          continue;
+      }
+      PostEntity savedPostEntity = postRepository.save(postEntity);
+      PostDto savedPostDto = postEntityDtoMapper.mapTo(savedPostEntity);
+      posts.add(savedPostDto);
     }
+    return posts;
+  }
 
-    private void registerBusinessUserJoleneHornsey() {
-        UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
-        userEntity.setId(null);
-        user = userRepository.save(userEntity);
-    }
+  private void registerBusinessUserJoleneHornsey() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
+    userEntity.setId(null);
+    user = userRepository.save(userEntity);
+  }
 }

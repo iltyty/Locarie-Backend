@@ -25,60 +25,62 @@ import org.springframework.util.MultiValueMap;
 @Transactional
 @AutoConfigureMockMvc
 public class UserLoginControllerTest {
-    private static final String ENDPOINT = "/api/v1/users/login";
+  private static final String ENDPOINT = "/api/v1/users/login";
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired private MockMvc mockMvc;
-    @Autowired private UserRepository userRepository;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private UserRepository userRepository;
 
-    @Test
-    void testLoginShouldSucceed() throws Exception {
-        UserLoginRequestDto userRegistrationDto = givenUserLoginRequestDtoAfterCreated();
-        MockHttpServletRequestBuilder request = givenLoginRequest(userRegistrationDto);
-        ResultActions result = whenPerformLoginRequest(request);
-        thenLoginResultShouldBeSuccess(result);
-        thenLoginResultShouldContainValidData(result);
-    }
+  @Test
+  void testLoginShouldSucceed() throws Exception {
+    UserLoginRequestDto userRegistrationDto = givenUserLoginRequestDtoAfterCreated();
+    MockHttpServletRequestBuilder request = givenLoginRequest(userRegistrationDto);
+    ResultActions result = whenPerformLoginRequest(request);
+    thenLoginResultShouldBeSuccess(result);
+    thenLoginResultShouldContainValidData(result);
+  }
 
-    private UserLoginRequestDto givenUserLoginRequestDtoAfterCreated() {
-        createBusinessUserInRepository();
-        return UserLoginRequestDtoCreator.businessUserLoginRequestDtoJoleneHornsey();
-    }
+  private UserLoginRequestDto givenUserLoginRequestDtoAfterCreated() {
+    createBusinessUserInRepository();
+    return UserLoginRequestDtoCreator.businessUserLoginRequestDtoJoleneHornsey();
+  }
 
-    private MockHttpServletRequestBuilder givenLoginRequest(UserLoginRequestDto dto)
-            throws IllegalAccessException {
-        MultiValueMap<String, String> params = convertLoginDtoToMap(dto);
-        return MockMvcRequestBuilders.post(ENDPOINT)
-                .params(params)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
-    }
+  private MockHttpServletRequestBuilder givenLoginRequest(UserLoginRequestDto dto)
+      throws IllegalAccessException {
+    MultiValueMap<String, String> params = convertLoginDtoToMap(dto);
+    return MockMvcRequestBuilders.post(ENDPOINT)
+        .params(params)
+        .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+  }
 
-    private ResultActions whenPerformLoginRequest(MockHttpServletRequestBuilder request)
-            throws Exception {
-        return mockMvc.perform(request);
-    }
+  private ResultActions whenPerformLoginRequest(MockHttpServletRequestBuilder request)
+      throws Exception {
+    return mockMvc.perform(request);
+  }
 
-    private void thenLoginResultShouldBeSuccess(ResultActions result) throws Exception {
-        result.andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-                .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
-    }
+  private void thenLoginResultShouldBeSuccess(ResultActions result) throws Exception {
+    result
+        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
+        .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
+  }
 
-    private void thenLoginResultShouldContainValidData(ResultActions result) throws Exception {
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isNotEmpty());
-    }
+  private void thenLoginResultShouldContainValidData(ResultActions result) throws Exception {
+    result
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isString())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isString())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isNotEmpty());
+  }
 
-    private void createBusinessUserInRepository() {
-        UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
-        userRepository.save(userEntity);
-    }
+  private void createBusinessUserInRepository() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
+    userRepository.save(userEntity);
+  }
 
-    private MultiValueMap<String, String> convertLoginDtoToMap(UserLoginRequestDto dto)
-            throws IllegalAccessException {
-        return DataFormatConverter.objectToMultiValueMap(dto);
-    }
+  private MultiValueMap<String, String> convertLoginDtoToMap(UserLoginRequestDto dto)
+      throws IllegalAccessException {
+    return DataFormatConverter.objectToMultiValueMap(dto);
+  }
 }

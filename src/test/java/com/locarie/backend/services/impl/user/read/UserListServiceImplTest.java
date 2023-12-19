@@ -16,36 +16,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class UserListServiceImplTest {
-    @Autowired private UserServiceImpl underTests;
+  @Autowired private UserServiceImpl underTests;
 
-    @Test
-    void testListAfterRegisteredShouldReturnAllUsers() {
-        List<UserRegistrationDto> userRegistrationDtos = givenUserRegistrationDtos();
-        List<UserDto> result = whenListUsersAfterRegistered(userRegistrationDtos);
-        thenListResultShouldContainsAllDtos(result, userRegistrationDtos);
-    }
+  @Test
+  void testListAfterRegisteredShouldReturnAllUsers() {
+    List<UserRegistrationDto> userRegistrationDtos = givenUserRegistrationDtos();
+    List<UserDto> result = whenListUsersAfterRegistered(userRegistrationDtos);
+    thenListResultShouldContainsAllDtos(result, userRegistrationDtos);
+  }
 
-    private List<UserRegistrationDto> givenUserRegistrationDtos() {
-        return Arrays.asList(
-                UserRegistrationDtoCreator.plainUserRegistrationDto(),
-                UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey());
-    }
+  private List<UserRegistrationDto> givenUserRegistrationDtos() {
+    return Arrays.asList(
+        UserRegistrationDtoCreator.plainUserRegistrationDto(),
+        UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey());
+  }
 
-    private List<UserDto> whenListUsersAfterRegistered(
-            List<UserRegistrationDto> userRegistrationDtos) {
-        userRegistrationDtos.forEach(
-                userRegistrationDto -> underTests.register(userRegistrationDto, null));
-        return underTests.list();
-    }
+  private List<UserDto> whenListUsersAfterRegistered(
+      List<UserRegistrationDto> userRegistrationDtos) {
+    userRegistrationDtos.forEach(
+        userRegistrationDto -> underTests.register(userRegistrationDto, null));
+    return underTests.list();
+  }
 
-    private void thenListResultShouldContainsAllDtos(
-            List<UserDto> result, List<UserRegistrationDto> dtos) {
-        assertThat(result.size()).isEqualTo(dtos.size());
-        for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i))
-                    .usingRecursiveComparison()
-                    .ignoringFields("id")
-                    .isEqualTo(dtos.get(i));
-        }
+  private void thenListResultShouldContainsAllDtos(
+      List<UserDto> result, List<UserRegistrationDto> dtos) {
+    assertThat(result.size()).isEqualTo(dtos.size());
+    for (int i = 0; i < result.size(); i++) {
+      assertThat(result.get(i))
+          .usingRecursiveComparison()
+          .ignoringFields("id")
+          .isEqualTo(dtos.get(i));
     }
+  }
 }

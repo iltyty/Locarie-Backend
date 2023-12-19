@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserEntityDtoMapperImpl implements Mapper<UserEntity, UserDto> {
 
-    private final ModelMapper modelMapper = new ModelMapper();
+  private final ModelMapper modelMapper = new ModelMapper();
 
-    @Override
-    public UserDto mapTo(UserEntity user) {
-        return modelMapper.map(user, UserDto.class);
-    }
+  @Override
+  public UserDto mapTo(UserEntity user) {
+    return modelMapper.map(user, UserDto.class);
+  }
 
-    @Override
-    public UserEntity mapFrom(UserDto userDto) {
-        return modelMapper.map(userDto, UserEntity.class);
-    }
+  @Override
+  public UserEntity mapFrom(UserDto userDto) {
+    return modelMapper.map(userDto, UserEntity.class);
+  }
 }

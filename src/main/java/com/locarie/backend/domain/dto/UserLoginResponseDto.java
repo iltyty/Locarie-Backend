@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserLoginResponseDto {
-    private Long id;
-    private String type;
-    private String username;
-    private String avatarUrl;
-    private String jwtToken;
+  private Long id;
+  private String type;
+  private String username;
+  private String avatarUrl;
+  private String jwtToken;
 }

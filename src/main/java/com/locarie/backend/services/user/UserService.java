@@ -9,11 +9,11 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-    UserDto register(UserRegistrationDto dto, MultipartFile avatar);
+  UserDto register(UserRegistrationDto dto, MultipartFile avatar);
 
-    UserLoginResponseDto login(UserLoginRequestDto dto);
+  UserLoginResponseDto login(UserLoginRequestDto dto);
 
-    Optional<UserDto> get(Long id);
+  Optional<UserDto> get(Long id);
 
-    List<UserDto> list();
+  List<UserDto> list();
 }

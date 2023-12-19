@@ -15,22 +15,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class PostReadServiceImplTest {
-    @Autowired private PostReadServiceImpl underTests;
-    @Autowired private PostTestsDataCreator postTestsDataCreator;
+  @Autowired private PostReadServiceImpl underTests;
+  @Autowired private PostTestsDataCreator postTestsDataCreator;
 
-    @Test
-    void testGet() {
-        List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1");
-        Optional<PostDto> result = whenGetPost(postDtos.getFirst().getId());
-        assertThat(result.isPresent()).isTrue();
-        thenGetResultShouldEqualsToPostDto(result.get(), postDtos.getFirst());
-    }
+  @Test
+  void testGet() {
+    List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1");
+    Optional<PostDto> result = whenGetPost(postDtos.getFirst().getId());
+    assertThat(result.isPresent()).isTrue();
+    thenGetResultShouldEqualsToPostDto(result.get(), postDtos.getFirst());
+  }
 
-    private Optional<PostDto> whenGetPost(Long id) {
-        return underTests.get(id);
-    }
+  private Optional<PostDto> whenGetPost(Long id) {
+    return underTests.get(id);
+  }
 
-    private void thenGetResultShouldEqualsToPostDto(PostDto result, PostDto postDto) {
-        assertThat(result).isEqualTo(postDto);
-    }
+  private void thenGetResultShouldEqualsToPostDto(PostDto result, PostDto postDto) {
+    assertThat(result).isEqualTo(postDto);
+  }
 }

@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostReadService {
-    Optional<PostDto> get(Long id);
+  Optional<PostDto> get(Long id);
 
-    List<PostDto> list();
+  List<PostDto> list();
 
-    List<PostDto> listNearby(double latitude, double longitude, int distance);
+  List<PostDto> listNearby(double latitude, double longitude, int distance);
 }

@@ -6,13 +6,13 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
 
 public class UserDtoCreator {
-    private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
+  private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
 
-    public static UserDto plainUserDto() {
-        return mapper.mapTo(UserEntityCreator.plainUserEntity());
-    }
+  public static UserDto plainUserDto() {
+    return mapper.mapTo(UserEntityCreator.plainUserEntity());
+  }
 
-    public static UserDto businessUserDtoJoleneHornsey() {
-        return mapper.mapTo(UserEntityCreator.businessUserEntityJoleneHornsey());
-    }
+  public static UserDto businessUserDtoJoleneHornsey() {
+    return mapper.mapTo(UserEntityCreator.businessUserEntityJoleneHornsey());
+  }
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("storage")
 public class StorageConfig {
-    private String location = "uploads";
+  private String location = "uploads";
 }

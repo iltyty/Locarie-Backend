@@ -8,15 +8,15 @@ import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.utils.user.UserEntityCreator;
 
 public class PostDtoCreator {
-    private static final Mapper<PostEntity, PostDto> mapper = new PostEntityDtoMapper();
+  private static final Mapper<PostEntity, PostDto> mapper = new PostEntityDtoMapper();
 
-    public static PostDto postDtoJoleneHornsey1() {
-        UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
-        return mapper.mapTo(PostEntityCreator.newPostEntityJoleneHornsey1(userEntity));
-    }
+  public static PostDto postDtoJoleneHornsey1() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
+    return mapper.mapTo(PostEntityCreator.newPostEntityJoleneHornsey1(userEntity));
+  }
 
-    public static PostDto postDtoJoleneHornsey2() {
-        UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
-        return mapper.mapTo(PostEntityCreator.newPostEntityJoleneHornsey2(userEntity));
-    }
+  public static PostDto postDtoJoleneHornsey2() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
+    return mapper.mapTo(PostEntityCreator.newPostEntityJoleneHornsey2(userEntity));
+  }
 }

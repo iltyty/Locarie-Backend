@@ -18,52 +18,52 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class PostReadServiceImplListTest {
 
-    @Autowired private PostReadServiceImpl underTests;
-    @Autowired private PostTestsDataCreator postTestsDataCreator;
+  @Autowired private PostReadServiceImpl underTests;
+  @Autowired private PostTestsDataCreator postTestsDataCreator;
 
-    @Test
-    void testListReturnsAllPosts() {
-        List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1", "post2");
-        List<PostDto> listResult = whenListAllPosts();
-        thenListResultShouldContainAllPosts(listResult, postDtos);
-    }
+  @Test
+  void testListReturnsAllPosts() {
+    List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1", "post2");
+    List<PostDto> listResult = whenListAllPosts();
+    thenListResultShouldContainAllPosts(listResult, postDtos);
+  }
 
-    @Test
-    void testListNearbyWithin0kmReturnsNoPosts() {
-        postTestsDataCreator.givenPosts("post1", "post2");
-        Point location = new GeometryFactory().createPoint(new Coordinate(0, 0));
-        List<PostDto> listResult = whenListNearbyPostsWithin0km(location);
-        thenListResultShouldContainNoPost(listResult);
-    }
+  @Test
+  void testListNearbyWithin0kmReturnsNoPosts() {
+    postTestsDataCreator.givenPosts("post1", "post2");
+    Point location = new GeometryFactory().createPoint(new Coordinate(0, 0));
+    List<PostDto> listResult = whenListNearbyPostsWithin0km(location);
+    thenListResultShouldContainNoPost(listResult);
+  }
 
-    @Test
-    void testListNearbyWithinInfiniteDistanceReturnsAllPosts() {
-        List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1", "post2");
-        Point location = postDtos.getFirst().getUser().getLocation();
-        List<PostDto> listResult = whenListNearbyPostsWithinInfiniteDistance(location);
-        thenListResultShouldContainAllPosts(listResult, postDtos);
-    }
+  @Test
+  void testListNearbyWithinInfiniteDistanceReturnsAllPosts() {
+    List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1", "post2");
+    Point location = postDtos.getFirst().getUser().getLocation();
+    List<PostDto> listResult = whenListNearbyPostsWithinInfiniteDistance(location);
+    thenListResultShouldContainAllPosts(listResult, postDtos);
+  }
 
-    private List<PostDto> whenListAllPosts() {
-        return underTests.list();
-    }
+  private List<PostDto> whenListAllPosts() {
+    return underTests.list();
+  }
 
-    private List<PostDto> whenListNearbyPostsWithin0km(Point location) {
-        return underTests.listNearby(location.getY(), location.getX(), 0);
-    }
+  private List<PostDto> whenListNearbyPostsWithin0km(Point location) {
+    return underTests.listNearby(location.getY(), location.getX(), 0);
+  }
 
-    private List<PostDto> whenListNearbyPostsWithinInfiniteDistance(Point location) {
-        return underTests.listNearby(location.getY(), location.getX(), Integer.MAX_VALUE);
-    }
+  private List<PostDto> whenListNearbyPostsWithinInfiniteDistance(Point location) {
+    return underTests.listNearby(location.getY(), location.getX(), Integer.MAX_VALUE);
+  }
 
-    private void thenListResultShouldContainAllPosts(List<PostDto> result, List<PostDto> postDtos) {
-        assertThat(result.size()).isEqualTo(postDtos.size());
-        for (PostDto postDto : postDtos) {
-            assertThat(result).contains(postDto);
-        }
+  private void thenListResultShouldContainAllPosts(List<PostDto> result, List<PostDto> postDtos) {
+    assertThat(result.size()).isEqualTo(postDtos.size());
+    for (PostDto postDto : postDtos) {
+      assertThat(result).contains(postDto);
     }
+  }
 
-    private void thenListResultShouldContainNoPost(List<PostDto> result) {
-        assertThat(result.size()).isEqualTo(0);
-    }
+  private void thenListResultShouldContainNoPost(List<PostDto> result) {
+    assertThat(result.size()).isEqualTo(0);
+  }
 }

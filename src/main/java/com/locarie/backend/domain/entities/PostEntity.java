@@ -19,24 +19,24 @@ import org.hibernate.generator.EventType;
 @Table(name = "posts")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "user_id")
+  private UserEntity user;
 
-    @CurrentTimestamp(event = EventType.INSERT)
-    private Date time; // post publish time
+  @CurrentTimestamp(event = EventType.INSERT)
+  private Date time; // post publish time
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    @Column(nullable = false)
-    private String content;
+  @Column(nullable = false)
+  private String content;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @OrderColumn(name = "image_index")
-    private List<String> imageUrls;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @OrderColumn(name = "image_index")
+  private List<String> imageUrls;
 }

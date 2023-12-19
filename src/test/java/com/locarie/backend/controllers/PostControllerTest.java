@@ -28,171 +28,158 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Transactional
 class PostControllerTest {
 
-    private static UserDto userDto;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final MockMultipartFile avatar =
-            new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
-    private static final MockMultipartFile postImage =
-            new MockMultipartFile("images", "image.jpg", "image/jpeg", new byte[1]);
-    @Autowired private MockMvc mockMvc;
-    @Autowired private UserService userService;
+  private static UserDto userDto;
+  private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final MockMultipartFile avatar =
+      new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
+  private static final MockMultipartFile postImage =
+      new MockMultipartFile("images", "image.jpg", "image/jpeg", new byte[1]);
+  @Autowired private MockMvc mockMvc;
+  @Autowired private UserService userService;
 
-    @BeforeEach
-    public void registerBusinessUserJoleneHornsey() {
-        UserRegistrationDto userRegistrationDto =
-                UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey();
-        userRegistrationDto.setId(null);
-        userDto = userService.register(userRegistrationDto, avatar);
-    }
+  @BeforeEach
+  public void registerBusinessUserJoleneHornsey() {
+    UserRegistrationDto userRegistrationDto =
+        UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey();
+    userRegistrationDto.setId(null);
+    userDto = userService.register(userRegistrationDto, avatar);
+  }
 
-    private static MockPart createPostPart(PostDto postDto) throws JsonProcessingException {
-        String postJson = objectMapper.writeValueAsString(postDto);
-        MockPart postPart = new MockPart("post", postJson.getBytes());
-        postPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        return postPart;
-    }
+  private static MockPart createPostPart(PostDto postDto) throws JsonProcessingException {
+    String postJson = objectMapper.writeValueAsString(postDto);
+    MockPart postPart = new MockPart("post", postJson.getBytes());
+    postPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+    return postPart;
+  }
 
-    private PostDto createPostJoleneHornsey1() throws Exception {
-        PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
-        postDto.setId(null);
-        postDto.setUser(userDto);
-        mockMvc.perform(
-                        MockMvcRequestBuilders.multipart("/api/v1/posts")
-                                .file(postImage)
-                                .part(createPostPart(postDto)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andDo(
-                        result -> {
-                            String content = result.getResponse().getContentAsString();
-                            JsonNode dataNode = objectMapper.readTree(content).get("data");
-                            PostDto savedPostDto =
-                                    objectMapper.treeToValue(dataNode, PostDto.class);
-                            postDto.setId(savedPostDto.getId());
-                        });
-        return postDto;
-    }
+  private PostDto createPostJoleneHornsey1() throws Exception {
+    PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
+    postDto.setId(null);
+    postDto.setUser(userDto);
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.multipart("/api/v1/posts")
+                .file(postImage)
+                .part(createPostPart(postDto)))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andDo(
+            result -> {
+              String content = result.getResponse().getContentAsString();
+              JsonNode dataNode = objectMapper.readTree(content).get("data");
+              PostDto savedPostDto = objectMapper.treeToValue(dataNode, PostDto.class);
+              postDto.setId(savedPostDto.getId());
+            });
+    return postDto;
+  }
 
-    private PostDto createPostJoleneHornsey2() throws Exception {
-        PostDto postDto = PostDtoCreator.postDtoJoleneHornsey2();
-        postDto.setId(null);
-        postDto.setUser(userDto);
-        mockMvc.perform(
-                        MockMvcRequestBuilders.multipart("/api/v1/posts")
-                                .file(postImage)
-                                .part(createPostPart(postDto)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andDo(
-                        result -> {
-                            String content = result.getResponse().getContentAsString();
-                            JsonNode dataNode = objectMapper.readTree(content).get("data");
-                            PostDto savedPostDto =
-                                    objectMapper.treeToValue(dataNode, PostDto.class);
-                            postDto.setId(savedPostDto.getId());
-                        });
-        return postDto;
-    }
+  private PostDto createPostJoleneHornsey2() throws Exception {
+    PostDto postDto = PostDtoCreator.postDtoJoleneHornsey2();
+    postDto.setId(null);
+    postDto.setUser(userDto);
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.multipart("/api/v1/posts")
+                .file(postImage)
+                .part(createPostPart(postDto)))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andDo(
+            result -> {
+              String content = result.getResponse().getContentAsString();
+              JsonNode dataNode = objectMapper.readTree(content).get("data");
+              PostDto savedPostDto = objectMapper.treeToValue(dataNode, PostDto.class);
+              postDto.setId(savedPostDto.getId());
+            });
+    return postDto;
+  }
 
-    @Test
-    void testCreateReturnsHttpCreated() throws Exception {
-        createPostJoleneHornsey1();
-        createPostJoleneHornsey2();
-    }
+  @Test
+  void testCreateReturnsHttpCreated() throws Exception {
+    createPostJoleneHornsey1();
+    createPostJoleneHornsey2();
+  }
 
-    @Test
-    void testCreateReturnsPost() throws Exception {
-        PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
-        postDto.setId(null);
-        postDto.setUser(userDto);
+  @Test
+  void testCreateReturnsPost() throws Exception {
+    PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
+    postDto.setId(null);
+    postDto.setUser(userDto);
 
-        mockMvc.perform(
-                        MockMvcRequestBuilders.multipart("/api/v1/posts")
-                                .file(postImage)
-                                .part(createPostPart(postDto)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.data.content")
-                                .value(postDto.getContent()));
-    }
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.multipart("/api/v1/posts")
+                .file(postImage)
+                .part(createPostPart(postDto)))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.content").value(postDto.getContent()));
+  }
 
-    @Test
-    void testListReturnsHttpOk() throws Exception {
-        createPostJoleneHornsey1();
-        createPostJoleneHornsey2();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+  @Test
+  void testListReturnsHttpOk() throws Exception {
+    createPostJoleneHornsey1();
+    createPostJoleneHornsey2();
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 
-    @Test
-    void testListReturnsEmptyList() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResultCode.SUCCESS.getCode()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResultCode.SUCCESS.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
-    }
+  @Test
+  void testListReturnsEmptyList() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+  }
 
-    @Test
-    void testListReturnsPosts() throws Exception {
-        PostDto postDto1 = createPostJoleneHornsey1();
-        PostDto postDto2 = createPostJoleneHornsey2();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResultCode.SUCCESS.getCode()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResultCode.SUCCESS.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").value(postDto1.getId()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.data[0].title")
-                                .value(postDto1.getTitle()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.data[0].content")
-                                .value(postDto1.getContent()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id").value(postDto2.getId()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.data[1].title")
-                                .value(postDto2.getTitle()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.data[1].content")
-                                .value(postDto2.getContent()));
-    }
+  @Test
+  void testListReturnsPosts() throws Exception {
+    PostDto postDto1 = createPostJoleneHornsey1();
+    PostDto postDto2 = createPostJoleneHornsey2();
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").value(postDto1.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value(postDto1.getTitle()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].content").value(postDto1.getContent()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id").value(postDto2.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].title").value(postDto2.getTitle()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.data[1].content").value(postDto2.getContent()));
+  }
 
-    @Test
-    void testGetReturnsHttpOk() throws Exception {
-        PostDto postDto = createPostJoleneHornsey2();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+  @Test
+  void testGetReturnsHttpOk() throws Exception {
+    PostDto postDto = createPostJoleneHornsey2();
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
 
-    @Test
-    void testGetReturnsHttpNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/0"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+  @Test
+  void testGetReturnsHttpNotFound() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/posts/0"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
 
-    @Test
-    void testGetReturnsPost() throws Exception {
-        PostDto postDto = createPostJoleneHornsey2();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.status")
-                                .value(ResultCode.SUCCESS.getCode()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.message")
-                                .value(ResultCode.SUCCESS.getMessage()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(postDto.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
-                .andExpect(
-                        MockMvcResultMatchers.jsonPath("$.data.content")
-                                .value(postDto.getContent()));
-    }
+  @Test
+  void testGetReturnsPost() throws Exception {
+    PostDto postDto = createPostJoleneHornsey2();
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(postDto.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.content").value(postDto.getContent()));
+  }
 }

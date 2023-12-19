@@ -12,33 +12,33 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostServiceImpl implements PostService {
-    private final PostCreateService createService;
-    private final PostReadService readService;
+  private final PostCreateService createService;
+  private final PostReadService readService;
 
-    public PostServiceImpl(
-            @Qualifier("PostCreate") PostCreateService createService,
-            @Qualifier("PostRead") PostReadService readService) {
-        this.createService = createService;
-        this.readService = readService;
-    }
+  public PostServiceImpl(
+      @Qualifier("PostCreate") PostCreateService createService,
+      @Qualifier("PostRead") PostReadService readService) {
+    this.createService = createService;
+    this.readService = readService;
+  }
 
-    @Override
-    public PostDto create(PostDto dto, MultipartFile[] images) {
-        return createService.create(dto, images);
-    }
+  @Override
+  public PostDto create(PostDto dto, MultipartFile[] images) {
+    return createService.create(dto, images);
+  }
 
-    @Override
-    public Optional<PostDto> get(Long id) {
-        return readService.get(id);
-    }
+  @Override
+  public Optional<PostDto> get(Long id) {
+    return readService.get(id);
+  }
 
-    @Override
-    public List<PostDto> list() {
-        return readService.list();
-    }
+  @Override
+  public List<PostDto> list() {
+    return readService.list();
+  }
 
-    @Override
-    public List<PostDto> listNearby(double latitude, double longitude, int distance) {
-        return readService.listNearby(latitude, longitude, distance);
-    }
+  @Override
+  public List<PostDto> listNearby(double latitude, double longitude, int distance) {
+    return readService.listNearby(latitude, longitude, distance);
+  }
 }

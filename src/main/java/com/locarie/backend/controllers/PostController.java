@@ -14,37 +14,37 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
-    private final PostService service;
+  private final PostService service;
 
-    public PostController(PostServiceImpl service) {
-        this.service = service;
-    }
+  public PostController(PostServiceImpl service) {
+    this.service = service;
+  }
 
-    @PostMapping
-    public ResponseEntity<PostDto> create(
-            @Valid @RequestPart("post") PostDto dto,
-            @RequestPart("images") MultipartFile[] images) {
-        PostDto savedPostDto = service.create(dto, images);
-        return new ResponseEntity<>(savedPostDto, HttpStatus.CREATED);
-    }
+  @PostMapping
+  public ResponseEntity<PostDto> create(
+      @Valid @RequestPart("post") PostDto dto, @RequestPart("images") MultipartFile[] images) {
+    PostDto savedPostDto = service.create(dto, images);
+    return new ResponseEntity<>(savedPostDto, HttpStatus.CREATED);
+  }
 
-    @GetMapping
-    public List<PostDto> list() {
-        return service.list();
-    }
+  @GetMapping
+  public List<PostDto> list() {
+    return service.list();
+  }
 
-    @GetMapping("/nearby")
-    public List<PostDto> listNearby(
-            @RequestParam(value = "latitude") double latitude,
-            @RequestParam(value = "longitude") double longitude,
-            @RequestParam(value = "distance") int distance) {
-        return service.listNearby(latitude, longitude, distance);
-    }
+  @GetMapping("/nearby")
+  public List<PostDto> listNearby(
+      @RequestParam(value = "latitude") double latitude,
+      @RequestParam(value = "longitude") double longitude,
+      @RequestParam(value = "distance") int distance) {
+    return service.listNearby(latitude, longitude, distance);
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostDto> get(@PathVariable Long id) {
-        return service.get(id)
-                .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<PostDto> get(@PathVariable Long id) {
+    return service
+        .get(id)
+        .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
+        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+  }
 }

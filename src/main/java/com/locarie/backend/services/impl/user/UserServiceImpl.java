@@ -20,69 +20,69 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final JwtUtil jwtUtil;
-    private final UserRepository repository;
-    private final Mapper<UserEntity, UserDto> mapper;
+  private final JwtUtil jwtUtil;
+  private final UserRepository repository;
+  private final Mapper<UserEntity, UserDto> mapper;
 
-    private final StorageService storageService;
+  private final StorageService storageService;
 
-    public UserServiceImpl(
-            JwtUtil jwtUtil,
-            UserRepository repository,
-            Mapper<UserEntity, UserDto> mapper,
-            StorageService storageService) {
-        this.jwtUtil = jwtUtil;
-        this.repository = repository;
-        this.mapper = mapper;
-        this.storageService = storageService;
+  public UserServiceImpl(
+      JwtUtil jwtUtil,
+      UserRepository repository,
+      Mapper<UserEntity, UserDto> mapper,
+      StorageService storageService) {
+    this.jwtUtil = jwtUtil;
+    this.repository = repository;
+    this.mapper = mapper;
+    this.storageService = storageService;
+  }
+
+  @Override
+  public UserDto register(UserRegistrationDto dto, MultipartFile avatar) {
+    if (repository.emailEquals(dto.getEmail()).isPresent()) {
+      return null;
     }
-
-    @Override
-    public UserDto register(UserRegistrationDto dto, MultipartFile avatar) {
-        if (repository.emailEquals(dto.getEmail()).isPresent()) {
-            return null;
-        }
-        UserEntity user = mapper.mapFrom(dto);
-        UserEntity savedUser = repository.save(user);
-        if (avatar == null) {
-            return mapper.mapTo(savedUser);
-        }
-        Path avatarPath =
-                storageService.store(avatar, String.format("user_%d/avatar", savedUser.getId()));
-        savedUser.setAvatarUrl(avatarPath.toString());
-        repository.save(savedUser);
-        return mapper.mapTo(savedUser);
+    UserEntity user = mapper.mapFrom(dto);
+    UserEntity savedUser = repository.save(user);
+    if (avatar == null) {
+      return mapper.mapTo(savedUser);
     }
+    Path avatarPath =
+        storageService.store(avatar, String.format("user_%d/avatar", savedUser.getId()));
+    savedUser.setAvatarUrl(avatarPath.toString());
+    repository.save(savedUser);
+    return mapper.mapTo(savedUser);
+  }
 
-    @Override
-    public UserLoginResponseDto login(UserLoginRequestDto dto) {
-        Optional<UserEntity> user = repository.emailEquals(dto.getEmail());
-        if (user.isEmpty()) {
-            return null;
-        }
-        UserEntity result = user.get();
-        if (!result.getPassword().equals(dto.getPassword())) {
-            return null;
-        }
-        return UserLoginResponseDto.builder()
-                .id(result.getId())
-                .type(result.getType().toString())
-                .username(result.getUsername())
-                .avatarUrl(result.getAvatarUrl())
-                .jwtToken(jwtUtil.generateToken(result))
-                .build();
+  @Override
+  public UserLoginResponseDto login(UserLoginRequestDto dto) {
+    Optional<UserEntity> user = repository.emailEquals(dto.getEmail());
+    if (user.isEmpty()) {
+      return null;
     }
+    UserEntity result = user.get();
+    if (!result.getPassword().equals(dto.getPassword())) {
+      return null;
+    }
+    return UserLoginResponseDto.builder()
+        .id(result.getId())
+        .type(result.getType().toString())
+        .username(result.getUsername())
+        .avatarUrl(result.getAvatarUrl())
+        .jwtToken(jwtUtil.generateToken(result))
+        .build();
+  }
 
-    @Override
-    public List<UserDto> list() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false)
-                .map(mapper::mapTo)
-                .toList();
-    }
+  @Override
+  public List<UserDto> list() {
+    return StreamSupport.stream(repository.findAll().spliterator(), false)
+        .map(mapper::mapTo)
+        .toList();
+  }
 
-    @Override
-    public Optional<UserDto> get(Long id) {
-        Optional<UserEntity> result = repository.findById(id);
-        return result.map(mapper::mapTo);
-    }
+  @Override
+  public Optional<UserDto> get(Long id) {
+    Optional<UserEntity> result = repository.findById(id);
+    return result.map(mapper::mapTo);
+  }
 }

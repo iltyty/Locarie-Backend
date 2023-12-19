@@ -15,32 +15,32 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class UserGetServiceImplTest {
-    @Autowired private UserServiceImpl underTests;
+  @Autowired private UserServiceImpl underTests;
 
-    @Test
-    void testGetShouldReturnUser() {
-        UserRegistrationDto userRegistrationDto = givenUser();
-        Optional<UserDto> result = whenGetUserAfterRegistered(userRegistrationDto);
-        assertThat(result.isPresent()).isTrue();
-        thenGetResultShouldEqualToRegistrationDto(result.get(), userRegistrationDto);
-    }
+  @Test
+  void testGetShouldReturnUser() {
+    UserRegistrationDto userRegistrationDto = givenUser();
+    Optional<UserDto> result = whenGetUserAfterRegistered(userRegistrationDto);
+    assertThat(result.isPresent()).isTrue();
+    thenGetResultShouldEqualToRegistrationDto(result.get(), userRegistrationDto);
+  }
 
-    private UserRegistrationDto givenUser() {
-        UserRegistrationDto dto = UserRegistrationDtoCreator.plainUserRegistrationDto();
-        dto.setId(null);
-        return dto;
-    }
+  private UserRegistrationDto givenUser() {
+    UserRegistrationDto dto = UserRegistrationDtoCreator.plainUserRegistrationDto();
+    dto.setId(null);
+    return dto;
+  }
 
-    private Optional<UserDto> whenGetUserAfterRegistered(UserRegistrationDto userRegistrationDto) {
-        UserDto savedUserDto = underTests.register(userRegistrationDto, null);
-        return underTests.get(savedUserDto.getId());
-    }
+  private Optional<UserDto> whenGetUserAfterRegistered(UserRegistrationDto userRegistrationDto) {
+    UserDto savedUserDto = underTests.register(userRegistrationDto, null);
+    return underTests.get(savedUserDto.getId());
+  }
 
-    private void thenGetResultShouldEqualToRegistrationDto(
-            UserDto result, UserRegistrationDto userRegistrationDto) {
-        assertThat(result)
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(userRegistrationDto);
-    }
+  private void thenGetResultShouldEqualToRegistrationDto(
+      UserDto result, UserRegistrationDto userRegistrationDto) {
+    assertThat(result)
+        .usingRecursiveComparison()
+        .ignoringFields("id")
+        .isEqualTo(userRegistrationDto);
+  }
 }

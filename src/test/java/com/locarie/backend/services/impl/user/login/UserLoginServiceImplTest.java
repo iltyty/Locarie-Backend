@@ -16,45 +16,44 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class UserLoginServiceImplTest {
-    @Autowired private UserServiceImpl underTests;
+  @Autowired private UserServiceImpl underTests;
 
-    @Test
-    void loginWithCorrectCredentialShouldSucceed() {
-        UserLoginRequestDto loginDto = givenCorrectLoginCredentialAfterRegistered();
-        UserLoginResponseDto result = whenLogin(loginDto);
-        thenLoginResultShouldBeSuccess(result);
-    }
+  @Test
+  void loginWithCorrectCredentialShouldSucceed() {
+    UserLoginRequestDto loginDto = givenCorrectLoginCredentialAfterRegistered();
+    UserLoginResponseDto result = whenLogin(loginDto);
+    thenLoginResultShouldBeSuccess(result);
+  }
 
-    @Test
-    void loginWithIncorrectCredentialShouldFail() {
-        UserLoginRequestDto loginDto = givenIncorrectLoginCredential();
-        UserLoginResponseDto result = whenLogin(loginDto);
-        thenLoginResultShouldBeFailure(result);
-    }
+  @Test
+  void loginWithIncorrectCredentialShouldFail() {
+    UserLoginRequestDto loginDto = givenIncorrectLoginCredential();
+    UserLoginResponseDto result = whenLogin(loginDto);
+    thenLoginResultShouldBeFailure(result);
+  }
 
-    private UserLoginRequestDto givenCorrectLoginCredentialAfterRegistered() {
-        UserRegistrationDto userRegistrationDto =
-                UserRegistrationDtoCreator.plainUserRegistrationDto();
-        underTests.register(userRegistrationDto, null);
-        return UserLoginRequestDtoCreator.plainUserLoginRequestDto();
-    }
+  private UserLoginRequestDto givenCorrectLoginCredentialAfterRegistered() {
+    UserRegistrationDto userRegistrationDto = UserRegistrationDtoCreator.plainUserRegistrationDto();
+    underTests.register(userRegistrationDto, null);
+    return UserLoginRequestDtoCreator.plainUserLoginRequestDto();
+  }
 
-    private UserLoginRequestDto givenIncorrectLoginCredential() {
-        return UserLoginRequestDtoCreator.incorrectUserLoginRequestDto();
-    }
+  private UserLoginRequestDto givenIncorrectLoginCredential() {
+    return UserLoginRequestDtoCreator.incorrectUserLoginRequestDto();
+  }
 
-    private UserLoginResponseDto whenLogin(UserLoginRequestDto loginDto) {
-        return underTests.login(loginDto);
-    }
+  private UserLoginResponseDto whenLogin(UserLoginRequestDto loginDto) {
+    return underTests.login(loginDto);
+  }
 
-    private void thenLoginResultShouldBeSuccess(UserLoginResponseDto result) {
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isPositive();
-        assertThat(result.getUsername()).isNotEmpty();
-        assertThat(result.getJwtToken()).isNotEmpty();
-    }
+  private void thenLoginResultShouldBeSuccess(UserLoginResponseDto result) {
+    assertThat(result).isNotNull();
+    assertThat(result.getId()).isPositive();
+    assertThat(result.getUsername()).isNotEmpty();
+    assertThat(result.getJwtToken()).isNotEmpty();
+  }
 
-    private void thenLoginResultShouldBeFailure(UserLoginResponseDto result) {
-        assertThat(result).isNull();
-    }
+  private void thenLoginResultShouldBeFailure(UserLoginResponseDto result) {
+    assertThat(result).isNull();
+  }
 }

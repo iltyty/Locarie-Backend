@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class LocarieBackendApplicationTests {
 
-    @Autowired DataSource dataSource;
+  @Autowired DataSource dataSource;
 
-    @Test
-    void contextLoads() {}
+  @Test
+  void contextLoads() {}
 
-    @Test
-    void testConnection() throws SQLException {
-        System.out.println(dataSource.getConnection());
-    }
+  @Test
+  void testConnection() throws SQLException {
+    System.out.println(dataSource.getConnection());
+  }
 }

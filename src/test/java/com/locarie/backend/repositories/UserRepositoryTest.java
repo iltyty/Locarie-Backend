@@ -21,44 +21,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserRepositoryTest {
 
-    @Autowired private UserRepository underTests;
+  @Autowired private UserRepository underTests;
 
-    @Test
-    void testPlainUserCreateAndQuery() {
-        UserEntity user = UserEntityCreator.plainUserEntity();
-        underTests.save(user);
-        Optional<UserEntity> result = underTests.findById(user.getId());
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get()).isEqualTo(user);
-    }
+  @Test
+  void testPlainUserCreateAndQuery() {
+    UserEntity user = UserEntityCreator.plainUserEntity();
+    underTests.save(user);
+    Optional<UserEntity> result = underTests.findById(user.getId());
+    assertThat(result.isPresent()).isTrue();
+    assertThat(result.get()).isEqualTo(user);
+  }
 
-    @Test
-    void testRepeatedPlainUserCreation() {
-        UserEntity user = UserEntityCreator.plainUserEntity();
-        underTests.save(user);
-        underTests.save(user);
-        Iterable<UserEntity> result = underTests.findAll();
-        List<UserEntity> users = StreamSupport.stream(result.spliterator(), false).toList();
-        assertThat(users.size()).isEqualTo(1);
-    }
+  @Test
+  void testRepeatedPlainUserCreation() {
+    UserEntity user = UserEntityCreator.plainUserEntity();
+    underTests.save(user);
+    underTests.save(user);
+    Iterable<UserEntity> result = underTests.findAll();
+    List<UserEntity> users = StreamSupport.stream(result.spliterator(), false).toList();
+    assertThat(users.size()).isEqualTo(1);
+  }
 
-    @Test
-    void testBusinessUserCreateAndQuery() {
-        UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
-        underTests.save(user);
-        Optional<UserEntity> result = underTests.findById(user.getId());
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get()).isEqualTo(user);
-    }
+  @Test
+  void testBusinessUserCreateAndQuery() {
+    UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
+    underTests.save(user);
+    Optional<UserEntity> result = underTests.findById(user.getId());
+    assertThat(result.isPresent()).isTrue();
+    assertThat(result.get()).isEqualTo(user);
+  }
 
-    @Test
-    void testGetUserByEmail() {
-        UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
-        underTests.save(user);
-        Optional<UserEntity> result = underTests.emailEquals(user.getEmail());
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get()).isEqualTo(user);
-        result = underTests.emailEquals("email@notExists.com");
-        assertThat(result.isPresent()).isFalse();
-    }
+  @Test
+  void testGetUserByEmail() {
+    UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
+    underTests.save(user);
+    Optional<UserEntity> result = underTests.emailEquals(user.getEmail());
+    assertThat(result.isPresent()).isTrue();
+    assertThat(result.get()).isEqualTo(user);
+    result = underTests.emailEquals("email@notExists.com");
+    assertThat(result.isPresent()).isFalse();
+  }
 }
