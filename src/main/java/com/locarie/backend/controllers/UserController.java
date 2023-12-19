@@ -41,12 +41,12 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> listUsers() {
-        return service.listUsers();
+        return service.list();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
-        return service.getUser(id)
+        return service.get(id)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

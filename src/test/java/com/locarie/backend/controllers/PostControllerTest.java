@@ -3,13 +3,15 @@ package com.locarie.backend.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.services.user.UserService;
+import com.locarie.backend.utils.post.PostDtoCreator;
+import com.locarie.backend.utils.user.UserRegistrationDtoCreator;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Transactional
 class PostControllerTest {
 
+    private static UserDto userDto;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final MockMultipartFile avatar =
             new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
@@ -34,9 +37,12 @@ class PostControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private UserService userService;
 
-    private UserDto registerBusinessUserJoleneHornsey() {
-        UserRegistrationDto userDto = TestDataUtil.newBusinessUserRegistrationDtoJoleneHornsey();
-        return userService.register(userDto, avatar);
+    @BeforeEach
+    public void registerBusinessUserJoleneHornsey() {
+        UserRegistrationDto userRegistrationDto =
+                UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey();
+        userRegistrationDto.setId(null);
+        userDto = userService.register(userRegistrationDto, avatar);
     }
 
     private static MockPart createPostPart(PostDto postDto) throws JsonProcessingException {
@@ -46,9 +52,10 @@ class PostControllerTest {
         return postPart;
     }
 
-    private PostDto createPostJoleneHornsey1(final UserDto userDto) throws Exception {
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
+    private PostDto createPostJoleneHornsey1() throws Exception {
+        PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
         postDto.setId(null);
+        postDto.setUser(userDto);
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/posts")
                                 .file(postImage)
@@ -65,9 +72,10 @@ class PostControllerTest {
         return postDto;
     }
 
-    private PostDto createPostJoleneHornsey2(final UserDto userDto) throws Exception {
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey2(userDto);
+    private PostDto createPostJoleneHornsey2() throws Exception {
+        PostDto postDto = PostDtoCreator.postDtoJoleneHornsey2();
         postDto.setId(null);
+        postDto.setUser(userDto);
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/posts")
                                 .file(postImage)
@@ -86,16 +94,15 @@ class PostControllerTest {
 
     @Test
     void testCreateReturnsHttpCreated() throws Exception {
-        UserDto userDto = registerBusinessUserJoleneHornsey();
-        createPostJoleneHornsey1(userDto);
-        createPostJoleneHornsey2(userDto);
+        createPostJoleneHornsey1();
+        createPostJoleneHornsey2();
     }
 
     @Test
     void testCreateReturnsPost() throws Exception {
-        UserDto userDto = registerBusinessUserJoleneHornsey();
-        PostDto postDto = TestDataUtil.newPostDtoJoleneHornsey1(userDto);
+        PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
         postDto.setId(null);
+        postDto.setUser(userDto);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/api/v1/posts")
@@ -111,9 +118,8 @@ class PostControllerTest {
 
     @Test
     void testListReturnsHttpOk() throws Exception {
-        UserDto userDto = registerBusinessUserJoleneHornsey();
-        createPostJoleneHornsey1(userDto);
-        createPostJoleneHornsey2(userDto);
+        createPostJoleneHornsey1();
+        createPostJoleneHornsey2();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -133,9 +139,8 @@ class PostControllerTest {
 
     @Test
     void testListReturnsPosts() throws Exception {
-        UserDto userDto = registerBusinessUserJoleneHornsey();
-        PostDto postDto1 = createPostJoleneHornsey1(userDto);
-        PostDto postDto2 = createPostJoleneHornsey2(userDto);
+        PostDto postDto1 = createPostJoleneHornsey1();
+        PostDto postDto2 = createPostJoleneHornsey2();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(
@@ -162,8 +167,7 @@ class PostControllerTest {
 
     @Test
     void testGetReturnsHttpOk() throws Exception {
-        UserDto userDto = registerBusinessUserJoleneHornsey();
-        PostDto postDto = createPostJoleneHornsey2(userDto);
+        PostDto postDto = createPostJoleneHornsey2();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -176,8 +180,7 @@ class PostControllerTest {
 
     @Test
     void testGetReturnsPost() throws Exception {
-        UserDto userDto = registerBusinessUserJoleneHornsey();
-        PostDto postDto = createPostJoleneHornsey2(userDto);
+        PostDto postDto = createPostJoleneHornsey2();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(

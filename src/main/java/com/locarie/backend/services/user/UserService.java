@@ -13,7 +13,7 @@ public interface UserService {
 
     UserLoginResponseDto login(UserLoginRequestDto dto);
 
-    Optional<UserDto> getUser(Long id);
+    Optional<UserDto> get(Long id);
 
-    List<UserDto> listUsers();
+    List<UserDto> list();
 }

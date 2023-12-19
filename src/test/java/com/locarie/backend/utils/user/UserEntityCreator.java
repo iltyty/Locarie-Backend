@@ -1,11 +1,11 @@
-package com.locarie.backend.utils;
+package com.locarie.backend.utils.user;
 
-import com.locarie.backend.TestDataUtil;
 import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.utils.LocationCreator;
 import org.locationtech.jts.geom.Point;
 
-public class UserTestsDataCreator {
-    public static UserEntity newPlainUserEntity() {
+public class UserEntityCreator {
+    public static UserEntity plainUserEntity() {
         return UserEntity.builder()
                 .id(1L)
                 .type(UserEntity.Type.PLAIN)
@@ -16,8 +16,8 @@ public class UserTestsDataCreator {
                 .build();
     }
 
-    public static UserEntity newBusinessUserEntityJoleneHornsey() {
-        Point location = TestDataUtil.newLocation(51.560595, -0.116913);
+    public static UserEntity businessUserEntityJoleneHornsey() {
+        Point location = LocationCreator.location(51.560595, -0.116913);
         return UserEntity.builder()
                 .id(2L)
                 .type(UserEntity.Type.BUSINESS)

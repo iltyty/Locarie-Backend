@@ -30,9 +30,8 @@ public class PostReadServiceImplListTest {
 
     @Test
     void testListNearbyWithin0kmReturnsNoPosts() {
-        List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1", "post2");
+        postTestsDataCreator.givenPosts("post1", "post2");
         Point location = new GeometryFactory().createPoint(new Coordinate(0, 0));
-        Coordinate[] coordinates = location.getCoordinates();
         List<PostDto> listResult = whenListNearbyPostsWithin0km(location);
         thenListResultShouldContainNoPost(listResult);
     }

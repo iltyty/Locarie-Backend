@@ -74,14 +74,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> listUsers() {
+    public List<UserDto> list() {
         return StreamSupport.stream(repository.findAll().spliterator(), false)
                 .map(mapper::mapTo)
                 .toList();
     }
 
     @Override
-    public Optional<UserDto> getUser(Long id) {
+    public Optional<UserDto> get(Long id) {
         Optional<UserEntity> result = repository.findById(id);
         return result.map(mapper::mapTo);
     }

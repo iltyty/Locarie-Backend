@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.utils.PostTestsDataCreator;
-import com.locarie.backend.utils.UserTestsDataCreator;
+import com.locarie.backend.utils.post.PostEntityCreator;
+import com.locarie.backend.utils.user.UserEntityCreator;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +23,9 @@ public class PostRepositoryTest {
 
     @Test
     void testPostCreateAndQuery() {
-        UserEntity user = UserTestsDataCreator.newBusinessUserEntityJoleneHornsey();
+        UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
         UserEntity savedUser = userRepository.save(user);
-        PostEntity post = PostTestsDataCreator.newPostEntityJoleneHornsey1(savedUser);
+        PostEntity post = PostEntityCreator.newPostEntityJoleneHornsey1(savedUser);
         underTests.save(post);
 
         Optional<PostEntity> result = underTests.findById(post.getId());
@@ -36,9 +36,9 @@ public class PostRepositoryTest {
 
     @Test
     void testFindNearbyPosts() {
-        UserEntity user1 = UserTestsDataCreator.newBusinessUserEntityJoleneHornsey();
+        UserEntity user1 = UserEntityCreator.businessUserEntityJoleneHornsey();
         UserEntity savedUser = userRepository.save(user1);
-        PostEntity post = PostTestsDataCreator.newPostEntityJoleneHornsey1(savedUser);
+        PostEntity post = PostEntityCreator.newPostEntityJoleneHornsey1(savedUser);
         underTests.save(post);
 
         Optional<PostEntity> result1 = underTests.findById(post.getId());
@@ -49,7 +49,7 @@ public class PostRepositoryTest {
         List<PostEntity> result2 = underTests.findNearby(50, 0.1, 0);
         assertThat(result2.isEmpty()).isTrue();
 
-        UserEntity user2 = UserTestsDataCreator.newBusinessUserEntityJoleneHornsey();
+        UserEntity user2 = UserEntityCreator.businessUserEntityJoleneHornsey();
         result2 = underTests.findNearby(user2.getLocation().getY(), user2.getLocation().getX(), 0);
         assertThat(result2.size()).isEqualTo(1);
     }

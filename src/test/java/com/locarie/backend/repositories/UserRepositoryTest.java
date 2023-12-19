@@ -3,7 +3,7 @@ package com.locarie.backend.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.utils.UserTestsDataCreator;
+import com.locarie.backend.utils.user.UserEntityCreator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -25,7 +25,7 @@ public class UserRepositoryTest {
 
     @Test
     void testPlainUserCreateAndQuery() {
-        UserEntity user = UserTestsDataCreator.newPlainUserEntity();
+        UserEntity user = UserEntityCreator.plainUserEntity();
         underTests.save(user);
         Optional<UserEntity> result = underTests.findById(user.getId());
         assertThat(result.isPresent()).isTrue();
@@ -34,7 +34,7 @@ public class UserRepositoryTest {
 
     @Test
     void testRepeatedPlainUserCreation() {
-        UserEntity user = UserTestsDataCreator.newPlainUserEntity();
+        UserEntity user = UserEntityCreator.plainUserEntity();
         underTests.save(user);
         underTests.save(user);
         Iterable<UserEntity> result = underTests.findAll();
@@ -44,7 +44,7 @@ public class UserRepositoryTest {
 
     @Test
     void testBusinessUserCreateAndQuery() {
-        UserEntity user = UserTestsDataCreator.newBusinessUserEntityJoleneHornsey();
+        UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
         underTests.save(user);
         Optional<UserEntity> result = underTests.findById(user.getId());
         assertThat(result.isPresent()).isTrue();
@@ -53,7 +53,7 @@ public class UserRepositoryTest {
 
     @Test
     void testGetUserByEmail() {
-        UserEntity user = UserTestsDataCreator.newBusinessUserEntityJoleneHornsey();
+        UserEntity user = UserEntityCreator.businessUserEntityJoleneHornsey();
         underTests.save(user);
         Optional<UserEntity> result = underTests.emailEquals(user.getEmail());
         assertThat(result.isPresent()).isTrue();

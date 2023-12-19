@@ -7,13 +7,12 @@ import com.locarie.backend.repositories.PostRepository;
 import com.locarie.backend.services.post.PostCreateService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.storage.utils.StorageUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service("PostCreate")
 public class PostCreateServiceImpl implements PostCreateService {
