@@ -2,12 +2,12 @@ package com.locarie.backend.services.impl.user.login;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
+import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.UserLoginResponseDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.services.impl.user.UserServiceImpl;
-import com.locarie.backend.utils.user.UserLoginRequestDtoCreator;
-import com.locarie.backend.utils.user.UserRegistrationDtoCreator;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

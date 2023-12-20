@@ -1,4 +1,4 @@
-package com.locarie.backend.utils.user;
+package com.locarie.backend.datacreators.user;
 
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;

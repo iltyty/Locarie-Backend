@@ -1,4 +1,4 @@
-package com.locarie.backend.utils;
+package com.locarie.backend.datacreators;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;

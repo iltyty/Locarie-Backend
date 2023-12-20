@@ -2,8 +2,8 @@ package com.locarie.backend.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.utils.user.UserEntityCreator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;

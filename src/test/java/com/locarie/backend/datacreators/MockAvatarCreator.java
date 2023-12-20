@@ -1,4 +1,4 @@
-package com.locarie.backend.utils;
+package com.locarie.backend.datacreators;
 
 import org.springframework.mock.web.MockMultipartFile;
 

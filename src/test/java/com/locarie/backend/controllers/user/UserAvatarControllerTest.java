@@ -1,11 +1,10 @@
 package com.locarie.backend.controllers.user;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.utils.user.UserControllerResultMatcherUtil;
-import com.locarie.backend.utils.user.UserEntityCreator;
+import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,7 +30,6 @@ public class UserAvatarControllerTest {
   }
 
   @Test
-  @Disabled
   void testUploadAvatarShouldSucceed() throws Exception {
     Long userId = givenUserIdAfterCreated();
     MockMultipartFile avatar = givenAvatar();

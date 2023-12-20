@@ -1,13 +1,12 @@
-package com.locarie.backend.utils;
+package com.locarie.backend.datacreators.post;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
 import com.locarie.backend.repositories.PostRepository;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.utils.post.PostEntityCreator;
-import com.locarie.backend.utils.user.UserEntityCreator;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

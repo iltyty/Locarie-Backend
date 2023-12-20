@@ -1,12 +1,12 @@
 package com.locarie.backend.controllers.user;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.utils.user.UserControllerResultMatcherUtil;
-import com.locarie.backend.utils.user.UserEntityCreator;
+import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;

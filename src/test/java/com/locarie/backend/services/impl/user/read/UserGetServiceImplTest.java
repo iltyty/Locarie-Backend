@@ -2,10 +2,10 @@ package com.locarie.backend.services.impl.user.read;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.services.impl.user.UserServiceImpl;
-import com.locarie.backend.utils.user.UserRegistrationDtoCreator;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

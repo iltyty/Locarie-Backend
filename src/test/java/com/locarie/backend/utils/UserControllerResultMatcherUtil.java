@@ -1,4 +1,4 @@
-package com.locarie.backend.utils.user;
+package com.locarie.backend.utils;
 
 import com.locarie.backend.global.ResultCode;
 import org.hamcrest.core.StringContains;

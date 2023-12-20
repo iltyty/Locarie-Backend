@@ -2,10 +2,10 @@ package com.locarie.backend.controllers.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
-import com.locarie.backend.utils.user.UserControllerResultMatcherUtil;
-import com.locarie.backend.utils.user.UserRegistrationDtoCreator;
+import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

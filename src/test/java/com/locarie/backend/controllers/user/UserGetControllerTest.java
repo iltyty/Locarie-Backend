@@ -1,9 +1,9 @@
 package com.locarie.backend.controllers.user;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.utils.user.UserControllerResultMatcherUtil;
-import com.locarie.backend.utils.user.UserEntityCreator;
+import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

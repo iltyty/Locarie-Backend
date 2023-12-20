@@ -1,4 +1,4 @@
-package com.locarie.backend.utils.post;
+package com.locarie.backend.datacreators.post;
 
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;

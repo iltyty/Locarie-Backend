@@ -2,10 +2,10 @@ package com.locarie.backend.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.locarie.backend.datacreators.post.PostEntityCreator;
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.utils.post.PostEntityCreator;
-import com.locarie.backend.utils.user.UserEntityCreator;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;

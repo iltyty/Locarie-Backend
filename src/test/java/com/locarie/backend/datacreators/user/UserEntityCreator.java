@@ -1,7 +1,7 @@
-package com.locarie.backend.utils.user;
+package com.locarie.backend.datacreators.user;
 
+import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.utils.LocationCreator;
 import org.locationtech.jts.geom.Point;
 
 public class UserEntityCreator {

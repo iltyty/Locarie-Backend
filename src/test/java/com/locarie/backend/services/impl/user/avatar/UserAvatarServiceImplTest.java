@@ -3,14 +3,14 @@ package com.locarie.backend.services.impl.user.avatar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.locarie.backend.datacreators.MockAvatarCreator;
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.EmptyUserDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.impl.user.UserAvatarServiceImpl;
 import com.locarie.backend.storage.exceptions.StorageException;
-import com.locarie.backend.utils.MockAvatarCreator;
-import com.locarie.backend.utils.user.UserEntityCreator;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
