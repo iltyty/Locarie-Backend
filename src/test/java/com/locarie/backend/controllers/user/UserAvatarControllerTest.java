@@ -20,12 +20,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @Transactional
 @AutoConfigureMockMvc
 public class UserAvatarControllerTest {
-  private static final String ENDPOINT = "/api/v1/users/avatar";
   private static final MockMultipartFile AVATAR =
       new MockMultipartFile("avatar", "avatar.png", "image/png", new byte[1]);
 
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
+
+  private static String getEndpoint(Long userId) {
+    return String.format("/api/v1/users/%d/avatar", userId);
+  }
 
   @Test
   @Disabled
@@ -47,7 +50,8 @@ public class UserAvatarControllerTest {
   }
 
   private MockHttpServletRequestBuilder givenRequest(Long userId, MockMultipartFile avatar) {
-    return MockMvcRequestBuilders.multipart(ENDPOINT).file(avatar).param("userId");
+    String endpoint = getEndpoint(userId);
+    return MockMvcRequestBuilders.multipart(endpoint).file(avatar);
   }
 
   private ResultActions whenPerformUpdateAvatarRequest(MockHttpServletRequestBuilder request)

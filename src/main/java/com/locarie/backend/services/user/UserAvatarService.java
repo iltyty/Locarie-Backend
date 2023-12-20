@@ -4,5 +4,5 @@ import com.locarie.backend.domain.dto.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserAvatarService {
-  UserDto updateAvatar(Long userId, MultipartFile avatar);
+  UserDto update(Long userId, MultipartFile avatar);
 }

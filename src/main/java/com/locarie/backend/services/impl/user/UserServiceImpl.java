@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto updateAvatar(Long userId, MultipartFile avatar) {
-    return avatarService.updateAvatar(userId, avatar);
+  public UserDto update(Long userId, MultipartFile avatar) {
+    return avatarService.update(userId, avatar);
   }
 }

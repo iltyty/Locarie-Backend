@@ -38,7 +38,7 @@ public class UserAvatarServiceImplTest {
   }
 
   private UserDto whenUpdateAvatar(Long userId, MockMultipartFile avatar) {
-    return underTests.updateAvatar(userId, avatar);
+    return underTests.update(userId, avatar);
   }
 
   private void thenResultShouldContainUpdatedAvatarUrl(UserDto userDto, MockMultipartFile avatar) {
