@@ -40,4 +40,28 @@ public class UserEntityCreator {
         .locationName("318–326 HORNSEY ROAD N7 7HE")
         .build();
   }
+
+  public static UserEntity businessUserShreeji() {
+    Point location = LocationCreator.location(51.51871309884953, -0.15449968748875476);
+    return UserEntity.builder()
+        .id(3L)
+        .type(UserEntity.Type.BUSINESS)
+        .username("Shreeji Newsagents")
+        .password("88888888")
+        .email("shreejinews@btopenworld.com")
+        .avatarUrl("https://www.shreejinewsagents.com/cdn/shop/files/shreeji-logo_400x.png")
+        .coverUrl("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg")
+        .homepageUrl("https://www.shreejinewsagents.com/")
+        .category("Newsagent")
+        .introduction(
+            "We offer a reliable delivery service for specific titles, newspapers or magazines.")
+        .phone("+442079355055")
+        .openHour(8)
+        .openMinute(30)
+        .closeHour(18)
+        .closeMinute(0)
+        .location(location)
+        .locationName("6 Chiltern St, London W1U 7PT, United Kingdom")
+        .build();
+  }
 }
