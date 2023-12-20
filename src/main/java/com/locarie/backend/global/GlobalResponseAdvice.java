@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.domain.dto.ResponseDto;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -36,7 +37,7 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
     if (body instanceof String) {
       return objectMapper.writeValueAsString(ResponseDto.success(body));
     }
-    if (body instanceof ResponseDto) {
+    if (body instanceof ResponseDto || body instanceof byte[] || body instanceof Resource) {
       return body;
     }
     return ResponseDto.success(body);

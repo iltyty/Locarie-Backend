@@ -4,7 +4,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 public class MockAvatarCreator {
   public static MockMultipartFile pngAvatar() {
-    return new MockMultipartFile("avatar", "avatar.png", "image/png", new byte[1]);
+    return new MockMultipartFile("avatar", "avatar.png", "image/png", new byte[100]);
   }
 
   public static MockMultipartFile jpgAvatar() {

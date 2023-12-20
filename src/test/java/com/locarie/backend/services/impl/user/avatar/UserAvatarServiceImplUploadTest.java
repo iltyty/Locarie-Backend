@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.locarie.backend.datacreators.MockAvatarCreator;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.EmptyUserDto;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.impl.user.UserAvatarServiceImpl;
 import com.locarie.backend.storage.exceptions.StorageException;
@@ -19,7 +19,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 @SpringBootTest
 @Transactional
-public class UserAvatarServiceImplTest {
+public class UserAvatarServiceImplUploadTest {
   @Autowired private UserAvatarServiceImpl underTests;
   @Autowired private UserRepository userRepository;
 
@@ -35,22 +35,21 @@ public class UserAvatarServiceImplTest {
   void testUploadAvatarOfNonExistentUserShouldFail() {
     Long userId = givenNonExistentUserId();
     MockMultipartFile avatar = givenAvatar();
-    UserDto userDto = whenUpdateAvatar(userId, avatar);
-    thenResultShouldBeEmptyUserDto(userDto);
+    thenResultShouldThrowUserNotFoundExceptionWhenUpdateAvatar(userId, avatar);
   }
 
   @Test
   void testUploadAvatarWithNoFilenameShouldFail() {
     Long userId = givenUserIdAfterCreated();
     MockMultipartFile avatar = MockAvatarCreator.avatarWithNoFilename();
-    thenResultShouldThrowExceptionWhenUpdateAvatar(userId, avatar);
+    thenResultShouldThrowStorageExceptionWhenUpdateAvatar(userId, avatar);
   }
 
   @Test
   void testUploadEmptyAvatarShouldFail() {
     Long userId = givenUserIdAfterCreated();
     MockMultipartFile avatar = MockAvatarCreator.emptyAvatar();
-    thenResultShouldThrowExceptionWhenUpdateAvatar(userId, avatar);
+    thenResultShouldThrowStorageExceptionWhenUpdateAvatar(userId, avatar);
   }
 
   private Long givenUserIdAfterCreated() {
@@ -76,11 +75,16 @@ public class UserAvatarServiceImplTest {
     assertThat(userDto.getAvatarUrl()).contains(avatar.getOriginalFilename());
   }
 
-  private void thenResultShouldBeEmptyUserDto(UserDto userDto) {
-    assertThat(userDto).isEqualTo(new EmptyUserDto());
+  private void thenResultShouldThrowUserNotFoundExceptionWhenUpdateAvatar(
+      Long userId, MockMultipartFile avatar) {
+    assertThatExceptionOfType(UserNotFoundException.class)
+        .isThrownBy(
+            () -> {
+              whenUpdateAvatar(userId, avatar);
+            });
   }
 
-  private void thenResultShouldThrowExceptionWhenUpdateAvatar(
+  private void thenResultShouldThrowStorageExceptionWhenUpdateAvatar(
       Long userId, MockMultipartFile avatar) {
     assertThatExceptionOfType(StorageException.class)
         .isThrownBy(

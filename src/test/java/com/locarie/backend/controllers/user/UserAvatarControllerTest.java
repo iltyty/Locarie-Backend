@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @Transactional
@@ -33,9 +34,17 @@ public class UserAvatarControllerTest {
   void testUploadAvatarShouldSucceed() throws Exception {
     Long userId = givenUserIdAfterCreated();
     MockMultipartFile avatar = givenAvatar();
-    MockHttpServletRequestBuilder request = givenRequest(userId, avatar);
-    ResultActions result = whenPerformUpdateAvatarRequest(request);
+    MockHttpServletRequestBuilder request = givenUploadAvatarRequest(userId, avatar);
+    ResultActions result = whenPerformHttpRequest(request);
     thenResultShouldBeOk(result);
+  }
+
+  @Test
+  void testGetAvatarShouldSucceed() throws Exception {
+    Long userId = givenUserIdAfterCreated();
+    MockHttpServletRequestBuilder request = givenGetAvatarRequest(userId);
+    ResultActions result = whenPerformHttpRequest(request);
+    thenResultStatusShouldBeOk(result);
   }
 
   private Long givenUserIdAfterCreated() {
@@ -47,12 +56,18 @@ public class UserAvatarControllerTest {
     return AVATAR;
   }
 
-  private MockHttpServletRequestBuilder givenRequest(Long userId, MockMultipartFile avatar) {
+  private MockHttpServletRequestBuilder givenUploadAvatarRequest(
+      Long userId, MockMultipartFile avatar) {
     String endpoint = getEndpoint(userId);
     return MockMvcRequestBuilders.multipart(endpoint).file(avatar);
   }
 
-  private ResultActions whenPerformUpdateAvatarRequest(MockHttpServletRequestBuilder request)
+  private MockHttpServletRequestBuilder givenGetAvatarRequest(Long userId) {
+    String endpoint = getEndpoint(userId);
+    return MockMvcRequestBuilders.get(endpoint);
+  }
+
+  private ResultActions whenPerformHttpRequest(MockHttpServletRequestBuilder request)
       throws Exception {
     return mockMvc.perform(request);
   }
@@ -61,5 +76,9 @@ public class UserAvatarControllerTest {
     result
         .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
         .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
+  }
+
+  private void thenResultStatusShouldBeOk(ResultActions result) throws Exception {
+    result.andExpect(MockMvcResultMatchers.status().isOk());
   }
 }

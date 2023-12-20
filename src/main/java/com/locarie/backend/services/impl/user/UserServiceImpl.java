@@ -95,4 +95,9 @@ public class UserServiceImpl implements UserService {
   public UserDto update(Long userId, MultipartFile avatar) {
     return avatarService.update(userId, avatar);
   }
+
+  @Override
+  public byte[] getAvatar(Long userId) {
+    return avatarService.getAvatar(userId);
+  }
 }
