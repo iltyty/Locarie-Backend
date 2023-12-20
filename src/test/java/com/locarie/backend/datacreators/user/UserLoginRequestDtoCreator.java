@@ -20,6 +20,14 @@ public class UserLoginRequestDtoCreator {
         .build();
   }
 
+  public static UserLoginRequestDto businessUserLoginRequestDtoShreeji() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityShreeji();
+    return UserLoginRequestDto.builder()
+        .email(userEntity.getEmail())
+        .password(userEntity.getPassword())
+        .build();
+  }
+
   public static UserLoginRequestDto incorrectUserLoginRequestDto() {
     return UserLoginRequestDto.builder()
         .email("this-is-an-email-that-does-not-exist@.com")

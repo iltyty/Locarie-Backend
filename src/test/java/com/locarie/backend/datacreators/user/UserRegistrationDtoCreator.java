@@ -18,4 +18,9 @@ public class UserRegistrationDtoCreator {
     UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
     return mapper.mapTo(userEntity);
   }
+
+  public static UserRegistrationDto businessUserRegistrationDtoShreeji() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityShreeji();
+    return mapper.mapTo(userEntity);
+  }
 }

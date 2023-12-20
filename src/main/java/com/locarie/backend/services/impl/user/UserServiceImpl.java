@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto register(UserRegistrationDto dto, MultipartFile avatar) {
-    if (repository.emailEquals(dto.getEmail()).isPresent()) {
+    if (repository.findByEmail(dto.getEmail()).isPresent()) {
       return null;
     }
     UserEntity user = mapper.mapFrom(dto);
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserLoginResponseDto login(UserLoginRequestDto dto) {
-    Optional<UserEntity> user = repository.emailEquals(dto.getEmail());
+    Optional<UserEntity> user = repository.findByEmail(dto.getEmail());
     if (user.isEmpty()) {
       return null;
     }

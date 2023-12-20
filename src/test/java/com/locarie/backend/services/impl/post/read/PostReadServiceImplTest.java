@@ -20,7 +20,7 @@ public class PostReadServiceImplTest {
 
   @Test
   void testGet() {
-    List<PostDto> postDtos = postTestsDataCreator.givenPosts("post1");
+    List<PostDto> postDtos = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
     Optional<PostDto> result = whenGetPost(postDtos.getFirst().getId());
     assertThat(result.isPresent()).isTrue();
     thenGetResultShouldEqualsToPostDto(result.get(), postDtos.getFirst());

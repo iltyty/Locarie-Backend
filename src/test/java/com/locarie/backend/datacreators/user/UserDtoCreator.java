@@ -15,4 +15,8 @@ public class UserDtoCreator {
   public static UserDto businessUserDtoJoleneHornsey() {
     return mapper.mapTo(UserEntityCreator.businessUserEntityJoleneHornsey());
   }
+
+  public static UserDto businessUserDtoShreeji() {
+    return mapper.mapTo(UserEntityCreator.businessUserEntityShreeji());
+  }
 }

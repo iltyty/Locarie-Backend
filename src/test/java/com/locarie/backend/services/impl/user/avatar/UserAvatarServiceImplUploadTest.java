@@ -3,7 +3,7 @@ package com.locarie.backend.services.impl.user.avatar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import com.locarie.backend.datacreators.MockAvatarCreator;
+import com.locarie.backend.datacreators.image.MockAvatarCreator;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
