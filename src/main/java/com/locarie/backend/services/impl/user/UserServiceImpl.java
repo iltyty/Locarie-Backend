@@ -7,18 +7,22 @@ import com.locarie.backend.domain.dto.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.user.UserService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {
+  private final UserAvatarService avatarService;
 
   private final JwtUtil jwtUtil;
   private final UserRepository repository;
@@ -27,10 +31,12 @@ public class UserServiceImpl implements UserService {
   private final StorageService storageService;
 
   public UserServiceImpl(
+      @Qualifier("UserAvatarService") UserAvatarService avatarService,
       JwtUtil jwtUtil,
       UserRepository repository,
       Mapper<UserEntity, UserDto> mapper,
       StorageService storageService) {
+    this.avatarService = avatarService;
     this.jwtUtil = jwtUtil;
     this.repository = repository;
     this.mapper = mapper;
@@ -84,5 +90,10 @@ public class UserServiceImpl implements UserService {
   public Optional<UserDto> get(Long id) {
     Optional<UserEntity> result = repository.findById(id);
     return result.map(mapper::mapTo);
+  }
+
+  @Override
+  public UserDto updateAvatar(Long userId, MultipartFile avatar) {
+    return avatarService.updateAvatar(userId, avatar);
   }
 }

@@ -17,17 +17,17 @@ public class UserRegisterServiceImplTest {
   @Autowired private UserServiceImpl underTests;
 
   @Test
-  void testPlainUserRegister() {
+  void testPlainUserRegisterShouldSucceed() {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDto();
     UserDto userDto = whenRegisterUser(userRegistrationDto);
-    thenRegisterResultShouldEqualToRegistrationDto(userDto, userRegistrationDto);
+    thenResultShouldEqualToRegistrationDto(userDto, userRegistrationDto);
   }
 
   @Test
-  void testBusinessUserRegister() {
+  void testBusinessUserRegisterShouldSucceed() {
     UserRegistrationDto userRegistrationDto = givenBusinessUserRegistrationDto();
     UserDto userDto = whenRegisterUser(userRegistrationDto);
-    thenRegisterResultShouldEqualToRegistrationDto(userDto, userRegistrationDto);
+    thenResultShouldEqualToRegistrationDto(userDto, userRegistrationDto);
   }
 
   private UserRegistrationDto givenPlainUserRegistrationDto() {
@@ -42,7 +42,7 @@ public class UserRegisterServiceImplTest {
     return underTests.register(userRegistrationDto, null);
   }
 
-  private void thenRegisterResultShouldEqualToRegistrationDto(
+  private void thenResultShouldEqualToRegistrationDto(
       UserDto result, UserRegistrationDto userRegistrationDto) {
     userRegistrationDto.setId(result.getId());
     assertThat(result)
