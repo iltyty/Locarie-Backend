@@ -8,6 +8,7 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.storage.StorageService;
+import com.locarie.backend.storage.exceptions.StorageException;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserAvatarServiceImpl implements UserAvatarService {
   }
 
   @Override
-  public UserDto update(Long userId, MultipartFile avatar) {
+  public UserDto update(Long userId, MultipartFile avatar) throws StorageException {
     try {
       UserEntity userEntity = findUserById(userId);
       Path avatarPath = storeAvatar(userId, avatar);

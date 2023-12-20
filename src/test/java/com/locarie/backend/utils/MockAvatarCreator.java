@@ -10,4 +10,12 @@ public class MockAvatarCreator {
   public static MockMultipartFile jpgAvatar() {
     return new MockMultipartFile("avatar", "avatar.jpg", "image/jpg", new byte[1]);
   }
+
+  public static MockMultipartFile emptyAvatar() {
+    return new MockMultipartFile("avatar", "avatar.jpg", "image/jpg", new byte[0]);
+  }
+
+  public static MockMultipartFile avatarWithNoFilename() {
+    return new MockMultipartFile("avatar", "", "image/jpg", new byte[1]);
+  }
 }
