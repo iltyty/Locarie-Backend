@@ -4,10 +4,9 @@ import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.dto.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.UserLoginResponseDto;
 import com.locarie.backend.domain.dto.UserRegistrationDto;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService extends UserAvatarService {
   UserDto register(UserRegistrationDto dto, MultipartFile avatar);

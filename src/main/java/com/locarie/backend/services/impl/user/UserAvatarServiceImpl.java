@@ -20,7 +20,10 @@ public class UserAvatarServiceImpl implements UserAvatarService {
   private final StorageService storageService;
   private final Mapper<UserEntity, UserDto> mapper;
 
-  public UserAvatarServiceImpl(UserRepository userRepository, StorageService storageService, Mapper<UserEntity, UserDto> mapper) {
+  public UserAvatarServiceImpl(
+      UserRepository userRepository,
+      StorageService storageService,
+      Mapper<UserEntity, UserDto> mapper) {
     this.userRepository = userRepository;
     this.storageService = storageService;
     this.mapper = mapper;
@@ -40,7 +43,8 @@ public class UserAvatarServiceImpl implements UserAvatarService {
 
   private UserEntity findUserById(Long userId) {
     Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
-    return optionalUserEntity.orElseThrow(() -> new UserNotFoundException("User with id" + userId + " not found"));
+    return optionalUserEntity.orElseThrow(
+        () -> new UserNotFoundException("User with id" + userId + " not found"));
   }
 
   private Path storeAvatar(Long userId, MultipartFile avatar) {

@@ -11,14 +11,13 @@ import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.user.UserService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {
