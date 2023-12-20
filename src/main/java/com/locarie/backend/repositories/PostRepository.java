@@ -1,10 +1,11 @@
 package com.locarie.backend.repositories;
 
 import com.locarie.backend.domain.entities.PostEntity;
-import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface PostRepository extends CrudRepository<PostEntity, Long> {
@@ -29,7 +30,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + "on p.user_id = u.id "
               + "where ST_Distance_Sphere(u.location, Point(:longitude, :latitude)) <= :distance "
               + "and p.time = ("
-              + "  select max(time) from posts group by user_id"
+              + "  select max(time) from posts where user_id = u.id"
               + ")",
       nativeQuery = true)
   List<PostEntity> findNearby(double latitude, double longitude, int distance);

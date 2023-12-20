@@ -1,18 +1,18 @@
 package com.locarie.backend.services.impl.post.read;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.services.impl.post.PostReadServiceImpl;
 import jakarta.transaction.Transactional;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -37,10 +37,12 @@ public class PostReadServiceImplListTest {
 
   @Test
   void testListNearbyWithinInfiniteDistanceShouldReturnFirstPostOfEachUser() {
-    List<PostDto> postDtos = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
-    Point location = postDtos.getFirst().getUser().getLocation();
+    List<PostDto> postDtosOfJoleneHornsey = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    List<PostDto> postDtosOfShreeji = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
+    Point location = postDtosOfJoleneHornsey.getFirst().getUser().getLocation();
     List<PostDto> listResult = whenListNearbyPostsWithinInfiniteDistance(location);
-    thenResultShouldContainPost(listResult, postDtos.getLast());
+    List<PostDto> expectedPostDtos = List.of(postDtosOfJoleneHornsey.getLast(), postDtosOfShreeji.getLast());
+    thenResultShouldContainAllPosts(listResult, expectedPostDtos);
   }
 
   private Point givenEmptyLocation() {
@@ -68,10 +70,5 @@ public class PostReadServiceImplListTest {
 
   private void thenResultShouldContainNoPost(List<PostDto> result) {
     assertThat(result.size()).isEqualTo(0);
-  }
-
-  private void thenResultShouldContainPost(List<PostDto> result, PostDto postDto) {
-    assertThat(result.size()).isEqualTo(1);
-    assertThat(result).contains(postDto);
   }
 }
