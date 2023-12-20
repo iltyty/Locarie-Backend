@@ -9,5 +9,5 @@ public interface PostReadService {
 
   List<PostDto> list();
 
-  List<PostDto> listNearby(double latitude, double longitude, int distance);
+  List<PostDto> listNearby(double latitude, double longitude, double distance);
 }

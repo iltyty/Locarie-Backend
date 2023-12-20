@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class PostReadServiceImplListTest {
   }
 
   @Test
+  @Commit
   void testListNearbyWithinInfiniteDistanceShouldReturnFirstPostOfEachUser() {
     List<PostDto> postDtosOfJoleneHornsey = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
     List<PostDto> postDtosOfShreeji = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
