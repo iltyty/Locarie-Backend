@@ -1,18 +1,18 @@
 package com.locarie.backend.services.impl.post.read;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.domain.dto.PostDto;
 import com.locarie.backend.services.impl.post.PostReadServiceImpl;
 import jakarta.transaction.Transactional;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest
 @Transactional

@@ -1,12 +1,15 @@
 package com.locarie.backend.controllers.user;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
+import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -14,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @Transactional
@@ -26,30 +28,25 @@ public class UserAvatarControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
 
+  @Qualifier("UserAvatarService") @Autowired
+  private UserAvatarService userAvatarService;
+
   private static String getEndpoint(Long userId) {
     return String.format("/api/v1/users/%d/avatar", userId);
   }
 
   @Test
   void testUploadAvatarShouldSucceed() throws Exception {
-    Long userId = givenUserIdAfterCreated();
+    Long userId = givenUserEntityAfterCreated().getId();
     MockMultipartFile avatar = givenAvatar();
     MockHttpServletRequestBuilder request = givenUploadAvatarRequest(userId, avatar);
     ResultActions result = whenPerformHttpRequest(request);
     thenResultShouldBeOk(result);
   }
 
-  @Test
-  void testGetAvatarShouldSucceed() throws Exception {
-    Long userId = givenUserIdAfterCreated();
-    MockHttpServletRequestBuilder request = givenGetAvatarRequest(userId);
-    ResultActions result = whenPerformHttpRequest(request);
-    thenResultStatusShouldBeOk(result);
-  }
-
-  private Long givenUserIdAfterCreated() {
+  private UserEntity givenUserEntityAfterCreated() {
     UserEntity userEntity = UserEntityCreator.plainUserEntity();
-    return userRepository.save(userEntity).getId();
+    return userRepository.save(userEntity);
   }
 
   private MockMultipartFile givenAvatar() {
@@ -62,9 +59,8 @@ public class UserAvatarControllerTest {
     return MockMvcRequestBuilders.multipart(endpoint).file(avatar);
   }
 
-  private MockHttpServletRequestBuilder givenGetAvatarRequest(Long userId) {
-    String endpoint = getEndpoint(userId);
-    return MockMvcRequestBuilders.get(endpoint);
+  private UserDto whenUploadAvatar(Long userId) {
+    return userAvatarService.update(userId, UserAvatarControllerTest.AVATAR);
   }
 
   private ResultActions whenPerformHttpRequest(MockHttpServletRequestBuilder request)
@@ -76,9 +72,5 @@ public class UserAvatarControllerTest {
     result
         .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
         .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
-  }
-
-  private void thenResultStatusShouldBeOk(ResultActions result) throws Exception {
-    result.andExpect(MockMvcResultMatchers.status().isOk());
   }
 }

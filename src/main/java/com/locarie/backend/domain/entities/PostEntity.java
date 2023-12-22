@@ -2,15 +2,14 @@ package com.locarie.backend.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.generator.EventType;
-
-import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

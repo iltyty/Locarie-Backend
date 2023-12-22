@@ -43,7 +43,7 @@ public class PostCreateServiceImpl implements PostCreateService {
     String dirname = StorageUtil.getPostImagesDirname(userId, postId);
     // ATTENTION: need to return a modifiable list here
     return Arrays.stream(images)
-        .map(image -> storageService.store(image, dirname).toString())
+        .map(image -> storageService.store(image, dirname))
         .collect(Collectors.toCollection(ArrayList::new));
   }
 

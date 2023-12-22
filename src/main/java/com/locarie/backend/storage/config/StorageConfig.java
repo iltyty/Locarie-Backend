@@ -8,5 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("storage")
 public class StorageConfig {
-  private String location = "uploads";
+  private String type = "local";
+  private String urlPrefix = "http://localhost:8080/";
 }

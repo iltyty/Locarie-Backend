@@ -7,27 +7,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class StorageServiceImpl implements StorageService {
+@ConditionalOnProperty(value = "storage.type", havingValue = "local", matchIfMissing = true)
+public class LocalStorageServiceImpl implements StorageService {
+  private final String urlPrefix;
+  private final Path rootLocation = Path.of("static");
 
-  private final Path rootLocation;
-
-  public StorageServiceImpl(StorageConfig properties) throws RuntimeException {
-    String rootLocation = properties.getLocation();
-    checkRootLocationEmptyAndThrows(rootLocation);
-    this.rootLocation = Path.of(rootLocation);
+  public LocalStorageServiceImpl(StorageConfig properties) throws RuntimeException {
+    this.urlPrefix = properties.getUrlPrefix();
     init();
-  }
-
-  private void checkRootLocationEmptyAndThrows(String rootLocation) {
-    if (rootLocation.trim().isEmpty()) {
-      throw new RuntimeException("Storage location is not set");
-    }
   }
 
   @Override
@@ -48,7 +43,7 @@ public class StorageServiceImpl implements StorageService {
   }
 
   @Override
-  public Path store(MultipartFile file, String dirname) throws StorageException {
+  public String store(MultipartFile file, String dirname) throws StorageException {
     checkInvalidFile(file);
     assert file.getOriginalFilename() != null;
     Path fileRootLocation = resolveFileSpecificRootLocation(dirname);
@@ -57,7 +52,7 @@ public class StorageServiceImpl implements StorageService {
       Path destinationFile = resolveFilePath(file.getOriginalFilename(), fileRootLocation);
       checkDestinationFileOutsideCurrentDirectory(destinationFile, fileRootLocation);
       doStore(file, destinationFile);
-      return destinationFile;
+      return concatenateAvatarUrl(dirname, file);
     } catch (IOException e) {
       throw handleIOException(e);
     }
@@ -94,13 +89,12 @@ public class StorageServiceImpl implements StorageService {
     }
   }
 
-  private StorageException handleIOException(IOException e) throws StorageException {
-    throw new StorageException("Failed to store file", e);
+  private String concatenateAvatarUrl(String dirname, MultipartFile file) {
+    return urlPrefix + Paths.get(dirname, file.getOriginalFilename());
   }
 
-  @Override
-  public Path load(String filename) {
-    return rootLocation.resolve(filename);
+  private StorageException handleIOException(IOException e) throws StorageException {
+    throw new StorageException("Failed to store file", e);
   }
 
   @Override

@@ -10,8 +10,8 @@ import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.user.UserService;
 import com.locarie.backend.storage.StorageService;
+import com.locarie.backend.storage.utils.StorageUtil;
 import com.locarie.backend.util.JwtUtil;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -52,9 +52,9 @@ public class UserServiceImpl implements UserService {
     if (avatar == null) {
       return mapper.mapTo(savedUser);
     }
-    Path avatarPath =
-        storageService.store(avatar, String.format("user_%d/avatar", savedUser.getId()));
-    savedUser.setAvatarUrl(avatarPath.toString());
+    String avatarUrl =
+        storageService.store(avatar, StorageUtil.getUserAvatarDirname(savedUser.getId()));
+    savedUser.setAvatarUrl(avatarUrl);
     repository.save(savedUser);
     return mapper.mapTo(savedUser);
   }
@@ -94,10 +94,5 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto update(Long userId, MultipartFile avatar) {
     return avatarService.update(userId, avatar);
-  }
-
-  @Override
-  public byte[] getAvatar(Long userId) {
-    return avatarService.getAvatar(userId);
   }
 }
