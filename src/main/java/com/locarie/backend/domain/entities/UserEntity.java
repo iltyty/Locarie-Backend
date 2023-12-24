@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.locationtech.jts.geom.Point;
 
 @Data
@@ -37,6 +38,7 @@ public class UserEntity {
   @Column(nullable = false, unique = true)
   private String email;
 
+  @ColumnDefault("''")
   private String avatarUrl;
 
   // The following fields are only valid for business users
