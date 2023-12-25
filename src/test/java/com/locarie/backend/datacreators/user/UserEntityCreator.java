@@ -2,6 +2,7 @@ package com.locarie.backend.datacreators.user;
 
 import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.domain.entities.UserEntity;
+import java.util.List;
 import org.locationtech.jts.geom.Point;
 
 public class UserEntityCreator {
@@ -9,6 +10,8 @@ public class UserEntityCreator {
     return UserEntity.builder()
         .id(1L)
         .type(UserEntity.Type.PLAIN)
+        .firstName("Tony")
+        .lastName("Stark")
         .username("Tony Stark")
         .password("12345678")
         .email("tonystark@avengers.com")
@@ -21,11 +24,14 @@ public class UserEntityCreator {
     return UserEntity.builder()
         .id(2L)
         .type(UserEntity.Type.BUSINESS)
+        .firstName("Jolene")
+        .lastName("Hornsey")
         .username("Jolene Hornsey")
         .password("88888888")
         .email("jolene-hornsey@bigjo.com")
         .avatarUrl("https://picsum.photos/200/200")
-        .coverUrl("https://picsum.photos/800/450")
+        .businessName("Big Jo Bakery")
+        .coverUrls(List.of("https://picsum.photos/800/450"))
         .homepageUrl("https://www.bigjobakery.com/")
         .category("Restaurant")
         .introduction(
@@ -37,7 +43,7 @@ public class UserEntityCreator {
         .closeHour(20)
         .closeMinute(0)
         .location(location)
-        .locationName("318–326 HORNSEY ROAD N7 7HE")
+        .address("318–326 HORNSEY ROAD N7 7HE")
         .build();
   }
 
@@ -46,11 +52,14 @@ public class UserEntityCreator {
     return UserEntity.builder()
         .id(3L)
         .type(UserEntity.Type.BUSINESS)
+        .firstName("Shreeji")
+        .lastName("Newsagents")
         .username("Shreeji Newsagents")
         .password("88888888")
         .email("shreejinews@btopenworld.com")
         .avatarUrl("https://www.shreejinewsagents.com/cdn/shop/files/shreeji-logo_400x.png")
-        .coverUrl("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg")
+        .businessName("Shreeji Newsagents")
+        .coverUrls(List.of("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg"))
         .homepageUrl("https://www.shreejinewsagents.com/")
         .category("Newsagent")
         .introduction(
@@ -61,7 +70,7 @@ public class UserEntityCreator {
         .closeHour(18)
         .closeMinute(0)
         .location(location)
-        .locationName("6 Chiltern St, London W1U 7PT, United Kingdom")
+        .address("6 Chiltern St, London W1U 7PT, United Kingdom")
         .build();
   }
 }

@@ -7,6 +7,7 @@ import com.locarie.backend.serialization.JtsPointDeserializer;
 import com.locarie.backend.serialization.JtsPointSerializer;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,26 +28,33 @@ public class UserDto {
   @NotNull(message = "username is mandatory") @Size(min = 2, max = 20, message = "username must be between 2 and 20 characters")
   private String username;
 
+  @NotNull(message = "first name is mandatory") @Size(min = 2, max = 20, message = "first name must be between 2 and 20 characters")
+  private String firstName;
+
+  @NotNull(message = "last name is mandatory") @Size(min = 2, max = 20, message = "last name must be between 2 and 20 characters")
+  private String lastName;
+
   @NotNull(message = "email is mandatory") private String email;
 
   private String avatarUrl;
 
   // The following fields are only valid for business users
-  private String coverUrl;
-  private String homepageUrl; // business homepage
-  private String category; // business category. e.g., cafe/restaurant, hotel, etc.
-  private String introduction; // business introduction
-  private String phone; // business phone number
-  private Integer openHour; // business opening hour
-  private Integer openMinute; // business opening minute
-  private Integer closeHour; // business closing hour
-  private Integer closeMinute; // business closing minute
+  private String businessName;
+  private List<String> coverUrls;
+  private String homepageUrl;
+  private String category;
+  private String introduction;
+  private String phone;
+  private Integer openHour;
+  private Integer openMinute;
+  private Integer closeHour;
+  private Integer closeMinute;
 
   @JsonSerialize(using = JtsPointSerializer.class)
   @JsonDeserialize(using = JtsPointDeserializer.class)
-  private Point location; // business location
+  private Point location;
 
-  private String locationName; // business location description
+  private String address;
 
   public enum Type {
     PLAIN,
