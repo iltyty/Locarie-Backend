@@ -34,7 +34,7 @@ public class UserLoginServiceImplTest {
 
   private UserLoginRequestDto givenCorrectLoginCredentialAfterRegistered() {
     UserRegistrationDto userRegistrationDto = UserRegistrationDtoCreator.plainUserRegistrationDto();
-    underTests.register(userRegistrationDto, null);
+    underTests.register(userRegistrationDto);
     return UserLoginRequestDtoCreator.plainUserLoginRequestDto();
   }
 

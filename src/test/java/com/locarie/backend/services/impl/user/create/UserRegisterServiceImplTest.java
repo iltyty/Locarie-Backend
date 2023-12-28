@@ -39,7 +39,7 @@ public class UserRegisterServiceImplTest {
   }
 
   private UserDto whenRegisterUser(UserRegistrationDto userRegistrationDto) {
-    return underTests.register(userRegistrationDto, null);
+    return underTests.register(userRegistrationDto);
   }
 
   private void thenResultShouldEqualToRegistrationDto(

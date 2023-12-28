@@ -30,8 +30,6 @@ class PostControllerTest {
 
   private static UserDto userDto;
   private static final ObjectMapper objectMapper = new ObjectMapper();
-  private static final MockMultipartFile avatar =
-      new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", new byte[1]);
   private static final MockMultipartFile postImage =
       new MockMultipartFile("images", "image.jpg", "image/jpeg", new byte[1]);
   @Autowired private MockMvc mockMvc;
@@ -42,7 +40,7 @@ class PostControllerTest {
     UserRegistrationDto userRegistrationDto =
         UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey();
     userRegistrationDto.setId(null);
-    userDto = userService.register(userRegistrationDto, avatar);
+    userDto = userService.register(userRegistrationDto);
   }
 
   private static MockPart createPostPart(PostDto postDto) throws JsonProcessingException {

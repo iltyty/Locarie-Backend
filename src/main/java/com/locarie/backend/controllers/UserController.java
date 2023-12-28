@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -22,11 +21,9 @@ public class UserController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<UserDto> register(
-      @Valid @RequestPart("user") UserRegistrationDto dto,
-      @RequestPart(value = "avatar", required = false) MultipartFile avatar)
+  public ResponseEntity<UserDto> register(@Valid @RequestBody UserRegistrationDto dto)
       throws UserAlreadyExistsException {
-    UserDto savedUser = service.register(dto, avatar);
+    UserDto savedUser = service.register(dto);
     if (savedUser == null) {
       throw new UserAlreadyExistsException("user already exists");
     }

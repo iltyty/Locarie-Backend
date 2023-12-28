@@ -32,7 +32,7 @@ public class UserGetServiceImplTest {
   }
 
   private Optional<UserDto> whenGetUserAfterRegistered(UserRegistrationDto userRegistrationDto) {
-    UserDto savedUserDto = underTests.register(userRegistrationDto, null);
+    UserDto savedUserDto = underTests.register(userRegistrationDto);
     return underTests.get(savedUserDto.getId());
   }
 

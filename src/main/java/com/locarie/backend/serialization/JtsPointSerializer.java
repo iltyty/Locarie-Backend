@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.locationtech.jts.geom.Point;
 
 public class JtsPointSerializer extends JsonSerializer<Point> {
-
   @Override
   public void serialize(
       Point point, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)

@@ -33,8 +33,7 @@ public class UserListServiceImplTest {
 
   private List<UserDto> whenListUsersAfterRegistered(
       List<UserRegistrationDto> userRegistrationDtos) {
-    userRegistrationDtos.forEach(
-        userRegistrationDto -> underTests.register(userRegistrationDto, null));
+    userRegistrationDtos.forEach(userRegistrationDto -> underTests.register(userRegistrationDto));
     return underTests.list();
   }
 

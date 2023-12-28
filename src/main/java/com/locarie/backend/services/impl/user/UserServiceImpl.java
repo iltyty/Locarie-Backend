@@ -9,8 +9,6 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.user.UserService;
-import com.locarie.backend.storage.StorageService;
-import com.locarie.backend.storage.utils.StorageUtil;
 import com.locarie.backend.util.JwtUtil;
 import java.util.List;
 import java.util.Optional;
@@ -27,35 +25,24 @@ public class UserServiceImpl implements UserService {
   private final UserRepository repository;
   private final Mapper<UserEntity, UserDto> mapper;
 
-  private final StorageService storageService;
-
   public UserServiceImpl(
       @Qualifier("UserAvatarService") UserAvatarService avatarService,
       JwtUtil jwtUtil,
       UserRepository repository,
-      Mapper<UserEntity, UserDto> mapper,
-      StorageService storageService) {
+      Mapper<UserEntity, UserDto> mapper) {
     this.avatarService = avatarService;
     this.jwtUtil = jwtUtil;
     this.repository = repository;
     this.mapper = mapper;
-    this.storageService = storageService;
   }
 
   @Override
-  public UserDto register(UserRegistrationDto dto, MultipartFile avatar) {
+  public UserDto register(UserRegistrationDto dto) {
     if (repository.findByEmail(dto.getEmail()).isPresent()) {
       return null;
     }
     UserEntity user = mapper.mapFrom(dto);
     UserEntity savedUser = repository.save(user);
-    if (avatar == null) {
-      return mapper.mapTo(savedUser);
-    }
-    String avatarUrl =
-        storageService.store(avatar, StorageUtil.getUserAvatarDirname(savedUser.getId()));
-    savedUser.setAvatarUrl(avatarUrl);
-    repository.save(savedUser);
     return mapper.mapTo(savedUser);
   }
 

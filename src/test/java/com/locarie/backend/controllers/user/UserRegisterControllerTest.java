@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -24,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Transactional
 public class UserRegisterControllerTest {
   private static final String ENDPOINT = "/api/v1/users/register";
-
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   @Autowired private MockMvc mockMvc;
@@ -32,7 +30,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterPlainUserShouldSucceed() throws Exception {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDto();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeCreated(resultActions);
     thenRegisterResultShouldContainUser(resultActions, userRegistrationDto);
@@ -41,7 +39,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterBusinessUserShouldSucceed() throws Exception {
     UserRegistrationDto userRegistrationDto = givenBusinessUserRegistrationDto();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeCreated(resultActions);
     thenRegisterResultShouldContainUser(resultActions, userRegistrationDto);
@@ -50,7 +48,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterDuplicateUserShouldFail() throws Exception {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDto();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeCreated(resultActions);
     thenRegisterResultShouldContainUser(resultActions, userRegistrationDto);
@@ -62,7 +60,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterUserWithInvalidTypeShouldFail() throws Exception {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDtoWithInvalidType();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeBadRequest(resultActions);
     thenRegisterResultStatusShouldBeInvalidParameters(resultActions);
@@ -72,7 +70,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterUserWithInvalidUsernameShouldFail() throws Exception {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDtoWithInvalidUsername();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeBadRequest(resultActions);
     thenRegisterResultStatusShouldBeInvalidParameters(resultActions);
@@ -82,7 +80,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterUserWithInvalidEmailShouldFail() throws Exception {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDtoWithInvalidEmail();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeBadRequest(resultActions);
     thenRegisterResultStatusShouldBeInvalidParameters(resultActions);
@@ -92,7 +90,7 @@ public class UserRegisterControllerTest {
   @Test
   void testRegisterUserWithInvalidPasswordShouldFail() throws Exception {
     UserRegistrationDto userRegistrationDto = givenPlainUserRegistrationDtoWithInvalidPassword();
-    MockMultipartHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
+    MockHttpServletRequestBuilder request = givenUserRegisterRequest(userRegistrationDto);
     ResultActions resultActions = whenPerformUserRegisterRequest(request);
     thenRegisterResultStatusShouldBeBadRequest(resultActions);
     thenRegisterResultStatusShouldBeInvalidParameters(resultActions);
@@ -136,25 +134,16 @@ public class UserRegisterControllerTest {
     return userRegistrationDto;
   }
 
-  private MockMultipartHttpServletRequestBuilder givenUserRegisterRequest(
-      UserRegistrationDto userRegistrationDto) {
-    MockPart userPart = createUserPartInRegisterRequest(userRegistrationDto);
-    return MockMvcRequestBuilders.multipart(ENDPOINT).part(userPart);
+  private MockHttpServletRequestBuilder givenUserRegisterRequest(UserRegistrationDto dto)
+      throws IllegalAccessException, JsonProcessingException {
+    String jsonContent = convertRegisterDtoToJsonString(dto);
+    return MockMvcRequestBuilders.post(ENDPOINT)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonContent);
   }
 
-  private static MockPart createUserPartInRegisterRequest(UserRegistrationDto userRegistrationDto) {
-    try {
-      String userJson = objectMapper.writeValueAsString(userRegistrationDto);
-      MockPart mockPart = new MockPart("user", userJson.getBytes());
-      mockPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-      return mockPart;
-    } catch (JsonProcessingException e) {
-      return new MockPart("user", new byte[0]);
-    }
-  }
-
-  private ResultActions whenPerformUserRegisterRequest(
-      MockMultipartHttpServletRequestBuilder request) throws Exception {
+  private ResultActions whenPerformUserRegisterRequest(MockHttpServletRequestBuilder request)
+      throws Exception {
     return mockMvc.perform(request);
   }
 
@@ -209,5 +198,10 @@ public class UserRegisterControllerTest {
   private void thenRegisterResultMessageContainPassword(ResultActions resultActions)
       throws Exception {
     resultActions.andExpect(UserControllerResultMatcherUtil.resultMessageShouldContainPassword());
+  }
+
+  private String convertRegisterDtoToJsonString(UserRegistrationDto dto)
+      throws JsonProcessingException {
+    return objectMapper.writeValueAsString(dto);
   }
 }

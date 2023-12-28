@@ -20,7 +20,6 @@ import org.locationtech.jts.geom.Point;
 @SuperBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
-
   private Long id;
 
   @NotNull(message = "type = PLAIN/BUSINESS is mandatory") private Type type;

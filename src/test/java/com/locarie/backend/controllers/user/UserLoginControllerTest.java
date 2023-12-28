@@ -1,6 +1,6 @@
 package com.locarie.backend.controllers.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
 import com.locarie.backend.domain.dto.UserLoginRequestDto;
@@ -27,8 +27,6 @@ import org.springframework.util.MultiValueMap;
 public class UserLoginControllerTest {
   private static final String ENDPOINT = "/api/v1/users/login";
 
-  private static final ObjectMapper objectMapper = new ObjectMapper();
-
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
 
@@ -47,7 +45,7 @@ public class UserLoginControllerTest {
   }
 
   private MockHttpServletRequestBuilder givenLoginRequest(UserLoginRequestDto dto)
-      throws IllegalAccessException {
+      throws IllegalAccessException, JsonProcessingException {
     MultiValueMap<String, String> params = convertLoginDtoToMap(dto);
     return MockMvcRequestBuilders.post(ENDPOINT)
         .params(params)
@@ -80,7 +78,7 @@ public class UserLoginControllerTest {
   }
 
   private MultiValueMap<String, String> convertLoginDtoToMap(UserLoginRequestDto dto)
-      throws IllegalAccessException {
+      throws IllegalAccessException, JsonProcessingException {
     return DataFormatConverter.objectToMultiValueMap(dto);
   }
 }
