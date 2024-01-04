@@ -1,4 +1,4 @@
-package com.locarie.backend.controllers.user;
+package com.locarie.backend.controllers.user.login;
 
 import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;

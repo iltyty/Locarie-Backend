@@ -1,4 +1,4 @@
-package com.locarie.backend.controllers.user;
+package com.locarie.backend.controllers.user.update;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserUpdateDtoCreator;

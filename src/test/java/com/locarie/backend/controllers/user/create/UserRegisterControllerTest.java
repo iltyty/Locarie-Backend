@@ -1,4 +1,4 @@
-package com.locarie.backend.controllers.user;
+package com.locarie.backend.controllers.user.create;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package com.locarie.backend.controllers.user;
+package com.locarie.backend.controllers.user.avatar;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.user.UserDto;

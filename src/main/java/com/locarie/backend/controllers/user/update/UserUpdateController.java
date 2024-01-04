@@ -1,4 +1,4 @@
-package com.locarie.backend.controllers.user;
+package com.locarie.backend.controllers.user.update;
 
 import com.locarie.backend.domain.dto.user.EmptyUserDto;
 import com.locarie.backend.domain.dto.user.UserDto;
