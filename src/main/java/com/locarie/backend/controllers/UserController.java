@@ -4,11 +4,8 @@ import com.locarie.backend.domain.dto.*;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
-import com.locarie.backend.domain.dto.user.UserRegistrationDto;
-import com.locarie.backend.exceptions.UserAlreadyExistsException;
 import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.services.user.UserService;
-import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +19,6 @@ public class UserController {
 
   public UserController(UserService service) {
     this.service = service;
-  }
-
-  @PostMapping("/register")
-  public ResponseEntity<UserDto> register(@Valid @RequestBody UserRegistrationDto dto)
-      throws UserAlreadyExistsException {
-    UserDto savedUser = service.register(dto);
-    if (savedUser == null) {
-      throw new UserAlreadyExistsException("user already exists");
-    }
-    return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
   }
 
   @PostMapping("/login")

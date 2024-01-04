@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.post.PostDtoCreator;
-import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
-import com.locarie.backend.domain.dto.user.UserRegistrationDto;
+import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.global.ResultCode;
-import com.locarie.backend.services.user.UserService;
+import com.locarie.backend.mapper.Mapper;
+import com.locarie.backend.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,16 +32,16 @@ class PostControllerTest {
   private static final MockMultipartFile postImage =
       new MockMultipartFile("images", "image.jpg", "image/jpeg", new byte[1]);
 
-  @Autowired private ObjectMapper objectMapper;
   @Autowired private MockMvc mockMvc;
-  @Autowired private UserService userService;
+  @Autowired private UserRepository userRepository;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private Mapper<UserEntity, UserDto> mapper;
 
   @BeforeEach
-  public void registerBusinessUserJoleneHornsey() {
-    UserRegistrationDto userRegistrationDto =
-        UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey();
-    userRegistrationDto.setId(null);
-    userDto = userService.register(userRegistrationDto);
+  public void createBusinessUserJoleneHornsey() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
+    UserEntity savedUserEntity = userRepository.save(userEntity);
+    userDto = mapper.mapTo(savedUserEntity);
   }
 
   private MockPart createPostPart(PostDto postDto) throws JsonProcessingException {

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserRegistrationDto;
-import com.locarie.backend.services.impl.user.UserServiceImpl;
+import com.locarie.backend.services.impl.user.UserRegisterServiceImpl;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class UserRegisterServiceImplTest {
-  @Autowired private UserServiceImpl underTests;
+  @Autowired private UserRegisterServiceImpl underTests;
 
   @Test
   void testPlainUserRegisterShouldSucceed() {

@@ -2,12 +2,13 @@ package com.locarie.backend.services.impl.user.login;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
-import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
-import com.locarie.backend.domain.dto.user.UserRegistrationDto;
-import com.locarie.backend.services.impl.user.UserServiceImpl;
+import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.services.user.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class UserLoginServiceImplTest {
-  @Autowired private UserServiceImpl underTests;
+  @Autowired private UserRepository userRepository;
+  @Autowired private UserService underTests;
 
   @Test
   void loginWithCorrectCredentialShouldSucceed() {
-    UserLoginRequestDto loginDto = givenCorrectLoginCredentialAfterRegistered();
+    UserLoginRequestDto loginDto = givenCorrectLoginCredentialAfterCreated();
     UserLoginResponseDto result = whenLogin(loginDto);
     thenLoginResultShouldBeSuccess(result);
   }
@@ -32,9 +34,9 @@ public class UserLoginServiceImplTest {
     thenLoginResultShouldBeFailure(result);
   }
 
-  private UserLoginRequestDto givenCorrectLoginCredentialAfterRegistered() {
-    UserRegistrationDto userRegistrationDto = UserRegistrationDtoCreator.plainUserRegistrationDto();
-    underTests.register(userRegistrationDto);
+  private UserLoginRequestDto givenCorrectLoginCredentialAfterCreated() {
+    UserEntity userEntity = UserEntityCreator.plainUserEntity();
+    userRepository.save(userEntity);
     return UserLoginRequestDtoCreator.plainUserLoginRequestDto();
   }
 

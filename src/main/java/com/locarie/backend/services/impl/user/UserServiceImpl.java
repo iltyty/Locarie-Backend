@@ -34,16 +34,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto register(UserRegistrationDto dto) {
-    if (repository.findByEmail(dto.getEmail()).isPresent()) {
-      return null;
-    }
-    UserEntity user = mapper.mapFrom(dto);
-    UserEntity savedUser = repository.save(user);
-    return mapper.mapTo(savedUser);
-  }
-
-  @Override
   public UserLoginResponseDto login(UserLoginRequestDto dto) {
     Optional<UserEntity> user = repository.findByEmail(dto.getEmail());
     if (user.isEmpty()) {

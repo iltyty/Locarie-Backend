@@ -2,9 +2,12 @@ package com.locarie.backend.services.impl.user.read;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserRegistrationDto;
+import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.mapper.Mapper;
+import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.impl.user.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
@@ -17,23 +20,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class UserListServiceImplTest {
   @Autowired private UserServiceImpl underTests;
+  @Autowired private UserRepository userRepository;
+  @Autowired private Mapper<UserEntity, UserRegistrationDto> mapper;
 
   @Test
   void testListAfterRegisteredShouldReturnAllUsers() {
-    List<UserRegistrationDto> userRegistrationDtos = givenUserRegistrationDtos();
-    List<UserDto> result = whenListUsersAfterRegistered(userRegistrationDtos);
+    List<UserEntity> userEntities = givenUserEntitiesAfterCreated();
+    List<UserRegistrationDto> userRegistrationDtos = givenUserRegistrationDtos(userEntities);
+    List<UserDto> result = whenListUsers();
     thenListResultShouldContainsAllDtos(result, userRegistrationDtos);
   }
 
-  private List<UserRegistrationDto> givenUserRegistrationDtos() {
-    return Arrays.asList(
-        UserRegistrationDtoCreator.plainUserRegistrationDto(),
-        UserRegistrationDtoCreator.businessUserRegistrationDtoJoleneHornsey());
+  private List<UserEntity> givenUserEntitiesAfterCreated() {
+    List<UserEntity> userEntities =
+        Arrays.asList(
+            UserEntityCreator.plainUserEntity(),
+            UserEntityCreator.businessUserEntityJoleneHornsey());
+    return (List<UserEntity>) userRepository.saveAll(userEntities);
   }
 
-  private List<UserDto> whenListUsersAfterRegistered(
-      List<UserRegistrationDto> userRegistrationDtos) {
-    userRegistrationDtos.forEach(userRegistrationDto -> underTests.register(userRegistrationDto));
+  private List<UserRegistrationDto> givenUserRegistrationDtos(List<UserEntity> userEntities) {
+    return userEntities.stream().map(mapper::mapTo).toList();
+  }
+
+  private List<UserDto> whenListUsers() {
     return underTests.list();
   }
 
