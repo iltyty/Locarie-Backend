@@ -23,9 +23,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Transactional
 public class UserRegisterControllerTest {
   private static final String ENDPOINT = "/api/v1/users/register";
-  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
 
   @Test
   void testRegisterPlainUserShouldSucceed() throws Exception {

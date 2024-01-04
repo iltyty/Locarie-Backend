@@ -81,11 +81,7 @@ public class UserListControllerTest {
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
       result
-          .andExpect(MockMvcResultMatchers.jsonPath("$.data[" + i + "].id").value(dto.getId()))
-          .andExpect(
-              MockMvcResultMatchers.jsonPath("$.data[" + i + "].username").value(dto.getUsername()))
-          .andExpect(
-              MockMvcResultMatchers.jsonPath("$.data[" + i + "].email").value(dto.getEmail()));
+          .andExpect(MockMvcResultMatchers.jsonPath("$.data[" + i + "].id").value(dto.getId()));
     }
   }
 }

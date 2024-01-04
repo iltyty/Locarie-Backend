@@ -2,6 +2,8 @@ package com.locarie.backend.datacreators.user;
 
 import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.domain.entities.UserEntity;
+
+import java.time.Instant;
 import java.util.List;
 import org.locationtech.jts.geom.Point;
 
@@ -16,6 +18,7 @@ public class UserEntityCreator {
         .password("12345678")
         .email("tonystark@avengers.com")
         .avatarUrl("https://picsum.photos/200/200")
+        .birthday(Instant.now())
         .build();
   }
 
@@ -30,6 +33,7 @@ public class UserEntityCreator {
         .password("88888888")
         .email("jolene-hornsey@bigjo.com")
         .avatarUrl("https://picsum.photos/200/200")
+        .birthday(Instant.now())
         .businessName("Big Jo Bakery")
         .coverUrls(List.of("https://picsum.photos/800/450"))
         .homepageUrl("https://www.bigjobakery.com/")
@@ -58,6 +62,7 @@ public class UserEntityCreator {
         .password("88888888")
         .email("shreejinews@btopenworld.com")
         .avatarUrl("https://www.shreejinewsagents.com/cdn/shop/files/shreeji-logo_400x.png")
+        .birthday(Instant.now())
         .businessName("Shreeji Newsagents")
         .coverUrls(List.of("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg"))
         .homepageUrl("https://www.shreejinewsagents.com/")

@@ -50,6 +50,7 @@ public class UserEntity {
   @ColumnDefault("''")
   private String avatarUrl;
 
+  @Column(columnDefinition = "timestamp")
   private Instant birthday;
 
   // The following fields are only valid for business users

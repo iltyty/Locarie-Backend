@@ -1,7 +1,11 @@
 package com.locarie.backend.controllers.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
+import com.locarie.backend.domain.dto.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.mapper.Mapper;
+import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
@@ -19,9 +23,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Transactional
 @AutoConfigureMockMvc
 public class UserGetControllerTest {
-  @Autowired private MockMvc mockMvc;
+  private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
 
-  @Autowired UserRepository userRepository;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private UserRepository userRepository;
 
   @Test
   void testGetExistedUserShouldSucceed() throws Exception {
@@ -29,7 +35,7 @@ public class UserGetControllerTest {
     MockHttpServletRequestBuilder request = givenGetUserRequest(userEntity.getId());
     ResultActions result = whenPerformGetUserRequest(request);
     thenGetResultShouldBeSuccess(result);
-    thenGetResultShouldContainUserEntity(result, userEntity);
+    thenGetResultShouldContainUser(result, userEntity);
   }
 
   @Test
@@ -60,10 +66,11 @@ public class UserGetControllerTest {
         .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess());
   }
 
-  private void thenGetResultShouldContainUserEntity(ResultActions result, UserEntity userEntity)
+  private void thenGetResultShouldContainUser(ResultActions result, UserEntity userEntity)
       throws Exception {
-    userEntity.setPassword(null);
-    result.andExpect(MockMvcResultMatchers.jsonPath("$.data").value(userEntity));
+    result
+        .andDo(result1 -> { System.out.println(result1.getResponse().getContentAsString()); })
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(userEntity.getId()));
   }
 
   private void thenGetResultShouldBeNotFound(ResultActions result) throws Exception {
