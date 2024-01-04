@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.serialization.JtsPointDeserializer;
 import com.locarie.backend.serialization.JtsPointSerializer;
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +49,8 @@ public class UserEntity {
 
   @ColumnDefault("''")
   private String avatarUrl;
+
+  private Instant birthday;
 
   // The following fields are only valid for business users
   private String businessName;

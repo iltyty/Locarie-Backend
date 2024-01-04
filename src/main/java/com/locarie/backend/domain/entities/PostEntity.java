@@ -29,6 +29,7 @@ public class PostEntity {
   @JoinColumn(name = "user_id")
   private UserEntity user;
 
+  @Column(columnDefinition = "timestamp")
   @CurrentTimestamp(event = EventType.INSERT)
   private Instant time; // post publish time
 
