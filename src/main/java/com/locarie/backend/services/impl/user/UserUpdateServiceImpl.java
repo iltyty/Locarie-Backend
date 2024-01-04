@@ -1,5 +1,6 @@
 package com.locarie.backend.services.impl.user;
 
+import com.locarie.backend.domain.dto.user.EmptyUserDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
@@ -14,21 +15,34 @@ public class UserUpdateServiceImpl implements UserUpdateService {
   private final Mapper<UserEntity, UserDto> userDtoMapper;
   private final Mapper<UserEntity, UserUpdateDto> userUpdateDtoMapper;
 
-  public UserUpdateServiceImpl(UserRepository userRepository, Mapper<UserEntity, UserDto> userDtoMapper, Mapper<UserEntity, UserUpdateDto> userUpdateDtoMapper) {
+  public UserUpdateServiceImpl(
+      UserRepository userRepository,
+      Mapper<UserEntity, UserDto> userDtoMapper,
+      Mapper<UserEntity, UserUpdateDto> userUpdateDtoMapper) {
     this.userRepository = userRepository;
     this.userDtoMapper = userDtoMapper;
     this.userUpdateDtoMapper = userUpdateDtoMapper;
   }
 
   @Override
-  public UserDto updateUser(UserUpdateDto dto) {
-    UserEntity userEntity = userUpdateDtoToUserEntity(dto);
+  public UserDto updateUser(Long id, UserUpdateDto dto) {
+    boolean userExists = checkUserExists(id);
+    if (!userExists) {
+      return new EmptyUserDto();
+    }
+    UserEntity userEntity = userUpdateDtoToUserEntity(id, dto);
     UserEntity updatedEntity = updateUserEntity(userEntity);
     return userEntityToUserDto(updatedEntity);
   }
 
-  private UserEntity userUpdateDtoToUserEntity(UserUpdateDto dto) {
-    return userUpdateDtoMapper.mapFrom(dto);
+  private boolean checkUserExists(Long id) {
+    return userRepository.existsById(id);
+  }
+
+  private UserEntity userUpdateDtoToUserEntity(Long id, UserUpdateDto dto) {
+    UserEntity userEntity = userUpdateDtoMapper.mapFrom(dto);
+    userEntity.setId(id);
+    return userEntity;
   }
 
   private UserEntity updateUserEntity(UserEntity entity) {

@@ -7,7 +7,7 @@ import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService extends UserAvatarService, UserUpdateService {
+public interface UserService extends UserAvatarService {
   UserDto register(UserRegistrationDto dto);
 
   UserLoginResponseDto login(UserLoginRequestDto dto);

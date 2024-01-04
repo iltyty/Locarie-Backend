@@ -2,7 +2,6 @@ package com.locarie.backend.domain.dto.post;
 
 import com.locarie.backend.domain.dto.user.UserDto;
 import jakarta.validation.constraints.NotEmpty;
-
 import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;

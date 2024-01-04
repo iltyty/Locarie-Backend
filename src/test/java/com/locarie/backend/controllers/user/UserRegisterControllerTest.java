@@ -135,7 +135,7 @@ public class UserRegisterControllerTest {
   }
 
   private MockHttpServletRequestBuilder givenUserRegisterRequest(UserRegistrationDto dto)
-      throws IllegalAccessException, JsonProcessingException {
+      throws JsonProcessingException {
     String jsonContent = convertRegisterDtoToJsonString(dto);
     return MockMvcRequestBuilders.post(ENDPOINT)
         .contentType(MediaType.APPLICATION_JSON)

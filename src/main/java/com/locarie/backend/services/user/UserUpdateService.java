@@ -4,5 +4,5 @@ import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 
 public interface UserUpdateService {
-  UserDto updateUser(UserUpdateDto dto);
+  UserDto updateUser(Long id, UserUpdateDto dto);
 }

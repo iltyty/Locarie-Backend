@@ -4,7 +4,6 @@ import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.user.UserEntityUpdateDtoMapperImpl;
-
 import java.time.Instant;
 
 public class UserUpdateDtoCreator {

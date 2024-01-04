@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.serialization.JtsPointDeserializer;
 import com.locarie.backend.serialization.JtsPointSerializer;
 import jakarta.persistence.*;
-
 import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;

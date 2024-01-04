@@ -1,6 +1,5 @@
 package com.locarie.backend.controllers.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
@@ -45,7 +44,7 @@ public class UserLoginControllerTest {
   }
 
   private MockHttpServletRequestBuilder givenLoginRequest(UserLoginRequestDto dto)
-      throws IllegalAccessException, JsonProcessingException {
+      throws IllegalAccessException {
     MultiValueMap<String, String> params = convertLoginDtoToMap(dto);
     return MockMvcRequestBuilders.post(ENDPOINT)
         .params(params)
@@ -78,7 +77,7 @@ public class UserLoginControllerTest {
   }
 
   private MultiValueMap<String, String> convertLoginDtoToMap(UserLoginRequestDto dto)
-      throws IllegalAccessException, JsonProcessingException {
+      throws IllegalAccessException {
     return DataFormatConverter.objectToMultiValueMap(dto);
   }
 }

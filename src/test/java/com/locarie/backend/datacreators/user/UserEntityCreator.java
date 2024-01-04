@@ -2,7 +2,6 @@ package com.locarie.backend.datacreators.user;
 
 import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.domain.entities.UserEntity;
-
 import java.time.Instant;
 import java.util.List;
 import org.locationtech.jts.geom.Point;

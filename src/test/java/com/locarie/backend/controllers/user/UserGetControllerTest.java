@@ -1,11 +1,7 @@
 package com.locarie.backend.controllers.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.mapper.impl.user.UserEntityDtoMapperImpl;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
@@ -23,10 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Transactional
 @AutoConfigureMockMvc
 public class UserGetControllerTest {
-  private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
-
   @Autowired private MockMvc mockMvc;
-  @Autowired private ObjectMapper objectMapper;
   @Autowired private UserRepository userRepository;
 
   @Test
@@ -45,12 +38,12 @@ public class UserGetControllerTest {
     thenGetResultShouldBeNotFound(result);
   }
 
-  UserEntity givenUserEntityAfterCreated() {
+  private UserEntity givenUserEntityAfterCreated() {
     UserEntity userEntity = UserEntityCreator.plainUserEntity();
     return userRepository.save(userEntity);
   }
 
-  MockHttpServletRequestBuilder givenGetUserRequest(Long userId) {
+  private MockHttpServletRequestBuilder givenGetUserRequest(Long userId) {
     String endpoint = getEndpointByUserId(userId);
     return MockMvcRequestBuilders.get(endpoint);
   }
@@ -69,7 +62,10 @@ public class UserGetControllerTest {
   private void thenGetResultShouldContainUser(ResultActions result, UserEntity userEntity)
       throws Exception {
     result
-        .andDo(result1 -> { System.out.println(result1.getResponse().getContentAsString()); })
+        .andDo(
+            result1 -> {
+              System.out.println(result1.getResponse().getContentAsString());
+            })
         .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(userEntity.getId()));
   }
 

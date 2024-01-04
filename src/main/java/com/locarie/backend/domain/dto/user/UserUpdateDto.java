@@ -1,9 +1,7 @@
 package com.locarie.backend.domain.dto.user;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 import java.time.Instant;
+import lombok.*;
 
 @Data
 @NoArgsConstructor

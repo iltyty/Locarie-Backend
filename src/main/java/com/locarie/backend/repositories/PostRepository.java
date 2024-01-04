@@ -24,9 +24,10 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
    */
   @Query(
       value =
-          "select p.*, u.location, u.address from posts p join users u on p.user_id = u.id"
-              + " where ST_Distance_Sphere(u.location, Point(:longitude, :latitude)) / 1000 <="
-              + " :distance and p.id = (select id from posts where user_id = u.id order by time desc, id desc limit 1)",
+          "select p.*, u.location, u.address from posts p join users u on p.user_id = u.id where"
+              + " ST_Distance_Sphere(u.location, Point(:longitude, :latitude)) / 1000 <= :distance"
+              + " and p.id = (select id from posts where user_id = u.id order by time desc, id desc"
+              + " limit 1)",
       nativeQuery = true)
   List<PostEntity> findNearby(double latitude, double longitude, double distance);
 }

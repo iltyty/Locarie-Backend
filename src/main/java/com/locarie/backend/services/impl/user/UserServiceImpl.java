@@ -6,7 +6,6 @@ import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.user.UserService;
-import com.locarie.backend.services.user.UserUpdateService;
 import com.locarie.backend.util.JwtUtil;
 import java.util.List;
 import java.util.Optional;
@@ -18,19 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserAvatarService avatarService;
-  private final UserUpdateService updateService;
 
   private final JwtUtil jwtUtil;
   private final UserRepository repository;
   private final Mapper<UserEntity, UserDto> mapper;
 
   public UserServiceImpl(
-      @Qualifier("UserAvatarService") UserAvatarService avatarService, UserUpdateService updateService,
+      @Qualifier("UserAvatarService") UserAvatarService avatarService,
       JwtUtil jwtUtil,
       UserRepository repository,
       Mapper<UserEntity, UserDto> mapper) {
     this.avatarService = avatarService;
-    this.updateService = updateService;
     this.jwtUtil = jwtUtil;
     this.repository = repository;
     this.mapper = mapper;
@@ -81,10 +78,5 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto updateAvatar(Long userId, MultipartFile avatar) {
     return avatarService.updateAvatar(userId, avatar);
-  }
-
-  @Override
-  public UserDto updateUser(UserUpdateDto dto) {
-    return updateService.updateUser(dto);
   }
 }

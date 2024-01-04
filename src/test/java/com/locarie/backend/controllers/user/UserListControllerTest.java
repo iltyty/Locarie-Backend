@@ -80,8 +80,7 @@ public class UserListControllerTest {
 
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
-      result
-          .andExpect(MockMvcResultMatchers.jsonPath("$.data[" + i + "].id").value(dto.getId()));
+      result.andExpect(MockMvcResultMatchers.jsonPath("$.data[" + i + "].id").value(dto.getId()));
     }
   }
 }
