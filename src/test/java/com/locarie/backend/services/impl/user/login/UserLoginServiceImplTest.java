@@ -8,7 +8,7 @@ import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.services.user.UserService;
+import com.locarie.backend.services.user.UserLoginService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class UserLoginServiceImplTest {
   @Autowired private UserRepository userRepository;
-  @Autowired private UserService underTests;
+  @Autowired private UserLoginService underTests;
 
   @Test
   void loginWithCorrectCredentialShouldSucceed() {

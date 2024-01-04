@@ -2,9 +2,6 @@ package com.locarie.backend.controllers;
 
 import com.locarie.backend.domain.dto.*;
 import com.locarie.backend.domain.dto.user.UserDto;
-import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
-import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
-import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.services.user.UserService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -19,12 +16,6 @@ public class UserController {
 
   public UserController(UserService service) {
     this.service = service;
-  }
-
-  @PostMapping("/login")
-  public ResponseDto<UserLoginResponseDto> login(UserLoginRequestDto dto) {
-    UserLoginResponseDto result = service.login(dto);
-    return result == null ? ResponseDto.fail(ResultCode.RC202) : ResponseDto.success(result);
   }
 
   @GetMapping
