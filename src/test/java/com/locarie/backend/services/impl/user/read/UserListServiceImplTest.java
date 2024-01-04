@@ -8,7 +8,7 @@ import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.UserRepository;
-import com.locarie.backend.services.impl.user.UserServiceImpl;
+import com.locarie.backend.services.impl.user.UserListServiceImpl;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Transactional
 public class UserListServiceImplTest {
-  @Autowired private UserServiceImpl underTests;
+  @Autowired private UserListServiceImpl underTests;
   @Autowired private UserRepository userRepository;
   @Autowired private Mapper<UserEntity, UserRegistrationDto> mapper;
 
