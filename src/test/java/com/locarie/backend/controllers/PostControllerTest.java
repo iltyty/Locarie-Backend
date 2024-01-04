@@ -27,11 +27,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 @Transactional
 class PostControllerTest {
-
   private static UserDto userDto;
-  private static final ObjectMapper objectMapper = new ObjectMapper();
   private static final MockMultipartFile postImage =
       new MockMultipartFile("images", "image.jpg", "image/jpeg", new byte[1]);
+
+  @Autowired private ObjectMapper objectMapper;
   @Autowired private MockMvc mockMvc;
   @Autowired private UserService userService;
 
@@ -43,7 +43,7 @@ class PostControllerTest {
     userDto = userService.register(userRegistrationDto);
   }
 
-  private static MockPart createPostPart(PostDto postDto) throws JsonProcessingException {
+  private MockPart createPostPart(PostDto postDto) throws JsonProcessingException {
     String postJson = objectMapper.writeValueAsString(postDto);
     MockPart postPart = new MockPart("post", postJson.getBytes());
     postPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
