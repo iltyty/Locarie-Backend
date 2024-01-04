@@ -1,4 +1,4 @@
-package com.locarie.backend.repositories;
+package com.locarie.backend.repositories.user;
 
 import com.locarie.backend.domain.entities.UserEntity;
 import java.util.Optional;

@@ -3,7 +3,7 @@ package com.locarie.backend.services.impl.user;
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserLoginService;
 import com.locarie.backend.util.JwtUtil;
 import java.util.Optional;

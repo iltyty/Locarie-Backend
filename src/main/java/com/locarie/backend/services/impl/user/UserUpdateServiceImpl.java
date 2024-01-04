@@ -5,7 +5,7 @@ import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserUpdateService;
 import org.springframework.stereotype.Service;
 

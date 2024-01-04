@@ -1,4 +1,4 @@
-package com.locarie.backend.repositories;
+package com.locarie.backend.repositories.post;
 
 import com.locarie.backend.domain.entities.PostEntity;
 import java.util.List;

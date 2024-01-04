@@ -3,7 +3,7 @@ package com.locarie.backend.services.impl.user;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserListService;
 import java.util.List;
 import java.util.stream.StreamSupport;

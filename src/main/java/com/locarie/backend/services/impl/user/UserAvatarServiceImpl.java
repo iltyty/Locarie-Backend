@@ -4,7 +4,7 @@ import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.utils.UserFindUtils;
 import com.locarie.backend.storage.StorageService;

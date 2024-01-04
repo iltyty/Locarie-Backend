@@ -1,7 +1,7 @@
 package com.locarie.backend.datacreators.user;
 
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

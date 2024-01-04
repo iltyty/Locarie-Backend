@@ -10,7 +10,7 @@ import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

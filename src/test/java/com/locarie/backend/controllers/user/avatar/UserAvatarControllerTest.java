@@ -3,7 +3,7 @@ package com.locarie.backend.controllers.user.avatar;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.repositories.UserRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
