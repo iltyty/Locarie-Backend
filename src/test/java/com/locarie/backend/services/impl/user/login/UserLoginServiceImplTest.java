@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
 import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
-import com.locarie.backend.domain.dto.UserLoginRequestDto;
-import com.locarie.backend.domain.dto.UserLoginResponseDto;
-import com.locarie.backend.domain.dto.UserRegistrationDto;
+import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
+import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.services.impl.user.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

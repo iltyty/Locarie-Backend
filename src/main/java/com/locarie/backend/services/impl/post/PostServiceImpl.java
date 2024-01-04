@@ -1,6 +1,6 @@
 package com.locarie.backend.services.impl.post;
 
-import com.locarie.backend.domain.dto.PostDto;
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.services.post.PostCreateService;
 import com.locarie.backend.services.post.PostReadService;
 import com.locarie.backend.services.post.PostService;

@@ -1,4 +1,4 @@
-package com.locarie.backend.domain.dto;
+package com.locarie.backend.domain.dto.user;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

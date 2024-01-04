@@ -1,6 +1,6 @@
 package com.locarie.backend.datacreators.user;
 
-import com.locarie.backend.domain.dto.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.entities.UserEntity;
 
 public class UserLoginRequestDtoCreator {

@@ -1,6 +1,6 @@
 package com.locarie.backend.services.post;
 
-import com.locarie.backend.domain.dto.PostDto;
+import com.locarie.backend.domain.dto.post.PostDto;
 import java.util.List;
 import java.util.Optional;
 

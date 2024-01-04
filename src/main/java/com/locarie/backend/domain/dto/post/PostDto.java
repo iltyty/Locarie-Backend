@@ -1,10 +1,9 @@
-package com.locarie.backend.domain.dto;
+package com.locarie.backend.domain.dto.post;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.locarie.backend.domain.dto.user.UserDto;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

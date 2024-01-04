@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.locarie.backend.datacreators.image.MockAvatarCreator;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.repositories.UserRepository;
@@ -66,7 +66,7 @@ public class UserAvatarServiceImplUploadTest {
   }
 
   private UserDto whenUpdateAvatar(Long userId, MockMultipartFile avatar) {
-    return underTests.update(userId, avatar);
+    return underTests.updateAvatar(userId, avatar);
   }
 
   private void thenResultShouldContainUpdatedAvatarUrl(UserDto userDto, MockMultipartFile avatar) {

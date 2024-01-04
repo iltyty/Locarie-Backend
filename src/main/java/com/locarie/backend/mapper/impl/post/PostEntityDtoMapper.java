@@ -1,6 +1,6 @@
-package com.locarie.backend.mapper.impl;
+package com.locarie.backend.mapper.impl.post;
 
-import com.locarie.backend.domain.dto.PostDto;
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.mapper.Mapper;
 import org.modelmapper.ModelMapper;

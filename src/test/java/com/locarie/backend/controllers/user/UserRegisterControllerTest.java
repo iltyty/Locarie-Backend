@@ -3,7 +3,7 @@ package com.locarie.backend.controllers.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
-import com.locarie.backend.domain.dto.UserRegistrationDto;
+import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;

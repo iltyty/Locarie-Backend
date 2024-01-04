@@ -1,9 +1,9 @@
 package com.locarie.backend.datacreators.post;
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
-import com.locarie.backend.domain.dto.PostDto;
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
-import com.locarie.backend.mapper.impl.PostEntityDtoMapper;
+import com.locarie.backend.mapper.impl.post.PostEntityDtoMapper;
 import com.locarie.backend.repositories.PostRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

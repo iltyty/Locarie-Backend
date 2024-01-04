@@ -1,6 +1,10 @@
 package com.locarie.backend.controllers;
 
 import com.locarie.backend.domain.dto.*;
+import com.locarie.backend.domain.dto.user.UserDto;
+import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
+import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.exceptions.UserAlreadyExistsException;
 import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.services.user.UserService;

@@ -3,7 +3,7 @@ package com.locarie.backend.controllers.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
-import com.locarie.backend.domain.dto.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.utils.DataFormatConverter;

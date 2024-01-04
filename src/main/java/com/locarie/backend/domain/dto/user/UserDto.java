@@ -1,4 +1,4 @@
-package com.locarie.backend.domain.dto;
+package com.locarie.backend.domain.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

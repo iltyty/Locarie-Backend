@@ -1,13 +1,13 @@
 package com.locarie.backend.services.user;
 
-import com.locarie.backend.domain.dto.UserDto;
-import com.locarie.backend.domain.dto.UserLoginRequestDto;
-import com.locarie.backend.domain.dto.UserLoginResponseDto;
-import com.locarie.backend.domain.dto.UserRegistrationDto;
+import com.locarie.backend.domain.dto.user.UserDto;
+import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
+import com.locarie.backend.domain.dto.user.UserLoginResponseDto;
+import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService extends UserAvatarService {
+public interface UserService extends UserAvatarService, UserUpdateService {
   UserDto register(UserRegistrationDto dto);
 
   UserLoginResponseDto login(UserLoginRequestDto dto);

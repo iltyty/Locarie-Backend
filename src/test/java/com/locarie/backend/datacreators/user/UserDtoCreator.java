@@ -1,9 +1,9 @@
 package com.locarie.backend.datacreators.user;
 
-import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.mapper.impl.UserEntityDtoMapperImpl;
+import com.locarie.backend.mapper.impl.user.UserEntityDtoMapperImpl;
 
 public class UserDtoCreator {
   private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();

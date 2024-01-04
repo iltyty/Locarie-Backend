@@ -3,7 +3,7 @@ package com.locarie.backend.services.impl.post.read;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
-import com.locarie.backend.domain.dto.PostDto;
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.services.impl.post.PostReadServiceImpl;
 import jakarta.transaction.Transactional;
 import java.util.List;

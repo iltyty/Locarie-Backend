@@ -1,6 +1,6 @@
 package com.locarie.backend.services.impl.user;
 
-import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.mapper.Mapper;
@@ -31,7 +31,7 @@ public class UserAvatarServiceImpl implements UserAvatarService {
   }
 
   @Override
-  public UserDto update(Long userId, MultipartFile avatar)
+  public UserDto updateAvatar(Long userId, MultipartFile avatar)
       throws StorageException, UserNotFoundException {
     try {
       UserEntity userEntity = userFindUtils.findUserById(userId);

@@ -1,4 +1,4 @@
-package com.locarie.backend.domain.dto;
+package com.locarie.backend.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

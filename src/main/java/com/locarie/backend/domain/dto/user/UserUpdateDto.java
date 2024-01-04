@@ -1,0 +1,23 @@
+package com.locarie.backend.domain.dto.user;
+
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.Instant;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserUpdateDto {
+  private String email;
+  private String username;
+  private String firstName;
+  private String lastName;
+  private Instant birthday;
+  private String businessName;
+  private String homepageUrl;
+  private String category;
+  private String introduction;
+  private String phone;
+}

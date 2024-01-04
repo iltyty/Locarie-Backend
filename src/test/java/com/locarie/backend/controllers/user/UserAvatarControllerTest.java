@@ -1,7 +1,7 @@
 package com.locarie.backend.controllers.user;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
@@ -60,7 +60,7 @@ public class UserAvatarControllerTest {
   }
 
   private UserDto whenUploadAvatar(Long userId) {
-    return userAvatarService.update(userId, UserAvatarControllerTest.AVATAR);
+    return userAvatarService.updateAvatar(userId, UserAvatarControllerTest.AVATAR);
   }
 
   private ResultActions whenPerformHttpRequest(MockHttpServletRequestBuilder request)

@@ -1,6 +1,6 @@
-package com.locarie.backend.mapper.impl;
+package com.locarie.backend.mapper.impl.user;
 
-import com.locarie.backend.domain.dto.UserDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import org.modelmapper.ModelMapper;
