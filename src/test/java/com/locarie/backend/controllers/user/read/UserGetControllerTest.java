@@ -1,9 +1,12 @@
 package com.locarie.backend.controllers.user.read;
 
+import static com.locarie.backend.utils.UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @Transactional
@@ -55,8 +57,8 @@ public class UserGetControllerTest {
 
   private void thenGetResultShouldBeSuccess(ResultActions result) throws Exception {
     result
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess());
+        .andExpect(resultStatusCodeShouldBeSuccess())
+        .andExpect(resultStatusCodeShouldBeSuccess());
   }
 
   private void thenGetResultShouldContainUser(ResultActions result, UserEntity userEntity)
@@ -66,11 +68,11 @@ public class UserGetControllerTest {
             result1 -> {
               System.out.println(result1.getResponse().getContentAsString());
             })
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(userEntity.getId()));
+        .andExpect(jsonPath("$.data.id").value(userEntity.getId()));
   }
 
   private void thenGetResultShouldBeNotFound(ResultActions result) throws Exception {
-    result.andExpect(MockMvcResultMatchers.status().isNotFound());
+    result.andExpect(status().isNotFound());
   }
 
   private static String getEndpointByUserId(Long userId) {

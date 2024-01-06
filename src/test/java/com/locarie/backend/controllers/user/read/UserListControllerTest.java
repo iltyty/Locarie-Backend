@@ -1,12 +1,14 @@
 package com.locarie.backend.controllers.user.read;
 
+import static com.locarie.backend.utils.UserControllerResultMatcherUtil.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.user.UserEntityDtoMapperImpl;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @Transactional
@@ -67,20 +68,18 @@ public class UserListControllerTest {
   }
 
   private void thenListResultShouldBeSuccess(ResultActions result) throws Exception {
-    result
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
+    result.andExpect(resultStatusCodeShouldBeSuccess()).andExpect(resultMessageShouldBeSuccess());
   }
 
   private void thenListResultShouldContainDtos(ResultActions result, List<UserDto> dtos)
       throws Exception {
     result
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.length()").value(dtos.size()));
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(dtos.size()));
 
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
-      result.andExpect(MockMvcResultMatchers.jsonPath("$.data[" + i + "].id").value(dto.getId()));
+      result.andExpect(jsonPath("$.data[" + i + "].id").value(dto.getId()));
     }
   }
 }

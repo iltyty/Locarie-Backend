@@ -1,5 +1,7 @@
 package com.locarie.backend.controllers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +24,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -60,7 +61,7 @@ class PostControllerTest {
             MockMvcRequestBuilders.multipart("/api/v1/posts")
                 .file(postImage)
                 .part(createPostPart(postDto)))
-        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(status().isCreated())
         .andDo(
             result -> {
               String content = result.getResponse().getContentAsString();
@@ -80,7 +81,7 @@ class PostControllerTest {
             MockMvcRequestBuilders.multipart("/api/v1/posts")
                 .file(postImage)
                 .part(createPostPart(postDto)))
-        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(status().isCreated())
         .andDo(
             result -> {
               String content = result.getResponse().getContentAsString();
@@ -108,30 +109,27 @@ class PostControllerTest {
             MockMvcRequestBuilders.multipart("/api/v1/posts")
                 .file(postImage)
                 .part(createPostPart(postDto)))
-        .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.content").value(postDto.getContent()));
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.data.id").exists())
+        .andExpect(jsonPath("$.data.title").value(postDto.getTitle()))
+        .andExpect(jsonPath("$.data.content").value(postDto.getContent()));
   }
 
   @Test
   void testListReturnsHttpOk() throws Exception {
     createPostJoleneHornsey1();
     createPostJoleneHornsey2();
-    mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts")).andExpect(status().isOk());
   }
 
   @Test
   void testListReturnsEmptyList() throws Exception {
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.data").isEmpty());
   }
 
   @Test
@@ -140,17 +138,15 @@ class PostControllerTest {
     PostDto postDto2 = createPostJoleneHornsey2();
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").value(postDto1.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value(postDto1.getTitle()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].content").value(postDto1.getContent()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].id").value(postDto2.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].title").value(postDto2.getTitle()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.data[1].content").value(postDto2.getContent()));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.data[0].id").value(postDto1.getId()))
+        .andExpect(jsonPath("$.data[0].title").value(postDto1.getTitle()))
+        .andExpect(jsonPath("$.data[0].content").value(postDto1.getContent()))
+        .andExpect(jsonPath("$.data[1].id").value(postDto2.getId()))
+        .andExpect(jsonPath("$.data[1].title").value(postDto2.getTitle()))
+        .andExpect(jsonPath("$.data[1].content").value(postDto2.getContent()));
   }
 
   @Test
@@ -158,14 +154,12 @@ class PostControllerTest {
     PostDto postDto = createPostJoleneHornsey2();
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(status().isOk());
   }
 
   @Test
   void testGetReturnsHttpNotFound() throws Exception {
-    mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/posts/0"))
-        .andExpect(MockMvcResultMatchers.status().isNotFound());
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/0")).andExpect(status().isNotFound());
   }
 
   @Test
@@ -173,12 +167,11 @@ class PostControllerTest {
     PostDto postDto = createPostJoleneHornsey2();
     mockMvc
         .perform(MockMvcRequestBuilders.get("/api/v1/posts/" + postDto.getId()))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(postDto.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(postDto.getTitle()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.content").value(postDto.getContent()));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.data.id").value(postDto.getId()))
+        .andExpect(jsonPath("$.data.title").value(postDto.getTitle()))
+        .andExpect(jsonPath("$.data.content").value(postDto.getContent()));
   }
 }

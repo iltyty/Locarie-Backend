@@ -1,6 +1,8 @@
 package com.locarie.backend.controllers.user.update;
 
+import static com.locarie.backend.utils.UserControllerResultMatcherUtil.*;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +11,6 @@ import com.locarie.backend.datacreators.user.UserUpdateDtoCreator;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
@@ -24,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @Transactional
@@ -128,23 +128,18 @@ public class UserUpdateControllerTest {
 
   private void thenUpdateResultShouldBeSuccess(ResultActions result) throws Exception {
     result
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess());
+        .andExpect(resultStatusCodeShouldBeSuccess())
+        .andExpect(resultStatusCodeShouldBeSuccess());
   }
 
   private void thenUpdateResultShouldFullyEqualToPlainUserUpdateDto(
       ResultActions result, UserUpdateDto userUpdateDto) throws Exception {
     result
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(userUpdateDto.getEmail()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.data.firstName").value(userUpdateDto.getFirstName()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.data.lastName").value(userUpdateDto.getLastName()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.data.username").value(userUpdateDto.getUsername()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.data.birthday")
-                .value(userUpdateDto.getBirthday().toString()));
+        .andExpect(jsonPath("$.data.email").value(userUpdateDto.getEmail()))
+        .andExpect(jsonPath("$.data.firstName").value(userUpdateDto.getFirstName()))
+        .andExpect(jsonPath("$.data.lastName").value(userUpdateDto.getLastName()))
+        .andExpect(jsonPath("$.data.username").value(userUpdateDto.getUsername()))
+        .andExpect(jsonPath("$.data.birthday").value(userUpdateDto.getBirthday().toString()));
   }
 
   private void thenUpdateResultShouldFullyEqualToBusinessUserUpdateDto(
@@ -160,24 +155,21 @@ public class UserUpdateControllerTest {
       field.setAccessible(true);
       Object value = field.get(userUpdateDto);
       if (value instanceof String) {
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.data." + field.getName()).value(value));
+        result.andExpect(jsonPath("$.data." + field.getName()).value(value));
       }
     }
   }
 
   private void expectBirthdayEquals(ResultActions result, UserUpdateDto userUpdateDto)
       throws Exception {
-    result.andExpect(
-        MockMvcResultMatchers.jsonPath("$.data.birthday")
-            .value(userUpdateDto.getBirthday().toString()));
+    result.andExpect(jsonPath("$.data.birthday").value(userUpdateDto.getBirthday().toString()));
   }
 
   private void expectBusinessHoursEquals(ResultActions result, UserUpdateDto userUpdateDto)
       throws Exception {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     result.andExpect(
-        MockMvcResultMatchers.jsonPath(
-            "$.data.businessHours", hasSize(userUpdateDto.getBusinessHours().size())));
+        jsonPath("$.data.businessHours", hasSize(userUpdateDto.getBusinessHours().size())));
     for (int i = 0; i < userUpdateDto.getBusinessHours().size(); i++) {
       LocalTime openingTime = userUpdateDto.getBusinessHours().get(i).getOpeningTime();
       LocalTime closingTime = userUpdateDto.getBusinessHours().get(i).getClosingTime();
@@ -185,17 +177,15 @@ public class UserUpdateControllerTest {
       String closingTimeString = closingTime == null ? null : closingTime.format(formatter);
       result
           .andExpect(
-              MockMvcResultMatchers.jsonPath("$.data.businessHours[" + i + "].dayOfWeek")
+              jsonPath("$.data.businessHours[" + i + "].dayOfWeek")
                   .value(userUpdateDto.getBusinessHours().get(i).getDayOfWeek().toString()))
           .andExpect(
-              MockMvcResultMatchers.jsonPath("$.data.businessHours[" + i + "].closed")
+              jsonPath("$.data.businessHours[" + i + "].closed")
                   .value(userUpdateDto.getBusinessHours().get(i).getClosed()))
           .andExpect(
-              MockMvcResultMatchers.jsonPath("$.data.businessHours[" + i + "].openingTime")
-                  .value(openingTimeString))
+              jsonPath("$.data.businessHours[" + i + "].openingTime").value(openingTimeString))
           .andExpect(
-              MockMvcResultMatchers.jsonPath("$.data.businessHours[" + i + "].closingTime")
-                  .value(closingTimeString));
+              jsonPath("$.data.businessHours[" + i + "].closingTime").value(closingTimeString));
     }
   }
 
@@ -208,15 +198,14 @@ public class UserUpdateControllerTest {
         if (value instanceof List) {
           expectBusinessHoursEquals(result, userUpdateDto);
         } else {
-          result.andExpect(
-              MockMvcResultMatchers.jsonPath("$.data." + field.getName()).value(value.toString()));
+          result.andExpect(jsonPath("$.data." + field.getName()).value(value.toString()));
         }
       }
     }
   }
 
   private void thenUpdateResultShouldBeNotFound(ResultActions result) throws Exception {
-    result.andExpect(MockMvcResultMatchers.status().isNotFound());
+    result.andExpect(status().isNotFound());
   }
 
   private String convertUpdateDtoToJsonString(UserUpdateDto dto) throws JsonProcessingException {

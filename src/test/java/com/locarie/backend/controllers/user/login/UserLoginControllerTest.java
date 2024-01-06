@@ -1,12 +1,14 @@
 package com.locarie.backend.controllers.user.login;
 
+import static com.locarie.backend.utils.UserControllerResultMatcherUtil.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserLoginRequestDtoCreator;
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.utils.DataFormatConverter;
-import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
@@ -57,18 +58,16 @@ public class UserLoginControllerTest {
   }
 
   private void thenLoginResultShouldBeSuccess(ResultActions result) throws Exception {
-    result
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
+    result.andExpect(resultStatusCodeShouldBeSuccess()).andExpect(resultMessageShouldBeSuccess());
   }
 
   private void thenLoginResultShouldContainValidData(ResultActions result) throws Exception {
     result
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.jwtToken").isNotEmpty());
+        .andExpect(jsonPath("$.data.id").isNumber())
+        .andExpect(jsonPath("$.data.username").isString())
+        .andExpect(jsonPath("$.data.username").isNotEmpty())
+        .andExpect(jsonPath("$.data.jwtToken").isString())
+        .andExpect(jsonPath("$.data.jwtToken").isNotEmpty());
   }
 
   private void createBusinessUserInRepository() {

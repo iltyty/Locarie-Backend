@@ -1,11 +1,14 @@
 package com.locarie.backend.controllers.user.create;
 
+import static com.locarie.backend.utils.UserControllerResultMatcherUtil.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
-import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -148,56 +150,55 @@ public class UserRegisterControllerTest {
   }
 
   private void thenRegisterResultStatusShouldBeCreated(ResultActions result) throws Exception {
-    result.andExpect(MockMvcResultMatchers.status().isCreated());
+    result.andExpect(status().isCreated());
   }
 
   private void thenRegisterResultStatusShouldBeOk(ResultActions result) throws Exception {
-    result.andExpect(MockMvcResultMatchers.status().isOk());
+    result.andExpect(status().isOk());
   }
 
   private void thenRegisterResultStatusShouldBeBadRequest(ResultActions result) throws Exception {
-    result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    result.andExpect(status().isBadRequest());
   }
 
   private void thenRegisterResultShouldContainUser(ResultActions result, UserRegistrationDto dto)
       throws Exception {
     result
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.type").value(dto.getType().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(dto.getUsername()))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(dto.getEmail()));
+        .andExpect(resultStatusCodeShouldBeSuccess())
+        .andExpect(resultMessageShouldBeSuccess())
+        .andExpect(jsonPath("$.data.id").isNumber())
+        .andExpect(jsonPath("$.data.type").value(dto.getType().toString()))
+        .andExpect(jsonPath("$.data.username").value(dto.getUsername()))
+        .andExpect(jsonPath("$.data.email").value(dto.getEmail()));
   }
 
   private void thenRegisterResultShouldBeUserAlreadyExists(ResultActions result) throws Exception {
     result
-        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.RC201.getCode()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.RC201.getMessage()));
+        .andExpect(jsonPath("$.status").value(ResultCode.RC201.getCode()))
+        .andExpect(jsonPath("$.message").value(ResultCode.RC201.getMessage()));
   }
 
   private void thenRegisterResultStatusShouldBeInvalidParameters(ResultActions result)
       throws Exception {
-    result.andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeInvalidParameters());
+    result.andExpect(resultStatusCodeShouldBeInvalidParameters());
   }
 
   private void thenRegisterResultMessageContainType(ResultActions resultActions) throws Exception {
-    resultActions.andExpect(UserControllerResultMatcherUtil.resultMessageShouldContainType());
+    resultActions.andExpect(resultMessageShouldContainType());
   }
 
   private void thenRegisterResultMessageContainUsername(ResultActions resultActions)
       throws Exception {
-    resultActions.andExpect(UserControllerResultMatcherUtil.resultMessageShouldContainUsername());
+    resultActions.andExpect(resultMessageShouldContainUsername());
   }
 
   private void thenRegisterResultMessageContainEmail(ResultActions resultActions) throws Exception {
-    resultActions.andExpect(UserControllerResultMatcherUtil.resultMessageShouldContainEmail());
+    resultActions.andExpect(resultMessageShouldContainEmail());
   }
 
   private void thenRegisterResultMessageContainPassword(ResultActions resultActions)
       throws Exception {
-    resultActions.andExpect(UserControllerResultMatcherUtil.resultMessageShouldContainPassword());
+    resultActions.andExpect(resultMessageShouldContainPassword());
   }
 
   private String convertRegisterDtoToJsonString(UserRegistrationDto dto)
