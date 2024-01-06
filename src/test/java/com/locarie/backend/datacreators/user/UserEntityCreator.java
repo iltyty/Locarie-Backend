@@ -1,6 +1,7 @@
 package com.locarie.backend.datacreators.user;
 
 import com.locarie.backend.datacreators.LocationCreator;
+import com.locarie.backend.datacreators.businesshours.BusinessHoursEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import java.time.Instant;
 import java.util.List;
@@ -41,12 +42,9 @@ public class UserEntityCreator {
             "WE ARE A BAKERY & RESTAURANT WHICH SUPPORT REGENERATIVE FOOD SYSTEMS &"
                 + " ETHICAL FARMING.")
         .phone("02039156760")
-        .openHour(8)
-        .openMinute(0)
-        .closeHour(20)
-        .closeMinute(0)
         .location(location)
         .address("318–326 HORNSEY ROAD N7 7HE")
+        .businessHours(BusinessHoursEntityCreator.businessHoursEntities())
         .build();
   }
 
@@ -69,12 +67,9 @@ public class UserEntityCreator {
         .introduction(
             "We offer a reliable delivery service for specific titles, newspapers or magazines.")
         .phone("+442079355055")
-        .openHour(8)
-        .openMinute(30)
-        .closeHour(18)
-        .closeMinute(0)
         .location(location)
         .address("6 Chiltern St, London W1U 7PT, United Kingdom")
+        .businessHours(BusinessHoursEntityCreator.businessHoursEntities())
         .build();
   }
 }

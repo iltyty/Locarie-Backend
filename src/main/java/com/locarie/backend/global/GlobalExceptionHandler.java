@@ -3,6 +3,7 @@ package com.locarie.backend.global;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.domain.dto.ResponseDto;
+import com.locarie.backend.exceptions.RequestArgumentNotValidException;
 import com.locarie.backend.exceptions.UserAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,13 @@ public class GlobalExceptionHandler {
         .getFieldErrors()
         .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
     return ResponseDto.fail(ResultCode.RC101, objectMapper.writeValueAsString(errors));
+  }
+
+  @ExceptionHandler(RequestArgumentNotValidException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseDto<String> handleRequestArgumentNotValidException(
+      RequestArgumentNotValidException e) {
+    return ResponseDto.fail(ResultCode.RC101, e.getMessage());
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)

@@ -1,5 +1,6 @@
 package com.locarie.backend.datacreators.user;
 
+import com.locarie.backend.datacreators.businesshours.BusinessHoursDtoCreator;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
@@ -10,28 +11,46 @@ public class UserUpdateDtoCreator {
   private static final Mapper<UserEntity, UserUpdateDto> mapper =
       new UserEntityUpdateDtoMapperImpl();
 
-  public static UserUpdateDto plainUserUpdateDto() {
+  public static UserUpdateDto fullPlainUserUpdateDto() {
     return UserUpdateDto.builder()
         .email("test@email.com")
+        .username("johndoe")
         .firstName("John")
         .lastName("Doe")
-        .username("johndoe")
         .birthday(Instant.parse("2000-10-21T17:30:00.00Z"))
         .build();
   }
 
-  public static UserUpdateDto businessUserUpdateDto() {
+  public static UserUpdateDto partialPlainUserUpdateDto() {
+    return UserUpdateDto.builder().username("johndoe").build();
+  }
+
+  public static UserUpdateDto fullBusinessUserUpdateDto() {
     return UserUpdateDto.builder()
         .email("test@email.com")
+        .username("johndoe")
         .firstName("John")
         .lastName("Doe")
-        .username("johndoe")
         .birthday(Instant.parse("2000-10-21T17:30:00.00Z"))
         .businessName("Business name")
         .homepageUrl("https://www.homepage.com")
         .category("Cafe")
         .introduction("Introduction")
         .phone("12345678")
+        .businessHours(BusinessHoursDtoCreator.businessHoursDtos())
+        .build();
+  }
+
+  public static UserUpdateDto partialBusinessUserUpdateDto() {
+    return UserUpdateDto.builder()
+        .businessName("Business name")
+        .businessHours(BusinessHoursDtoCreator.randomBusinessHoursDtos())
+        .build();
+  }
+
+  public static UserUpdateDto randomBusinessHoursUserUpdateDto() {
+    return UserUpdateDto.builder()
+        .businessHours(BusinessHoursDtoCreator.randomBusinessHoursDtos())
         .build();
   }
 }

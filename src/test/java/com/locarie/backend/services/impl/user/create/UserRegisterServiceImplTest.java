@@ -47,7 +47,7 @@ public class UserRegisterServiceImplTest {
     userRegistrationDto.setId(result.getId());
     assertThat(result)
         .usingRecursiveComparison()
-        .ignoringFields("id")
+        .ignoringFields("id", "businessHours.id")
         .isEqualTo(userRegistrationDto);
   }
 }

@@ -3,15 +3,14 @@ package com.locarie.backend.domain.dto.user;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
 import com.locarie.backend.serialization.JtsPointDeserializer;
 import com.locarie.backend.serialization.JtsPointSerializer;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.locationtech.jts.geom.Point;
 
@@ -19,6 +18,8 @@ import org.locationtech.jts.geom.Point;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@ToString(exclude = {"businessHours"})
+@EqualsAndHashCode(exclude = {"businessHours"})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
   private Long id;
@@ -46,10 +47,7 @@ public class UserDto {
   private String category;
   private String introduction;
   private String phone;
-  private Integer openHour;
-  private Integer openMinute;
-  private Integer closeHour;
-  private Integer closeMinute;
+  private List<BusinessHoursDto> businessHours;
 
   @JsonSerialize(using = JtsPointSerializer.class)
   @JsonDeserialize(using = JtsPointDeserializer.class)

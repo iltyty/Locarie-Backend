@@ -8,19 +8,19 @@ import com.locarie.backend.serialization.JtsPointSerializer;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 import org.locationtech.jts.geom.Point;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"businessHours"})
 @Entity
 @Table(name = "users")
+@DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserEntity {
   @Id
@@ -29,6 +29,7 @@ public class UserEntity {
   private Long id;
 
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private Type type;
 
   @Column(nullable = false)
@@ -59,14 +60,13 @@ public class UserEntity {
   @OrderColumn(name = "cover_index")
   private List<String> coverUrls;
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<BusinessHoursEntity> businessHours;
+
   private String homepageUrl;
   private String category;
   private String introduction;
   private String phone;
-  private Integer openHour;
-  private Integer openMinute;
-  private Integer closeHour;
-  private Integer closeMinute;
 
   @JsonSerialize(using = JtsPointSerializer.class)
   @JsonDeserialize(using = JtsPointDeserializer.class)

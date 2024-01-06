@@ -1,6 +1,8 @@
 package com.locarie.backend.domain.dto.user;
 
+import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
 import java.time.Instant;
+import java.util.List;
 import lombok.*;
 
 @Data
@@ -18,4 +20,5 @@ public class UserUpdateDto {
   private String category;
   private String introduction;
   private String phone;
+  private List<BusinessHoursDto> businessHours;
 }
