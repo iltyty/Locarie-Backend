@@ -1,5 +1,6 @@
 package com.locarie.backend.domain.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -38,6 +39,8 @@ public class UserDto {
   @NotNull(message = "email is mandatory") private String email;
 
   private String avatarUrl;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING)
   private Instant birthday;
 
   // The following fields are only valid for business users
