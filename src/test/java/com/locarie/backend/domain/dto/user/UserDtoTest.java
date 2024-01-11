@@ -1,8 +1,9 @@
 package com.locarie.backend.domain.dto.user;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.locarie.backend.datacreators.user.UserDtoCreator;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +18,120 @@ class UserDtoTest {
   }
 
   @Test
-  void testBirthdaySerialization() throws JsonProcessingException {
+  void testSerialization() throws JsonProcessingException {
     UserDto dto = UserDtoCreator.businessUserDtoShreeji();
     System.out.println(mapper.writeValueAsString(dto));
   }
+
+  @Test
+  void testBusinessHoursDeserialization() throws JsonProcessingException {
+    UserDto expected = UserDtoCreator.businessUserDtoShreeji();
+    UserDto actual = mapper.readValue(json, UserDto.class);
+    assertThat(actual.getBusinessHours()).isEqualTo(expected.getBusinessHours());
+  }
+
+  private static final String json =
+      """
+      {
+      	"id": 3,
+      	"type": "BUSINESS",
+      	"username": "Shreeji Newsagents",
+      	"firstName": "Shreeji",
+      	"lastName": "Newsagents",
+      	"email": "shreejinews@btopenworld.com",
+      	"avatarUrl": "https://www.shreejinewsagents.com/cdn/shop/files/shreeji-logo_400x.png",
+      	"birthday": "2024-01-11T02:16:46.915875Z",
+      	"businessName": "Shreeji Newsagents",
+      	"coverUrls": ["https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg"],
+      	"homepageUrl": "https://www.shreejinewsagents.com/",
+      	"category": "Newsagent",
+      	"introduction": "We offer a reliable delivery service for specific titles, newspapers or magazines.",
+      	"phone": "+442079355055",
+      	"businessHours": [{
+      		"id": null,
+      		"dayOfWeek": "MONDAY",
+      		"closed": false,
+      		"openingTime": {
+      			"hour": 9,
+      			"minute": 0
+      		},
+      		"closingTime": {
+      			"hour": 17,
+      			"minute": 0
+      		},
+      		"user": null
+      	}, {
+      		"id": null,
+      		"dayOfWeek": "TUESDAY",
+      		"closed": false,
+      		"openingTime": {
+      			"hour": 9,
+      			"minute": 0
+      		},
+      		"closingTime": {
+      			"hour": 17,
+      			"minute": 0
+      		},
+      		"user": null
+      	}, {
+      		"id": null,
+      		"dayOfWeek": "WEDNESDAY",
+      		"closed": false,
+      		"openingTime": {
+      			"hour": 9,
+      			"minute": 0
+      		},
+      		"closingTime": {
+      			"hour": 17,
+      			"minute": 0
+      		},
+      		"user": null
+      	}, {
+      		"id": null,
+      		"dayOfWeek": "THURSDAY",
+      		"closed": false,
+      		"openingTime": {
+      			"hour": 9,
+      			"minute": 0
+      		},
+      		"closingTime": {
+      			"hour": 17,
+      			"minute": 0
+      		},
+      		"user": null
+      	}, {
+      		"id": null,
+      		"dayOfWeek": "FRIDAY",
+      		"closed": false,
+      		"openingTime": {
+      			"hour": 9,
+      			"minute": 0
+      		},
+      		"closingTime": {
+      			"hour": 17,
+      			"minute": 0
+      		},
+      		"user": null
+      	}, {
+      		"id": null,
+      		"dayOfWeek": "SATURDAY",
+      		"closed": true,
+      		"openingTime": null,
+      		"closingTime": null,
+      		"user": null
+      	}, {
+      		"id": null,
+      		"dayOfWeek": "SUNDAY",
+      		"closed": true,
+      		"openingTime": null,
+      		"closingTime": null,
+      		"user": null
+      	}],
+      	"location": {
+      		"latitude": 51.51871309884953,
+      		"longitude": -0.15449968748875476
+      	},
+      	"address": "6 Chiltern St, London W1U 7PT, United Kingdom"
+      }
+      """;
 }

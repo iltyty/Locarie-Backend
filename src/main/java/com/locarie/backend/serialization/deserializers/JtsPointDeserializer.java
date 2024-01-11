@@ -1,4 +1,4 @@
-package com.locarie.backend.serialization;
+package com.locarie.backend.serialization.deserializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
