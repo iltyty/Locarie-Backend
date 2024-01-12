@@ -8,13 +8,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserUpdateDtoCreator;
+import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +76,10 @@ public class UserUpdateControllerTest {
     ResultActions result = whenPerformUpdateUserRequest(request);
     thenUpdateResultShouldBeSuccess(result);
     thenUpdateResultShouldPartiallyEqualToUserUpdateDto(result, userUpdateDto);
+    result.andDo(
+        res -> {
+          System.out.println(res.getResponse().getContentAsString());
+        });
   }
 
   @Test
@@ -167,25 +171,34 @@ public class UserUpdateControllerTest {
 
   private void expectBusinessHoursEquals(ResultActions result, UserUpdateDto userUpdateDto)
       throws Exception {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     result.andExpect(
         jsonPath("$.data.businessHours", hasSize(userUpdateDto.getBusinessHours().size())));
-    for (int i = 0; i < userUpdateDto.getBusinessHours().size(); i++) {
-      LocalTime openingTime = userUpdateDto.getBusinessHours().get(i).getOpeningTime();
-      LocalTime closingTime = userUpdateDto.getBusinessHours().get(i).getClosingTime();
-      String openingTimeString = openingTime == null ? null : openingTime.format(formatter);
-      String closingTimeString = closingTime == null ? null : closingTime.format(formatter);
+    List<BusinessHoursDto> businessHoursDtos = userUpdateDto.getBusinessHours();
+    for (int i = 0; i < businessHoursDtos.size(); i++) {
+      BusinessHoursDto businessHours = businessHoursDtos.get(i);
+      LocalTime openingTime = businessHours.getOpeningTime();
+      LocalTime closingTime = businessHours.getClosingTime();
       result
           .andExpect(
               jsonPath("$.data.businessHours[" + i + "].dayOfWeek")
-                  .value(userUpdateDto.getBusinessHours().get(i).getDayOfWeek().toString()))
+                  .value(businessHours.getDayOfWeek().getValue()))
           .andExpect(
-              jsonPath("$.data.businessHours[" + i + "].closed")
-                  .value(userUpdateDto.getBusinessHours().get(i).getClosed()))
-          .andExpect(
-              jsonPath("$.data.businessHours[" + i + "].openingTime").value(openingTimeString))
-          .andExpect(
-              jsonPath("$.data.businessHours[" + i + "].closingTime").value(closingTimeString));
+              jsonPath("$.data.businessHours[" + i + "].closed").value(businessHours.getClosed()));
+      if (!businessHours.getClosed()) {
+        result
+            .andExpect(
+                jsonPath("$.data.businessHours[" + i + "].openingTime.hour")
+                    .value(openingTime.getHour()))
+            .andExpect(
+                jsonPath("$.data.businessHours[" + i + "].openingTime.minute")
+                    .value(openingTime.getMinute()))
+            .andExpect(
+                jsonPath("$.data.businessHours[" + i + "].closingTime.hour")
+                    .value(closingTime.getHour()))
+            .andExpect(
+                jsonPath("$.data.businessHours[" + i + "].closingTime.minute")
+                    .value(closingTime.getMinute()));
+      }
     }
   }
 

@@ -49,7 +49,7 @@ class UserDtoTest {
       	"phone": "+442079355055",
       	"businessHours": [{
       		"id": null,
-      		"dayOfWeek": "MONDAY",
+      		"dayOfWeek": "Monday",
       		"closed": false,
       		"openingTime": {
       			"hour": 9,
@@ -62,7 +62,7 @@ class UserDtoTest {
       		"user": null
       	}, {
       		"id": null,
-      		"dayOfWeek": "TUESDAY",
+      		"dayOfWeek": "Tuesday",
       		"closed": false,
       		"openingTime": {
       			"hour": 9,
@@ -75,7 +75,7 @@ class UserDtoTest {
       		"user": null
       	}, {
       		"id": null,
-      		"dayOfWeek": "WEDNESDAY",
+      		"dayOfWeek": "Wednesday",
       		"closed": false,
       		"openingTime": {
       			"hour": 9,
@@ -88,7 +88,7 @@ class UserDtoTest {
       		"user": null
       	}, {
       		"id": null,
-      		"dayOfWeek": "THURSDAY",
+      		"dayOfWeek": "Thursday",
       		"closed": false,
       		"openingTime": {
       			"hour": 9,
@@ -101,7 +101,7 @@ class UserDtoTest {
       		"user": null
       	}, {
       		"id": null,
-      		"dayOfWeek": "FRIDAY",
+      		"dayOfWeek": "Friday",
       		"closed": false,
       		"openingTime": {
       			"hour": 9,
@@ -114,14 +114,14 @@ class UserDtoTest {
       		"user": null
       	}, {
       		"id": null,
-      		"dayOfWeek": "SATURDAY",
+      		"dayOfWeek": "Saturday",
       		"closed": true,
       		"openingTime": null,
       		"closingTime": null,
       		"user": null
       	}, {
       		"id": null,
-      		"dayOfWeek": "SUNDAY",
+      		"dayOfWeek": "Sunday",
       		"closed": true,
       		"openingTime": null,
       		"closingTime": null,
