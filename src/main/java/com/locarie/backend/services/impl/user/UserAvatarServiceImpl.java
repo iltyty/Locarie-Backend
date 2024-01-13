@@ -31,13 +31,13 @@ public class UserAvatarServiceImpl implements UserAvatarService {
   }
 
   @Override
-  public UserDto updateAvatar(Long userId, MultipartFile avatar)
+  public String updateAvatar(Long userId, MultipartFile avatar)
       throws StorageException, UserNotFoundException {
     try {
       UserEntity userEntity = userFindUtils.findUserById(userId);
       String avatarUrl = storeAvatar(userId, avatar);
       updateUserAvatarUrl(userEntity, avatarUrl);
-      return entityToDto(userEntity);
+      return avatarUrl;
     } catch (UserNotFoundException e) {
       throw handleUserNotFoundException(e);
     }

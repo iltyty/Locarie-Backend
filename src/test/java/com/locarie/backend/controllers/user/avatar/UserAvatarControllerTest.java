@@ -1,7 +1,6 @@
 package com.locarie.backend.controllers.user.avatar;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
@@ -57,10 +56,6 @@ public class UserAvatarControllerTest {
       Long userId, MockMultipartFile avatar) {
     String endpoint = getEndpoint(userId);
     return MockMvcRequestBuilders.multipart(endpoint).file(avatar);
-  }
-
-  private UserDto whenUploadAvatar(Long userId) {
-    return userAvatarService.updateAvatar(userId, UserAvatarControllerTest.AVATAR);
   }
 
   private ResultActions whenPerformHttpRequest(MockHttpServletRequestBuilder request)

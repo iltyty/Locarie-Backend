@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.locarie.backend.datacreators.image.MockAvatarCreator;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.repositories.user.UserRepository;
@@ -27,8 +26,8 @@ public class UserAvatarServiceImplUploadTest {
   void testUploadAvatarShouldSucceed() {
     Long userId = givenUserIdAfterCreated();
     MockMultipartFile avatar = givenAvatar();
-    UserDto userDto = whenUpdateAvatar(userId, avatar);
-    thenResultShouldContainUpdatedAvatarUrl(userDto, avatar);
+    String result = whenUpdateAvatar(userId, avatar);
+    thenResultShouldContainUpdatedAvatarUrl(result, avatar);
   }
 
   @Test
@@ -65,14 +64,14 @@ public class UserAvatarServiceImplUploadTest {
     return MockAvatarCreator.jpgAvatar();
   }
 
-  private UserDto whenUpdateAvatar(Long userId, MockMultipartFile avatar) {
+  private String whenUpdateAvatar(Long userId, MockMultipartFile avatar) {
     return underTests.updateAvatar(userId, avatar);
   }
 
-  private void thenResultShouldContainUpdatedAvatarUrl(UserDto userDto, MockMultipartFile avatar) {
-    assertThat(userDto).isNotNull();
-    assertThat(userDto.getAvatarUrl()).isNotEmpty();
-    assertThat(userDto.getAvatarUrl()).contains(avatar.getOriginalFilename());
+  private void thenResultShouldContainUpdatedAvatarUrl(String result, MockMultipartFile avatar) {
+    assertThat(result).isNotNull();
+    assertThat(result).isNotEmpty();
+    assertThat(result).contains(avatar.getOriginalFilename());
   }
 
   private void thenResultShouldThrowUserNotFoundExceptionWhenUpdateAvatar(
