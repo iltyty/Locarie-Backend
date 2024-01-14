@@ -1,14 +1,12 @@
-package com.locarie.backend.controllers.user.avatar;
+package com.locarie.backend.controllers.user.images;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.utils.UserControllerResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -26,9 +24,6 @@ public class UserAvatarControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
-
-  @Qualifier("UserAvatarService") @Autowired
-  private UserAvatarService userAvatarService;
 
   private static String getEndpoint(Long userId) {
     return String.format("/api/v1/users/%d/avatar", userId);

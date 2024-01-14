@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.locarie.backend.datacreators.image.MockImageCreator;
-import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.repositories.user.UserRepository;
+import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.services.impl.user.UserProfileImagesServiceImpl;
 import com.locarie.backend.storage.exceptions.StorageException;
 import java.util.List;
@@ -20,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserProfileImagesServiceImplTest {
   @Autowired private UserProfileImagesServiceImpl underTests;
-  @Autowired private UserRepository userRepository;
+  @Autowired private UserTestsDataCreator userDataCreator;
 
   @Test
   void testUploadShouldSucceed() {
-    Long userId = givenUserIdAfterCreated();
+    Long userId = userDataCreator.givenBusinessUserShreejiIdAfterCreated();
     MockMultipartFile[] profileImages = givenProfileImages();
     List<String> result = whenUploadProfileImages(userId, profileImages);
     thenResultShouldBeOfSize(result, profileImages.length);
@@ -33,14 +31,9 @@ public class UserProfileImagesServiceImplTest {
 
   @Test
   void testUploadProfileImagesWithoutFilenameShouldFail() {
-    Long userId = givenUserIdAfterCreated();
+    Long userId = userDataCreator.givenBusinessUserJoleneHornseyIdAfterCreated();
     MockMultipartFile[] profileImages = givenProfileImagesWithoutFilename();
     thenResultShouldThrowStorageExceptionWhenUploadProfileImages(userId, profileImages);
-  }
-
-  private Long givenUserIdAfterCreated() {
-    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
-    return userRepository.save(userEntity).getId();
   }
 
   private MockMultipartFile[] givenProfileImages() {

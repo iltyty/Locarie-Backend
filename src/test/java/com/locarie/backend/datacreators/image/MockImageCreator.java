@@ -3,6 +3,10 @@ package com.locarie.backend.datacreators.image;
 import org.springframework.mock.web.MockMultipartFile;
 
 public class MockImageCreator {
+  public static MockMultipartFile[] profileImages() {
+    return new MockMultipartFile[] {pngImage(), jpgImage(), jpegImage()};
+  }
+
   public static MockMultipartFile pngImage() {
     return new MockMultipartFile("images", "image1.png", "image/png", new byte[100]);
   }

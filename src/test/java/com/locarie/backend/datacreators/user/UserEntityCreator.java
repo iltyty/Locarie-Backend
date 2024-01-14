@@ -4,6 +4,7 @@ import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.datacreators.businesshours.BusinessHoursEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import org.locationtech.jts.geom.Point;
 
@@ -35,7 +36,7 @@ public class UserEntityCreator {
         .avatarUrl("https://picsum.photos/200/200")
         .birthday(Instant.now())
         .businessName("Big Jo Bakery")
-        .profileImageUrls(List.of("https://picsum.photos/800/450"))
+        .profileImageUrls(new ArrayList<>(List.of("https://picsum.photos/800/450")))
         .homepageUrl("https://www.bigjobakery.com/")
         .category("Restaurant")
         .introduction(
@@ -61,7 +62,9 @@ public class UserEntityCreator {
         .avatarUrl("https://www.shreejinewsagents.com/cdn/shop/files/shreeji-logo_400x.png")
         .birthday(Instant.now())
         .businessName("Shreeji Newsagents")
-        .profileImageUrls(List.of("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg"))
+        .profileImageUrls(
+            new ArrayList<>(
+                List.of("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg")))
         .homepageUrl("https://www.shreejinewsagents.com/")
         .category("Newsagent")
         .introduction(

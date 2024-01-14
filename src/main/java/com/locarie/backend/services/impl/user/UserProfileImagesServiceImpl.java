@@ -9,7 +9,6 @@ import com.locarie.backend.storage.StorageService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +26,7 @@ public class UserProfileImagesServiceImpl implements UserProfileImagesService {
   }
 
   @Override
-  public java.util.List<String> uploadProfileImages(Long id, MultipartFile[] images) {
+  public List<String> uploadProfileImages(Long id, MultipartFile[] images) {
     try {
       UserEntity userEntity = userFindUtils.findUserById(id);
       List<String> profileImageUrls = storeProfileImages(id, images);
@@ -40,13 +39,12 @@ public class UserProfileImagesServiceImpl implements UserProfileImagesService {
 
   private List<String> storeProfileImages(Long userId, MultipartFile[] images) {
     String dirname = String.format("user_%d/profile_images", userId);
-    return Arrays.stream(images)
-        .map(image -> storageService.store(image, dirname))
-        .collect(Collectors.toCollection(ArrayList::new));
+    return new ArrayList<>(
+        Arrays.stream(images).map(image -> storageService.store(image, dirname)).toList());
   }
 
   private void updateProfileImages(UserEntity userEntity, List<String> profileImageUrls) {
-    userEntity.setProfileImageUrls(profileImageUrls);
+    userEntity.setProfileImageUrls(new ArrayList<>(profileImageUrls));
     userRepository.save(userEntity);
   }
 }

@@ -1,4 +1,4 @@
-package com.locarie.backend.controllers.user.avatar;
+package com.locarie.backend.controllers.user.images;
 
 import com.locarie.backend.services.user.UserAvatarService;
 import org.springframework.beans.factory.annotation.Qualifier;
