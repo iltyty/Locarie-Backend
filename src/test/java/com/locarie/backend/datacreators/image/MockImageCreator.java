@@ -11,6 +11,10 @@ public class MockImageCreator {
     return new MockMultipartFile("images", "image2.jpg", "image/jpg", new byte[1]);
   }
 
+  public static MockMultipartFile jpegImage() {
+    return new MockMultipartFile("images", "image3.jpeg", "image/jpeg", new byte[1]);
+  }
+
   public static MockMultipartFile emptyImage() {
     return new MockMultipartFile("images", "empty.jpg", "image/jpg", new byte[0]);
   }

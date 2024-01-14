@@ -45,7 +45,7 @@ public class UserDto {
 
   // The following fields are only valid for business users
   private String businessName;
-  private List<String> coverUrls;
+  private List<String> profileImageUrls;
   private String homepageUrl;
   private String category;
   private String introduction;

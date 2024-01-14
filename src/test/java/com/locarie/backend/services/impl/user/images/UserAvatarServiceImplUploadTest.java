@@ -1,4 +1,4 @@
-package com.locarie.backend.services.impl.user.avatar;
+package com.locarie.backend.services.impl.user.images;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -38,7 +38,7 @@ public class UserAvatarServiceImplUploadTest {
   }
 
   @Test
-  void testUploadAvatarWithNoFilenameShouldFail() {
+  void testUploadAvatarWithoutFilenameShouldFail() {
     Long userId = givenUserIdAfterCreated();
     MockMultipartFile avatar = MockAvatarCreator.avatarWithNoFilename();
     thenResultShouldThrowStorageExceptionWhenUpdateAvatar(userId, avatar);

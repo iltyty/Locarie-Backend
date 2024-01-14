@@ -57,8 +57,8 @@ public class UserEntity {
   private String businessName;
 
   @ElementCollection(fetch = FetchType.EAGER)
-  @OrderColumn(name = "cover_index")
-  private List<String> coverUrls;
+  @OrderColumn(name = "profile_image_index")
+  private List<String> profileImageUrls;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<BusinessHoursEntity> businessHours;
