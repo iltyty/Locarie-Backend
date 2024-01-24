@@ -27,7 +27,10 @@ class UserDtoTest {
   void testBusinessHoursDeserialization() throws JsonProcessingException {
     UserDto expected = UserDtoCreator.businessUserDtoShreeji();
     UserDto actual = mapper.readValue(json, UserDto.class);
-    assertThat(actual.getBusinessHours()).isEqualTo(expected.getBusinessHours());
+    assertThat(actual.getBusinessHours())
+        .usingRecursiveComparison()
+        .ignoringFields("user")
+        .isEqualTo(expected.getBusinessHours());
   }
 
   private static final String json =

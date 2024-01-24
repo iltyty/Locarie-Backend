@@ -1,5 +1,6 @@
 package com.locarie.backend.domain.dto.post;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.locarie.backend.domain.dto.user.UserDto;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.Instant;
@@ -17,6 +18,7 @@ public class PostDto {
   private Long id;
   private UserDto user;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING)
   private Instant time;
 
   @NotEmpty(message = "title cannot be empty")

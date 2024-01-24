@@ -2,6 +2,7 @@ package com.locarie.backend.domain.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
@@ -50,6 +51,8 @@ public class UserDto {
   private String category;
   private String introduction;
   private String phone;
+
+  @JsonManagedReference
   private List<BusinessHoursDto> businessHours;
 
   @JsonSerialize(using = JtsPointSerializer.class)

@@ -1,5 +1,6 @@
 package com.locarie.backend.domain.dto.businesshours;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -31,7 +32,7 @@ public class BusinessHoursDto {
   @JsonDeserialize(using = BusinessHoursTimeDeserializer.class)
   private LocalTime closingTime;
 
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+  @JsonBackReference
   private UserDto user;
 
   public enum DayOfWeek {
@@ -47,7 +48,7 @@ public class BusinessHoursDto {
       this.value = value;
     }
 
-    private String value;
+    private final String value;
 
     @JsonValue
     public String getValue() {
