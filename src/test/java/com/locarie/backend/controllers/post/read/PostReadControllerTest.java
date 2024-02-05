@@ -1,25 +1,18 @@
 package com.locarie.backend.controllers.post.read;
 
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
-import com.locarie.backend.domain.dto.user.UserDto;
-import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.global.ResultCode;
-import com.locarie.backend.mapper.Mapper;
-import com.locarie.backend.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,13 +24,15 @@ class PostReadControllerTest {
   @Test
   void testListReturnsHttpOk() throws Exception {
     dataCreator.givenPostDtosJoleneHornseyAfterCreated();
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts")).andExpect(status().isOk());
+    MockHttpServletRequestBuilder request = givenListPostRequest();
+    mockMvc.perform(request).andExpect(status().isOk());
   }
 
   @Test
   void testListReturnsEmptyList() throws Exception {
+    MockHttpServletRequestBuilder request = givenListPostRequest();
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
+        .perform(request)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
         .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
@@ -46,10 +41,11 @@ class PostReadControllerTest {
 
   @Test
   void testListReturnsPosts() throws Exception {
+    MockHttpServletRequestBuilder request = givenListPostRequest();
     PostDto dto1 = dataCreator.givenPostDtoJoleneHornsey1AfterCreated();
     PostDto dto2 = dataCreator.givenPostDtoJoleneHornsey2AfterCreated();
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/posts"))
+        .perform(request)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
         .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
@@ -64,26 +60,37 @@ class PostReadControllerTest {
   @Test
   void testGetReturnsHttpOk() throws Exception {
     PostDto dto = dataCreator.givenPostDtoJoleneHornsey1AfterCreated();
+    MockHttpServletRequestBuilder request = givenGetPostRequest(dto.getId());
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/posts/" + dto.getId()))
+        .perform(request)
         .andExpect(status().isOk());
   }
 
   @Test
   void testGetReturnsHttpNotFound() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/posts/0")).andExpect(status().isNotFound());
+    MockHttpServletRequestBuilder request = givenGetPostRequest(0);
+    mockMvc.perform(request).andExpect(status().isNotFound());
   }
 
   @Test
   void testGetReturnsPost() throws Exception {
     PostDto dto = dataCreator.givenPostDtoJoleneHornsey2AfterCreated();
+    MockHttpServletRequestBuilder request = givenGetPostRequest(dto.getId());
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/api/v1/posts/" + dto.getId()))
+        .perform(request)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
         .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
         .andExpect(jsonPath("$.data.id").value(dto.getId()))
         .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
         .andExpect(jsonPath("$.data.content").value(dto.getContent()));
+  }
+
+  private MockHttpServletRequestBuilder givenListPostRequest() {
+    return MockMvcRequestBuilders.get("/api/v1/posts");
+  }
+
+  private MockHttpServletRequestBuilder givenGetPostRequest(long id) {
+    return MockMvcRequestBuilders.get("/api/v1/posts/" + id);
   }
 }
