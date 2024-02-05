@@ -1,5 +1,6 @@
 package com.locarie.backend.repositories.post;
 
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " limit 1)",
       nativeQuery = true)
   List<PostEntity> findNearby(double latitude, double longitude, double distance);
+
+  @Query(value = "select p from PostEntity p where p.user.id = :id")
+  List<PostEntity> findByUserId(Long id);
 }

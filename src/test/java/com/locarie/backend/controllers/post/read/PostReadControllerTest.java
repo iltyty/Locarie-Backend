@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -86,8 +88,29 @@ class PostReadControllerTest {
         .andExpect(jsonPath("$.data.content").value(dto.getContent()));
   }
 
+  @Test
+  void testListUserPostsReturnCorrectData() throws Exception {
+    List<PostDto> dtos = dataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    MockHttpServletRequestBuilder request = givenListUserPostsRequest(dtos.getFirst().getUser().getId());
+    mockMvc
+        .perform(request)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
+        .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.data[0].id").value(dtos.get(0).getId()))
+        .andExpect(jsonPath("$.data[0].title").value(dtos.get(0).getTitle()))
+        .andExpect(jsonPath("$.data[0].content").value(dtos.get(0).getContent()))
+        .andExpect(jsonPath("$.data[1].id").value(dtos.get(1).getId()))
+        .andExpect(jsonPath("$.data[1].title").value(dtos.get(1).getTitle()))
+        .andExpect(jsonPath("$.data[1].content").value(dtos.get(1).getContent()));
+  }
+
   private MockHttpServletRequestBuilder givenListPostRequest() {
     return MockMvcRequestBuilders.get("/api/v1/posts");
+  }
+
+  private MockHttpServletRequestBuilder givenListUserPostsRequest(long id) {
+    return MockMvcRequestBuilders.get("/api/v1/posts/user/" + id);
   }
 
   private MockHttpServletRequestBuilder givenGetPostRequest(long id) {

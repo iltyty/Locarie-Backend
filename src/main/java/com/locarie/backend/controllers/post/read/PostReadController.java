@@ -37,4 +37,9 @@ public class PostReadController {
         .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
+
+  @GetMapping("/user/{id}")
+  public List<PostDto> listUserPosts(@PathVariable("id") Long id) {
+    return service.listUserPosts(id);
+  }
 }

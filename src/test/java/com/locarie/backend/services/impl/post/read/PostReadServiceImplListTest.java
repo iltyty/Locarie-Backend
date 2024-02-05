@@ -47,6 +47,13 @@ public class PostReadServiceImplListTest {
     thenResultShouldContainAllPosts(listResult, expectedPostDtos);
   }
 
+  @Test
+  void testListUserPostsShouldReturnAllPostsOfUser() {
+    List<PostDto> dtos = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    List<PostDto> listResult = underTests.listUserPosts(dtos.getFirst().getUser().getId());
+    thenResultShouldContainAllPosts(listResult, dtos);
+  }
+
   private Point givenEmptyLocation() {
     return new GeometryFactory().createPoint(new Coordinate(0, 0));
   }

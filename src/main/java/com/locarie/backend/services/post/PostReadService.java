@@ -10,4 +10,6 @@ public interface PostReadService {
   List<PostDto> list();
 
   List<PostDto> listNearby(double latitude, double longitude, double distance);
+
+  List<PostDto> listUserPosts(Long id);
 }
