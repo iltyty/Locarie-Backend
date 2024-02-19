@@ -23,11 +23,11 @@ import org.springframework.util.MultiValueMap;
 @Transactional
 @AutoConfigureMockMvc
 public class FavoritePostControllerTest {
-  private static final String FAVORITE_ENDPOINT = "/api/v1/favorite";
-  private static final String UNFAVORITE_ENDPOINT = "/api/v1/unfavorite";
+  private static final String FAVORITE_ENDPOINT = "/api/v1/posts/favorite";
+  private static final String UNFAVORITE_ENDPOINT = "/api/v1/posts/unfavorite";
 
   private static String listEndpoint(Long userId) {
-    return String.format("/api/v1/favorite?userId=%d", userId);
+    return String.format("/api/v1/posts/favorite?userId=%d", userId);
   }
 
   @Autowired MockMvc mockMvc;
