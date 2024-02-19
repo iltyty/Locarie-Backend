@@ -63,6 +63,9 @@ public class UserEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<BusinessHoursEntity> businessHours;
 
+  @ManyToMany(mappedBy = "favoredBy", fetch = FetchType.LAZY)
+  private List<PostEntity> favoritePosts;
+
   private String homepageUrl;
   private String category;
   private String introduction;

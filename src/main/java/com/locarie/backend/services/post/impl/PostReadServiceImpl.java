@@ -1,19 +1,13 @@
-package com.locarie.backend.services.impl.post;
+package com.locarie.backend.services.post.impl;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
-import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.mapper.impl.post.PostEntityDtoMapper;
 import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.services.post.PostReadService;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
-
-import com.locarie.backend.services.utils.UserFindUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 

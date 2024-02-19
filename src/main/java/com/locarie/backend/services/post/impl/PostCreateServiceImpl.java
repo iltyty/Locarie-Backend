@@ -1,4 +1,4 @@
-package com.locarie.backend.services.impl.post;
+package com.locarie.backend.services.post.impl;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;

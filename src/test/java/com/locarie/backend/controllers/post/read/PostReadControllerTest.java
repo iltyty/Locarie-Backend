@@ -1,9 +1,13 @@
 package com.locarie.backend.controllers.post.read;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.global.ResultCode;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,10 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -63,9 +63,7 @@ class PostReadControllerTest {
   void testGetReturnsHttpOk() throws Exception {
     PostDto dto = dataCreator.givenPostDtoJoleneHornsey1AfterCreated();
     MockHttpServletRequestBuilder request = givenGetPostRequest(dto.getId());
-    mockMvc
-        .perform(request)
-        .andExpect(status().isOk());
+    mockMvc.perform(request).andExpect(status().isOk());
   }
 
   @Test
@@ -91,7 +89,8 @@ class PostReadControllerTest {
   @Test
   void testListUserPostsReturnCorrectData() throws Exception {
     List<PostDto> dtos = dataCreator.givenPostDtosJoleneHornseyAfterCreated();
-    MockHttpServletRequestBuilder request = givenListUserPostsRequest(dtos.getFirst().getUser().getId());
+    MockHttpServletRequestBuilder request =
+        givenListUserPostsRequest(dtos.getFirst().getUser().getId());
     mockMvc
         .perform(request)
         .andExpect(status().isOk())

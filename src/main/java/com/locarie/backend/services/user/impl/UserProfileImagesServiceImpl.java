@@ -1,4 +1,4 @@
-package com.locarie.backend.services.impl.user;
+package com.locarie.backend.services.user.impl;
 
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.exceptions.UserNotFoundException;

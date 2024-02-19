@@ -2,7 +2,7 @@ package com.locarie.backend.controllers.user.images;
 
 import com.locarie.backend.datacreators.image.MockImageCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
-import com.locarie.backend.utils.UserControllerResultMatcherUtil;
+import com.locarie.backend.utils.matchers.ControllerResultMatcherUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,7 +52,7 @@ public class UserProfileImagesControllerTest {
 
   private void thenResultShouldBeOk(ResultActions result) throws Exception {
     result
-        .andExpect(UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(UserControllerResultMatcherUtil.resultMessageShouldBeSuccess());
+        .andExpect(ControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
+        .andExpect(ControllerResultMatcherUtil.resultMessageShouldBeSuccess());
   }
 }

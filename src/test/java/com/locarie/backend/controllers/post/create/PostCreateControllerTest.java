@@ -1,5 +1,8 @@
 package com.locarie.backend.controllers.post.create;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.post.PostDtoCreator;
@@ -22,8 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -60,7 +61,8 @@ public class PostCreateControllerTest {
     return postDto;
   }
 
-  private MockMultipartHttpServletRequestBuilder givenCreatePostRequest(PostDto dto) throws JsonProcessingException {
+  private MockMultipartHttpServletRequestBuilder givenCreatePostRequest(PostDto dto)
+      throws JsonProcessingException {
     return MockMvcRequestBuilders.multipart("/api/v1/posts")
         .file(postImage)
         .part(createPostPart(dto));

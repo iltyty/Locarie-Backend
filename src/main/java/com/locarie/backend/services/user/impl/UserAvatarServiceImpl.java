@@ -1,9 +1,7 @@
-package com.locarie.backend.services.impl.user;
+package com.locarie.backend.services.user.impl;
 
-import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.exceptions.UserNotFoundException;
-import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserAvatarService;
 import com.locarie.backend.services.utils.UserFindUtils;
@@ -17,30 +15,21 @@ public class UserAvatarServiceImpl implements UserAvatarService {
   private final UserRepository userRepository;
   private final UserFindUtils userFindUtils;
   private final StorageService storageService;
-  private final Mapper<UserEntity, UserDto> mapper;
 
   public UserAvatarServiceImpl(
-      UserRepository userRepository,
-      UserFindUtils userFindUtils,
-      StorageService storageService,
-      Mapper<UserEntity, UserDto> mapper) {
+      UserRepository userRepository, UserFindUtils userFindUtils, StorageService storageService) {
     this.userRepository = userRepository;
     this.userFindUtils = userFindUtils;
     this.storageService = storageService;
-    this.mapper = mapper;
   }
 
   @Override
   public String updateAvatar(Long userId, MultipartFile avatar)
       throws StorageException, UserNotFoundException {
-    try {
-      UserEntity userEntity = userFindUtils.findUserById(userId);
-      String avatarUrl = storeAvatar(userId, avatar);
-      updateUserAvatarUrl(userEntity, avatarUrl);
-      return avatarUrl;
-    } catch (UserNotFoundException e) {
-      throw handleUserNotFoundException(e);
-    }
+    UserEntity userEntity = userFindUtils.findUserById(userId);
+    String avatarUrl = storeAvatar(userId, avatar);
+    updateUserAvatarUrl(userEntity, avatarUrl);
+    return avatarUrl;
   }
 
   private String storeAvatar(Long userId, MultipartFile avatar) {
@@ -51,13 +40,5 @@ public class UserAvatarServiceImpl implements UserAvatarService {
   private void updateUserAvatarUrl(UserEntity userEntity, String avatarPath) {
     userEntity.setAvatarUrl(avatarPath);
     userRepository.save(userEntity);
-  }
-
-  private UserDto entityToDto(UserEntity userEntity) {
-    return mapper.mapTo(userEntity);
-  }
-
-  private UserNotFoundException handleUserNotFoundException(UserNotFoundException e) {
-    throw e;
   }
 }

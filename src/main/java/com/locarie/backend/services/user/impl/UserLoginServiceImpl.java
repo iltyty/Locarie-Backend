@@ -1,4 +1,4 @@
-package com.locarie.backend.services.impl.user;
+package com.locarie.backend.services.user.impl;
 
 import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.dto.user.UserLoginResponseDto;

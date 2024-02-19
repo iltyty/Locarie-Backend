@@ -1,6 +1,5 @@
 package com.locarie.backend.repositories.post;
 
-import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;

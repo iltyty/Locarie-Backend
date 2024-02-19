@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
-import com.locarie.backend.services.impl.post.PostReadServiceImpl;
+import com.locarie.backend.services.post.impl.PostReadServiceImpl;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.Test;

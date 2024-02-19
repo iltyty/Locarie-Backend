@@ -27,6 +27,8 @@ public class PostEntity {
   @JoinColumn(name = "user_id")
   private UserEntity user;
 
+  @ManyToMany private List<UserEntity> favoredBy;
+
   @Column(columnDefinition = "timestamp")
   @CurrentTimestamp(event = EventType.INSERT)
   private Instant time; // post publish time

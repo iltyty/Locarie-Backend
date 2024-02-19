@@ -12,7 +12,13 @@ public enum ResultCode {
 
   // authentication-related codes
   RC201(201, "email already in use"),
-  RC202(202, "incorrect email or password");
+  RC202(202, "incorrect email or password"),
+
+  // user-related codes
+  RC301(301, "user not found"),
+
+  // post-related codes
+  RC401(401, "post not found");
 
   private final int code;
 

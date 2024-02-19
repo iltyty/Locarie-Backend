@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.locarie.backend.datacreators.image.MockImageCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
-import com.locarie.backend.services.impl.user.UserProfileImagesServiceImpl;
+import com.locarie.backend.services.user.impl.UserProfileImagesServiceImpl;
 import com.locarie.backend.storage.exceptions.StorageException;
 import java.util.List;
 import org.junit.jupiter.api.Test;

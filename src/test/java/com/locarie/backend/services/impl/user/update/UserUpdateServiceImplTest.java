@@ -12,7 +12,7 @@ import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.businesshours.BusinessHoursRepository;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.services.impl.user.UserUpdateServiceImpl;
+import com.locarie.backend.services.user.impl.UserUpdateServiceImpl;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;

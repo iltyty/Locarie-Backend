@@ -20,7 +20,6 @@ public class PostCreateController {
     this.service = service;
   }
 
-
   @PostMapping
   public ResponseEntity<PostDto> create(
       @Valid @RequestPart("post") PostDto dto, @RequestPart("images") MultipartFile[] images) {

@@ -52,8 +52,7 @@ public class UserDto {
   private String introduction;
   private String phone;
 
-  @JsonManagedReference
-  private List<BusinessHoursDto> businessHours;
+  @JsonManagedReference private List<BusinessHoursDto> businessHours;
 
   @JsonSerialize(using = JtsPointSerializer.class)
   @JsonDeserialize(using = JtsPointDeserializer.class)

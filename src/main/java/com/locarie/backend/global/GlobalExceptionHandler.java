@@ -3,8 +3,10 @@ package com.locarie.backend.global;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.domain.dto.ResponseDto;
+import com.locarie.backend.exceptions.PostNotFoundException;
 import com.locarie.backend.exceptions.RequestArgumentNotValidException;
 import com.locarie.backend.exceptions.UserAlreadyExistsException;
+import com.locarie.backend.exceptions.UserNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,16 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UserAlreadyExistsException.class)
   public ResponseDto<String> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
     return ResponseDto.fail(ResultCode.RC201);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseDto<String> handleUserNotFoundException(UserNotFoundException e) {
+    return ResponseDto.fail(ResultCode.RC301);
+  }
+
+  @ExceptionHandler(PostNotFoundException.class)
+  public ResponseDto<String> handlePostNotFoundException(PostNotFoundException e) {
+    return ResponseDto.fail(ResultCode.RC401);
   }
 
   @ExceptionHandler(Exception.class)

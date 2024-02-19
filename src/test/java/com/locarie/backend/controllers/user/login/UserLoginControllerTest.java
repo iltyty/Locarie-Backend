@@ -1,6 +1,6 @@
 package com.locarie.backend.controllers.user.login;
 
-import static com.locarie.backend.utils.UserControllerResultMatcherUtil.*;
+import static com.locarie.backend.utils.matchers.UserControllerResultMatcherUtil.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;

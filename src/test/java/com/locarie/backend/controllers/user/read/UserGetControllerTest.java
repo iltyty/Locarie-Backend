@@ -1,6 +1,6 @@
 package com.locarie.backend.controllers.user.read;
 
-import static com.locarie.backend.utils.UserControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess;
+import static com.locarie.backend.utils.matchers.ControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

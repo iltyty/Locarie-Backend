@@ -1,6 +1,6 @@
 package com.locarie.backend.controllers.user.update;
 
-import static com.locarie.backend.utils.UserControllerResultMatcherUtil.*;
+import static com.locarie.backend.utils.matchers.UserControllerResultMatcherUtil.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

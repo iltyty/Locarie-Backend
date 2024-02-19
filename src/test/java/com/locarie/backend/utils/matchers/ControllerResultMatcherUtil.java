@@ -1,11 +1,18 @@
-package com.locarie.backend.utils;
+package com.locarie.backend.utils.matchers;
 
 import com.locarie.backend.global.ResultCode;
-import org.hamcrest.core.StringContains;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class UserControllerResultMatcherUtil {
+public class ControllerResultMatcherUtil {
+  public static ResultMatcher resultStatusShouldBeOk() {
+    return MockMvcResultMatchers.status().isOk();
+  }
+
+  public static ResultMatcher resultStatusShouldBeCreated() {
+    return MockMvcResultMatchers.status().isCreated();
+  }
+
   public static ResultMatcher resultStatusCodeShouldBeSuccess() {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode());
   }
@@ -24,25 +31,5 @@ public class UserControllerResultMatcherUtil {
 
   public static ResultMatcher resultMessageShouldBeFailure() {
     return MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.FAIL.getMessage());
-  }
-
-  public static ResultMatcher resultMessageShouldContainType() {
-    return resultMessageShouldContainField("type");
-  }
-
-  public static ResultMatcher resultMessageShouldContainUsername() {
-    return resultMessageShouldContainField("username");
-  }
-
-  public static ResultMatcher resultMessageShouldContainEmail() {
-    return resultMessageShouldContainField("email");
-  }
-
-  public static ResultMatcher resultMessageShouldContainPassword() {
-    return resultMessageShouldContainField("password");
-  }
-
-  public static ResultMatcher resultMessageShouldContainField(String field) {
-    return MockMvcResultMatchers.jsonPath("$.message").value(new StringContains(field));
   }
 }

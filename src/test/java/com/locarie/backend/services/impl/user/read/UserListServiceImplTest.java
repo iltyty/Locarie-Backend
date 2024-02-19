@@ -8,7 +8,7 @@ import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.services.impl.user.UserListServiceImpl;
+import com.locarie.backend.services.user.impl.UserListServiceImpl;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;

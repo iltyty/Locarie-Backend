@@ -1,9 +1,7 @@
 package com.locarie.backend.domain.dto.businesshours;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.domain.dto.user.UserDto;
@@ -32,8 +30,7 @@ public class BusinessHoursDto {
   @JsonDeserialize(using = BusinessHoursTimeDeserializer.class)
   private LocalTime closingTime;
 
-  @JsonBackReference
-  private UserDto user;
+  @JsonBackReference private UserDto user;
 
   public enum DayOfWeek {
     MONDAY("Monday"),
