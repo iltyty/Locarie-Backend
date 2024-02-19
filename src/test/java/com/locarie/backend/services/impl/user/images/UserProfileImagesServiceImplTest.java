@@ -22,7 +22,7 @@ public class UserProfileImagesServiceImplTest {
 
   @Test
   void testUploadShouldSucceed() {
-    Long userId = userDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     MockMultipartFile[] profileImages = givenProfileImages();
     List<String> result = whenUploadProfileImages(userId, profileImages);
     thenResultShouldBeOfSize(result, profileImages.length);
@@ -31,7 +31,7 @@ public class UserProfileImagesServiceImplTest {
 
   @Test
   void testUploadProfileImagesWithoutFilenameShouldFail() {
-    Long userId = userDataCreator.givenBusinessUserJoleneHornseyIdAfterCreated();
+    Long userId = userDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     MockMultipartFile[] profileImages = givenProfileImagesWithoutFilename();
     thenResultShouldThrowStorageExceptionWhenUploadProfileImages(userId, profileImages);
   }

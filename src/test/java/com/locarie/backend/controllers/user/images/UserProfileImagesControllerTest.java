@@ -27,7 +27,7 @@ public class UserProfileImagesControllerTest {
 
   @Test
   void testUploadProfileImagesShouldSucceed() throws Exception {
-    Long userId = userDataCreator.givenBusinessUserJoleneHornseyIdAfterCreated();
+    Long userId = userDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     MockMultipartFile[] images = MockImageCreator.profileImages();
     MockMultipartHttpServletRequestBuilder request =
         givenProfileImagesUploadRequest(userId, images);

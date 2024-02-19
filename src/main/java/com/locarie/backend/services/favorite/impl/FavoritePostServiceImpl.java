@@ -49,11 +49,8 @@ public class FavoritePostServiceImpl implements FavoritePostService {
 
   private boolean isAlreadyFavored(UserEntity user, Long postId) {
     List<PostEntity> favoritePosts = user.getFavoritePosts();
-    if (favoritePosts == null) {
-      return false;
-    }
-    List<Long> favoritePostIds = favoritePosts.stream().map(PostEntity::getId).toList();
-    return favoritePostIds.contains(postId);
+    return favoritePosts != null
+        && favoritePosts.stream().map(PostEntity::getId).toList().contains(postId);
   }
 
   private void doFavoritePost(UserEntity user, PostEntity post) {

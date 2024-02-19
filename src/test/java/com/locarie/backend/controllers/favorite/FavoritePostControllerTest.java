@@ -36,7 +36,7 @@ public class FavoritePostControllerTest {
 
   @Test
   void testFavoritePostShouldSucceed() throws Exception {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder request = givenFavoritePostRequest(userId, postId);
     ResultActions result = whenPerformRequest(request);
@@ -45,7 +45,7 @@ public class FavoritePostControllerTest {
 
   @Test
   void testRepeatFavoriteShouldSucceed() throws Exception {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder request = givenFavoritePostRequest(userId, postId);
     whenPerformRequest(request);
@@ -55,7 +55,7 @@ public class FavoritePostControllerTest {
 
   @Test
   void testUnfavoriteAfterFavoriteShouldSucceed() throws Exception {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
     whenPerformRequest(favoriteRequest);
@@ -67,7 +67,7 @@ public class FavoritePostControllerTest {
 
   @Test
   void testRepeatUnfavoriteShouldSucceed() throws Exception {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
     whenPerformRequest(favoriteRequest);
@@ -80,7 +80,7 @@ public class FavoritePostControllerTest {
 
   @Test
   void testListAfterFavoriteShouldReturnCorrectData() throws Exception {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
     MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, post.getId());
     whenPerformRequest(favoriteRequest);
@@ -93,7 +93,7 @@ public class FavoritePostControllerTest {
 
   @Test
   void testListAfterUnfavoriteShouldReturnEmptyData() throws Exception {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
     whenPerformRequest(favoriteRequest);

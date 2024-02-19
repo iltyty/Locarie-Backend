@@ -26,7 +26,7 @@ public class FavoritePostServiceImplTest {
 
   @Test
   void testFavoritePostShouldSucceed() {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
     underTests.favoritePost(userId, post.getId());
     List<PostEntity> actual = userFindUtils.findUserById(userId).getFavoritePosts();
@@ -36,7 +36,7 @@ public class FavoritePostServiceImplTest {
 
   @Test
   void testUnfavoriteAfterFavoriteShouldSucceed() {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
     underTests.favoritePost(userId, post.getId());
     underTests.unfavoritePost(userId, post.getId());
@@ -46,7 +46,7 @@ public class FavoritePostServiceImplTest {
 
   @Test
   void testListAfterFavoriteShouldReturnCorrectData() {
-    Long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
     underTests.favoritePost(userId, post.getId());
     thenUserFavoritePostsShouldBeExactly(underTests.listFavoritePosts(userId), post);

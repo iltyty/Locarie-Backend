@@ -16,7 +16,7 @@ public class PostTestsDataCreator {
   @Autowired private UserTestsDataCreator userTestsDataCreator;
 
   public PostDto givenPostDtoJoleneHornsey1AfterCreated() {
-    long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyIdAfterCreated();
+    long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     PostEntity postEntity = PostEntityCreator.postEntityJoleneHornsey1();
     postEntity.setId(null);
     postEntity.getUser().setId(userId);
@@ -25,7 +25,7 @@ public class PostTestsDataCreator {
   }
 
   public PostDto givenPostDtoJoleneHornsey2AfterCreated() {
-    long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyIdAfterCreated();
+    long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     PostEntity postEntity = PostEntityCreator.postEntityJoleneHornsey2();
     postEntity.setId(null);
     postEntity.getUser().setId(userId);
@@ -39,7 +39,7 @@ public class PostTestsDataCreator {
   }
 
   public PostDto givenPostDtoShreeji1AfterCreated() {
-    long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostEntity postEntity = PostEntityCreator.postEntityShreeji1();
     postEntity.setId(null);
     postEntity.getUser().setId(userId);
@@ -48,7 +48,7 @@ public class PostTestsDataCreator {
   }
 
   public PostDto givenPostDtoShreeji2AfterCreated() {
-    long userId = userTestsDataCreator.givenBusinessUserShreejiIdAfterCreated();
+    long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostEntity postEntity = PostEntityCreator.postEntityShreeji2();
     postEntity.setId(null);
     postEntity.getUser().setId(userId);

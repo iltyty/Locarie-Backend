@@ -10,25 +10,36 @@ import org.springframework.stereotype.Component;
 public class UserTestsDataCreator {
   @Autowired private UserRepository userRepository;
 
-  public Long givenBusinessUserJoleneHornseyIdAfterCreated() {
+  public UserEntity givenPlainUserAfterCreated() {
+    UserEntity userEntity = UserEntityCreator.plainUserEntity();
+    userEntity.setId(null);
+    if (!userRepository.existsByEmail(userEntity.getEmail())) {
+      return userRepository.save(userEntity);
+    }
+    Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userEntity.getEmail());
+    assert optionalUserEntity.isPresent();
+    return optionalUserEntity.get();
+  }
+
+  public UserEntity givenBusinessUserJoleneHornseyAfterCreated() {
     UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
     userEntity.setId(null);
     if (!userRepository.existsByEmail(userEntity.getEmail())) {
-      return userRepository.save(userEntity).getId();
+      return userRepository.save(userEntity);
     }
     Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userEntity.getEmail());
     assert optionalUserEntity.isPresent();
-    return optionalUserEntity.get().getId();
+    return optionalUserEntity.get();
   }
 
-  public Long givenBusinessUserShreejiIdAfterCreated() {
+  public UserEntity givenBusinessUserShreejiAfterCreated() {
     UserEntity userEntity = UserEntityCreator.businessUserEntityShreeji();
     userEntity.setId(null);
     if (!userRepository.existsByEmail(userEntity.getEmail())) {
-      return userRepository.save(userEntity).getId();
+      return userRepository.save(userEntity);
     }
     Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userEntity.getEmail());
     assert optionalUserEntity.isPresent();
-    return optionalUserEntity.get().getId();
+    return optionalUserEntity.get();
   }
 }

@@ -66,6 +66,11 @@ public class UserEntity {
   @ManyToMany(mappedBy = "favoredBy", fetch = FetchType.LAZY)
   private List<PostEntity> favoritePosts;
 
+  @ManyToMany(mappedBy = "favoredBy", fetch = FetchType.LAZY)
+  private List<UserEntity> favoriteBusinesses;
+
+  @ManyToMany private List<UserEntity> favoredBy;
+
   private String homepageUrl;
   private String category;
   private String introduction;

@@ -34,7 +34,7 @@ public class PostCreateServiceImplTest {
   }
 
   private PostDto givenPostDto() {
-    long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyIdAfterCreated();
+    long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     PostDto postDto = PostDtoCreator.postDtoShreeji1();
     postDto.setId(null);
     postDto.getUser().setId(userId);
