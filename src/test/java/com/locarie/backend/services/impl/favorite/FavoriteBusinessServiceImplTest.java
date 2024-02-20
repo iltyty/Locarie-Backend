@@ -41,10 +41,16 @@ public class FavoriteBusinessServiceImplTest {
   void testRepeatFavoriteBusinessShouldSucceed() {
     UserDto[] users = favoriteBusinessAfterCreatingUsers();
     underTests.favoriteBusiness(users[0].getId(), users[1].getId());
+
+    List<UserDto> favoredBy =
+        userFindUtils.findUserById(users[1].getId()).getFavoredBy().stream()
+            .map(userMapper::mapTo)
+            .toList();
     List<UserDto> favoriteBusinesses =
         userFindUtils.findUserById(users[0].getId()).getFavoriteBusinesses().stream()
             .map(userMapper::mapTo)
             .toList();
+    thenResultShouldBeExactly(favoredBy, users[0]);
     thenResultShouldBeExactly(favoriteBusinesses, users[1]);
   }
 

@@ -1,9 +1,12 @@
 package com.locarie.backend.services.favorite.impl;
 
 import com.locarie.backend.domain.dto.post.PostDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.post.PostEntityDtoMapper;
+import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.favorite.FavoritePostService;
 import com.locarie.backend.services.utils.PostFindUtils;
@@ -17,18 +20,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class FavoritePostServiceImpl implements FavoritePostService {
   private final UserRepository userRepository;
+  private final PostRepository postRepository;
   private final UserFindUtils userFindUtils;
   private final PostFindUtils postFindUtils;
-  private final PostEntityDtoMapper postMapper;
+  private final Mapper<UserEntity, UserDto> userMapper;
+  private final Mapper<PostEntity, PostDto> postMapper;
 
   public FavoritePostServiceImpl(
       UserRepository userRepository,
+      PostRepository postRepository,
       UserFindUtils userFindUtils,
       PostFindUtils postFindUtils,
+      Mapper<UserEntity, UserDto> userMapper,
       PostEntityDtoMapper postMapper) {
     this.userRepository = userRepository;
+    this.postRepository = postRepository;
     this.userFindUtils = userFindUtils;
     this.postFindUtils = postFindUtils;
+    this.userMapper = userMapper;
     this.postMapper = postMapper;
   }
 
@@ -40,20 +49,37 @@ public class FavoritePostServiceImpl implements FavoritePostService {
   }
 
   private void favoritePostIfNeeded(UserEntity user, PostEntity post) {
-    if (isAlreadyFavored(user, post.getId())) {
+    if (isAlreadyFavored(user, post)) {
       return;
     }
     doFavoritePost(user, post);
-    saveFavoritePosts(user);
   }
 
-  private boolean isAlreadyFavored(UserEntity user, Long postId) {
+  private boolean isAlreadyFavored(UserEntity user, PostEntity post) {
+    List<UserEntity> favoredBy = post.getFavoredBy();
     List<PostEntity> favoritePosts = user.getFavoritePosts();
-    return favoritePosts != null
-        && favoritePosts.stream().map(PostEntity::getId).toList().contains(postId);
+    return favoredBy != null
+        && favoritePosts != null
+        && favoredBy.stream().map(UserEntity::getId).toList().contains(user.getId())
+        && favoritePosts.stream().map(PostEntity::getId).toList().contains(post.getId());
   }
 
   private void doFavoritePost(UserEntity user, PostEntity post) {
+    addFavoredBy(user, post);
+    addFavoritePosts(user, post);
+    saveUpdates(user, post);
+  }
+
+  private void addFavoredBy(UserEntity user, PostEntity post) {
+    List<UserEntity> favoredBy = post.getFavoredBy();
+    if (favoredBy == null) {
+      favoredBy = new ArrayList<>();
+    }
+    favoredBy.add(user);
+    post.setFavoredBy(favoredBy);
+  }
+
+  private void addFavoritePosts(UserEntity user, PostEntity post) {
     List<PostEntity> favoritePosts = user.getFavoritePosts();
     if (favoritePosts == null) {
       favoritePosts = new ArrayList<>();
@@ -62,33 +88,60 @@ public class FavoritePostServiceImpl implements FavoritePostService {
     user.setFavoritePosts(favoritePosts);
   }
 
-  private void saveFavoritePosts(UserEntity user) {
+  private void saveUpdates(UserEntity user, PostEntity post) {
     userRepository.save(user);
+    postRepository.save(post);
   }
 
   @Override
   public void unfavoritePost(Long userId, Long postId) {
     UserEntity user = userFindUtils.findUserById(userId);
-    unfavoritePostIfNeeded(user, postId);
+    PostEntity post = postFindUtils.findPostById(postId);
+    unfavoritePostIfNeeded(user, post);
   }
 
-  private void unfavoritePostIfNeeded(UserEntity user, Long postId) {
-    if (!isAlreadyFavored(user, postId)) {
+  private void unfavoritePostIfNeeded(UserEntity user, PostEntity post) {
+    if (!isAlreadyFavored(user, post)) {
       return;
     }
-    doUnfavoritePost(user, postId);
-    saveFavoritePosts(user);
+    doUnfavoritePost(user, post);
   }
 
-  private void doUnfavoritePost(UserEntity user, Long postId) {
+  private void doUnfavoritePost(UserEntity user, PostEntity post) {
+    removeFavoredBy(user, post);
+    removeFavoritePost(user, post);
+    saveUpdates(user, post);
+  }
+
+  private void removeFavoredBy(UserEntity user, PostEntity post) {
+    List<UserEntity> favoredBy = post.getFavoredBy();
+    favoredBy.removeIf(u -> u.getId().equals(user.getId()));
+    post.setFavoredBy(favoredBy);
+  }
+
+  private void removeFavoritePost(UserEntity user, PostEntity post) {
     List<PostEntity> favoritePosts = user.getFavoritePosts();
-    favoritePosts.removeIf(post -> post.getId().equals(postId));
+    favoritePosts.removeIf(p -> p.getId().equals(post.getId()));
     user.setFavoritePosts(favoritePosts);
   }
 
   @Override
   public List<PostDto> listFavoritePosts(Long userId) {
     UserEntity user = userFindUtils.findUserById(userId);
-    return user.getFavoritePosts().stream().map(postMapper::mapTo).toList();
+    List<PostEntity> favoritePosts = user.getFavoritePosts();
+    if (favoritePosts == null) {
+      favoritePosts = new ArrayList<>();
+    }
+    return favoritePosts.stream().map(postMapper::mapTo).toList();
+  }
+
+  @Override
+  public List<UserDto> listFavoredBy(Long postId) {
+    PostEntity post = postFindUtils.findPostById(postId);
+    List<UserEntity> favoredBy = post.getFavoredBy();
+    if (favoredBy == null) {
+      favoredBy = new ArrayList<>();
+    }
+    return favoredBy.stream().map(userMapper::mapTo).toList();
   }
 }

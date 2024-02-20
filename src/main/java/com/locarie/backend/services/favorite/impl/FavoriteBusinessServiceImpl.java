@@ -55,12 +55,12 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   private void doFavoriteBusiness(UserEntity user, UserEntity businessUser) {
-    updateFavoredBy(user, businessUser);
-    updateFavoriteBusinesses(user, businessUser);
-    saveUpdatedUsers(user, businessUser);
+    addFavoredBy(user, businessUser);
+    addFavoriteBusiness(user, businessUser);
+    saveUpdates(user, businessUser);
   }
 
-  private void updateFavoredBy(UserEntity user, UserEntity businessUser) {
+  private void addFavoredBy(UserEntity user, UserEntity businessUser) {
     List<UserEntity> favoredBy = businessUser.getFavoredBy();
     if (favoredBy == null) {
       favoredBy = new ArrayList<>();
@@ -69,7 +69,7 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
     businessUser.setFavoredBy(favoredBy);
   }
 
-  private void updateFavoriteBusinesses(UserEntity user, UserEntity businessUser) {
+  private void addFavoriteBusiness(UserEntity user, UserEntity businessUser) {
     List<UserEntity> favoriteBusinesses = user.getFavoriteBusinesses();
     if (favoriteBusinesses == null) {
       favoriteBusinesses = new ArrayList<>();
@@ -78,7 +78,7 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
     user.setFavoriteBusinesses(favoriteBusinesses);
   }
 
-  private void saveUpdatedUsers(UserEntity user, UserEntity businessUser) {
+  private void saveUpdates(UserEntity user, UserEntity businessUser) {
     userRepository.save(user);
     userRepository.save(businessUser);
   }
@@ -98,18 +98,18 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   private void doUnfavoriteBusiness(UserEntity user, UserEntity businessUser) {
-    updateUnfavoredBy(user, businessUser);
-    updateUnfavoriteBusinesses(user, businessUser);
-    saveUpdatedUsers(user, businessUser);
+    removeFavoredBy(user, businessUser);
+    removeFavoriteBusiness(user, businessUser);
+    saveUpdates(user, businessUser);
   }
 
-  private void updateUnfavoredBy(UserEntity user, UserEntity businessUser) {
+  private void removeFavoredBy(UserEntity user, UserEntity businessUser) {
     List<UserEntity> favoredBy = businessUser.getFavoredBy();
     favoredBy.removeIf(u -> u.getId().equals(user.getId()));
     businessUser.setFavoredBy(favoredBy);
   }
 
-  private void updateUnfavoriteBusinesses(UserEntity user, UserEntity businessUser) {
+  private void removeFavoriteBusiness(UserEntity user, UserEntity businessUser) {
     List<UserEntity> favoriteBusinesses = user.getFavoriteBusinesses();
     favoriteBusinesses.removeIf(u -> u.getId().equals(businessUser.getId()));
     user.setFavoriteBusinesses(favoriteBusinesses);
