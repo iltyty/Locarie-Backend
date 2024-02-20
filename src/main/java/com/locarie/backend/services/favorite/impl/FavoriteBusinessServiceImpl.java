@@ -120,4 +120,10 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
     UserEntity user = userFindUtils.findUserById(userId);
     return user.getFavoriteBusinesses().stream().map(userMapper::mapTo).toList();
   }
+
+  @Override
+  public List<UserDto> listFavoredBy(Long businessId) {
+    UserEntity businessUser = userFindUtils.findUserById(businessId);
+    return businessUser.getFavoredBy().stream().map(userMapper::mapTo).toList();
+  }
 }

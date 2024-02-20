@@ -4,8 +4,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.domain.dto.user.UserDto;
-import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -34,12 +32,11 @@ public class FavoriteBusinessControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private UserTestsDataCreator userTestsDataCreator;
   @Autowired private ResultExpectUtil resultExpectUtil;
-  @Autowired private Mapper<UserEntity, UserDto> userMapper;
 
   @Test
   void testFavoriteBusinessShouldSucceed() throws Exception {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder request =
         givenFavoriteBusinessRequest(user.getId(), businessUser.getId());
     ResultActions result = whenPerformRequest(request);
@@ -48,8 +45,8 @@ public class FavoriteBusinessControllerTest {
 
   @Test
   void testRepeatFavoriteShouldSucceed() throws Exception {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder request =
         givenFavoriteBusinessRequest(user.getId(), businessUser.getId());
     whenPerformRequest(request);
@@ -60,8 +57,8 @@ public class FavoriteBusinessControllerTest {
 
   @Test
   void testUnfavoriteAfterFavoriteShouldSucceed() throws Exception {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
         givenFavoriteBusinessRequest(user.getId(), businessUser.getId());
     whenPerformRequest(favoriteRequest);
@@ -74,8 +71,8 @@ public class FavoriteBusinessControllerTest {
 
   @Test
   void testRepeatUnfavoriteShouldSucceed() throws Exception {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
         givenFavoriteBusinessRequest(user.getId(), businessUser.getId());
     whenPerformRequest(favoriteRequest);
@@ -90,8 +87,8 @@ public class FavoriteBusinessControllerTest {
 
   @Test
   void testListAfterFavoriteShouldReturnCorrectData() throws Exception {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
         givenFavoriteBusinessRequest(user.getId(), businessUser.getId());
     whenPerformRequest(favoriteRequest);
@@ -99,13 +96,13 @@ public class FavoriteBusinessControllerTest {
     MockHttpServletRequestBuilder listRequest =
         MockMvcRequestBuilders.get(listEndpoint(user.getId()));
     ResultActions result = whenPerformRequest(listRequest);
-    thenListResultShouldBeExact(result, userMapper.mapTo(businessUser));
+    thenListResultShouldBeExact(result, businessUser);
   }
 
   @Test
   void testListAfterUnfavoriteShouldReturnEmptyData() throws Exception {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
         givenFavoriteBusinessRequest(user.getId(), businessUser.getId());
     whenPerformRequest(favoriteRequest);

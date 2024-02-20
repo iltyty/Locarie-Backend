@@ -24,26 +24,33 @@ public class FavoriteBusinessServiceImplTest {
 
   @Test
   void testFavoriteBusinessShouldSucceed() {
-    UserEntity[] users = favoriteBusinessAfterCreatingUsers();
-    List<UserEntity> favoredBy = userFindUtils.findUserById(users[1].getId()).getFavoredBy();
-    List<UserEntity> favoriteBusinesses =
-        userFindUtils.findUserById(users[0].getId()).getFavoriteBusinesses();
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    List<UserDto> favoredBy =
+        userFindUtils.findUserById(users[1].getId()).getFavoredBy().stream()
+            .map(userMapper::mapTo)
+            .toList();
+    List<UserDto> favoriteBusinesses =
+        userFindUtils.findUserById(users[0].getId()).getFavoriteBusinesses().stream()
+            .map(userMapper::mapTo)
+            .toList();
     thenResultShouldBeExactly(favoredBy, users[0]);
     thenResultShouldBeExactly(favoriteBusinesses, users[1]);
   }
 
   @Test
   void testRepeatFavoriteBusinessShouldSucceed() {
-    UserEntity[] users = favoriteBusinessAfterCreatingUsers();
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
     underTests.favoriteBusiness(users[0].getId(), users[1].getId());
-    List<UserEntity> favoriteBusinesses =
-        userFindUtils.findUserById(users[0].getId()).getFavoriteBusinesses();
+    List<UserDto> favoriteBusinesses =
+        userFindUtils.findUserById(users[0].getId()).getFavoriteBusinesses().stream()
+            .map(userMapper::mapTo)
+            .toList();
     thenResultShouldBeExactly(favoriteBusinesses, users[1]);
   }
 
   @Test
   void testUnfavoriteAfterFavoriteShouldSucceed() {
-    UserEntity[] users = favoriteBusinessAfterCreatingUsers();
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
     underTests.unfavoriteBusiness(users[0].getId(), users[1].getId());
     List<UserEntity> favoriteBusinesses =
         userFindUtils.findUserById(users[0].getId()).getFavoriteBusinesses();
@@ -54,7 +61,7 @@ public class FavoriteBusinessServiceImplTest {
 
   @Test
   void testRepeatUnfavoriteAfterFavoriteShouldSucceed() {
-    UserEntity[] users = favoriteBusinessAfterCreatingUsers();
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
     underTests.unfavoriteBusiness(users[0].getId(), users[1].getId());
     underTests.unfavoriteBusiness(users[0].getId(), users[1].getId());
     List<UserEntity> favoriteBusinesses =
@@ -65,23 +72,24 @@ public class FavoriteBusinessServiceImplTest {
   }
 
   @Test
-  void testListAfterFavoriteShouldReturnCorrectData() {
-    UserEntity[] users = favoriteBusinessAfterCreatingUsers();
+  void testListFavoriteAfterFavoriteShouldReturnCorrectData() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
     List<UserDto> favoriteBusinesses = underTests.listFavoriteBusinesses(users[0].getId());
-    UserDto businessUser = userMapper.mapTo(users[1]);
-    thenResultShouldBeExactly(favoriteBusinesses, businessUser);
+    thenResultShouldBeExactly(favoriteBusinesses, users[1]);
   }
 
-  private UserEntity[] favoriteBusinessAfterCreatingUsers() {
-    UserEntity user = userTestsDataCreator.givenPlainUserAfterCreated();
-    UserEntity businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+  @Test
+  void testListFavoredByAfterFavoriteShouldReturnCorrectData() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    List<UserDto> favoredBy = underTests.listFavoredBy(users[1].getId());
+    thenResultShouldBeExactly(favoredBy, users[0]);
+  }
+
+  private UserDto[] favoriteBusinessAfterCreatingUsers() {
+    UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
+    UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     underTests.favoriteBusiness(user.getId(), businessUser.getId());
-    return new UserEntity[] {user, businessUser};
-  }
-
-  private void thenResultShouldBeExactly(
-      List<UserEntity> favoriteBusinesses, UserEntity businessUser) {
-    listBeExactly(favoriteBusinesses, businessUser);
+    return new UserDto[] {user, businessUser};
   }
 
   private void thenResultShouldBeExactly(List<UserDto> favoriteBusinesses, UserDto businessUser) {
