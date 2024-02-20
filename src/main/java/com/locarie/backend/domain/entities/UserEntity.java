@@ -3,6 +3,7 @@ package com.locarie.backend.domain.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.locarie.backend.domain.enums.BusinessTag;
 import com.locarie.backend.serialization.deserializers.JtsPointDeserializer;
 import com.locarie.backend.serialization.serializers.JtsPointSerializer;
 import jakarta.persistence.*;
@@ -55,6 +56,9 @@ public class UserEntity {
 
   // The following fields are only valid for business users
   private String businessName;
+
+  @Enumerated(EnumType.STRING)
+  private List<BusinessTag> tags;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @OrderColumn(name = "profile_image_index")

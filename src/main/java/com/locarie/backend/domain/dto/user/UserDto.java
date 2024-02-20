@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
+import com.locarie.backend.domain.enums.BusinessTag;
 import com.locarie.backend.serialization.deserializers.JtsPointDeserializer;
 import com.locarie.backend.serialization.serializers.JtsPointSerializer;
 import jakarta.validation.constraints.NotNull;
@@ -46,6 +47,7 @@ public class UserDto {
 
   // The following fields are only valid for business users
   private String businessName;
+  private List<BusinessTag> tags;
   private List<String> profileImageUrls;
   private String homepageUrl;
   private String category;
