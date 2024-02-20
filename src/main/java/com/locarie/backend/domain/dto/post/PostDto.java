@@ -21,9 +21,6 @@ public class PostDto {
   @JsonFormat(shape = JsonFormat.Shape.STRING)
   private Instant time;
 
-  @NotEmpty(message = "title cannot be empty")
-  private String title;
-
   @NotEmpty(message = "content cannot be empty")
   private String content;
 

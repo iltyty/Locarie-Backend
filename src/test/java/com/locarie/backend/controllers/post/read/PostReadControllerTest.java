@@ -52,10 +52,8 @@ class PostReadControllerTest {
         .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
         .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
         .andExpect(jsonPath("$.data[0].id").value(dto1.getId()))
-        .andExpect(jsonPath("$.data[0].title").value(dto1.getTitle()))
         .andExpect(jsonPath("$.data[0].content").value(dto1.getContent()))
         .andExpect(jsonPath("$.data[1].id").value(dto2.getId()))
-        .andExpect(jsonPath("$.data[1].title").value(dto2.getTitle()))
         .andExpect(jsonPath("$.data[1].content").value(dto2.getContent()));
   }
 
@@ -82,7 +80,6 @@ class PostReadControllerTest {
         .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
         .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
         .andExpect(jsonPath("$.data.id").value(dto.getId()))
-        .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
         .andExpect(jsonPath("$.data.content").value(dto.getContent()));
   }
 
@@ -97,10 +94,8 @@ class PostReadControllerTest {
         .andExpect(jsonPath("$.status").value(ResultCode.SUCCESS.getCode()))
         .andExpect(jsonPath("$.message").value(ResultCode.SUCCESS.getMessage()))
         .andExpect(jsonPath("$.data[0].id").value(dtos.get(0).getId()))
-        .andExpect(jsonPath("$.data[0].title").value(dtos.get(0).getTitle()))
         .andExpect(jsonPath("$.data[0].content").value(dtos.get(0).getContent()))
         .andExpect(jsonPath("$.data[1].id").value(dtos.get(1).getId()))
-        .andExpect(jsonPath("$.data[1].title").value(dtos.get(1).getTitle()))
         .andExpect(jsonPath("$.data[1].content").value(dtos.get(1).getContent()));
   }
 

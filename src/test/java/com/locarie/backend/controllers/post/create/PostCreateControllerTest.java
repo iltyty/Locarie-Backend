@@ -72,7 +72,6 @@ public class PostCreateControllerTest {
     result
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.data.id").exists())
-        .andExpect(jsonPath("$.data.title").value(dto.getTitle()))
         .andExpect(jsonPath("$.data.content").value(dto.getContent()));
   }
 

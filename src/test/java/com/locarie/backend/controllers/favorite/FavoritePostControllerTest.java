@@ -183,7 +183,6 @@ public class FavoritePostControllerTest {
     result
         .andExpect(jsonPath("$.data").isArray())
         .andExpect(jsonPath("$.data[0].id").value(post.getId()))
-        .andExpect(jsonPath("$.data[0].title").value(post.getTitle()))
         .andExpect(jsonPath("$.data[0].content").value(post.getContent()));
   }
 

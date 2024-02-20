@@ -34,9 +34,6 @@ public class PostEntity {
   private Instant time; // post publish time
 
   @Column(nullable = false)
-  private String title;
-
-  @Column(nullable = false)
   private String content;
 
   @ElementCollection(fetch = FetchType.EAGER)
