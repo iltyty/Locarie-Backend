@@ -1,6 +1,7 @@
 package com.locarie.backend.controllers.favorite;
 
 import com.locarie.backend.domain.dto.post.PostDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.services.favorite.FavoritePostService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,10 @@ public class FavoritePostController {
   @GetMapping("/favorite")
   public List<PostDto> listFavoritePosts(@RequestParam("userId") Long userId) {
     return service.listFavoritePosts(userId);
+  }
+
+  @GetMapping("/favored-by")
+  public List<UserDto> listFavoredByPosts(@RequestParam("postId") Long postId) {
+    return service.listFavoredBy(postId);
   }
 }

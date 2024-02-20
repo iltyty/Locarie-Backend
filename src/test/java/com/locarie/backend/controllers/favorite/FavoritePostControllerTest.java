@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
+import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -26,8 +27,12 @@ public class FavoritePostControllerTest {
   private static final String FAVORITE_ENDPOINT = "/api/v1/posts/favorite";
   private static final String UNFAVORITE_ENDPOINT = "/api/v1/posts/unfavorite";
 
-  private static String listEndpoint(Long userId) {
+  private static String listFavoriteEndpoint(Long userId) {
     return String.format("/api/v1/posts/favorite?userId=%d", userId);
+  }
+
+  private static String listFavoredByEndpoint(Long postId) {
+    return String.format("/api/v1/posts/favored-by?postId=%d", postId);
   }
 
   @Autowired private MockMvc mockMvc;
@@ -89,7 +94,7 @@ public class FavoritePostControllerTest {
     MockHttpServletRequestBuilder listRequest = givenListFavoriteRequest(userId);
     ResultActions result = whenPerformRequest(listRequest);
     resultExpectUtil.thenResultShouldBeOk(result);
-    thenListResultShouldBeExact(result, post);
+    thenListFavoritePostsResultShouldBeExact(result, post);
   }
 
   @Test
@@ -108,6 +113,38 @@ public class FavoritePostControllerTest {
     thenListResultShouldBeEmpty(result);
   }
 
+  @Test
+  void testListFavoredByAfterFavoriteShouldReturnCorrectData() throws Exception {
+    UserDto user = userTestsDataCreator.givenBusinessUserShreejiAfterCreated();
+    PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
+    MockHttpServletRequestBuilder favoriteRequest =
+        givenFavoritePostRequest(user.getId(), post.getId());
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder listRequest = givenListFavoredByRequest(post.getId());
+    ResultActions result = whenPerformRequest(listRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenListFavoredByUsersResultShouldBeExact(result, user);
+  }
+
+  @Test
+  void testListFavoredByAfterUnfavoriteShouldReturnEmptyData() throws Exception {
+    UserDto user = userTestsDataCreator.givenBusinessUserShreejiAfterCreated();
+    PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
+    MockHttpServletRequestBuilder favoriteRequest =
+        givenFavoritePostRequest(user.getId(), post.getId());
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder unfavoriteRequest =
+        givenUnfavoritePostRequest(user.getId(), post.getId());
+    whenPerformRequest(unfavoriteRequest);
+
+    MockHttpServletRequestBuilder listRequest = givenListFavoredByRequest(post.getId());
+    ResultActions result = whenPerformRequest(listRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenListResultShouldBeEmpty(result);
+  }
+
   private MockHttpServletRequestBuilder givenFavoritePostRequest(Long userId, Long postId) {
     return MockMvcRequestBuilders.post(FAVORITE_ENDPOINT)
         .params(preparePostParams(userId, postId))
@@ -121,7 +158,12 @@ public class FavoritePostControllerTest {
   }
 
   private MockHttpServletRequestBuilder givenListFavoriteRequest(Long userId) {
-    String endpoint = listEndpoint(userId);
+    String endpoint = listFavoriteEndpoint(userId);
+    return MockMvcRequestBuilders.get(endpoint);
+  }
+
+  private MockHttpServletRequestBuilder givenListFavoredByRequest(Long id) {
+    String endpoint = listFavoredByEndpoint(id);
     return MockMvcRequestBuilders.get(endpoint);
   }
 
@@ -136,12 +178,24 @@ public class FavoritePostControllerTest {
     return mockMvc.perform(request);
   }
 
-  private void thenListResultShouldBeExact(ResultActions result, PostDto post) throws Exception {
+  private void thenListFavoritePostsResultShouldBeExact(ResultActions result, PostDto post)
+      throws Exception {
     result
         .andExpect(jsonPath("$.data").isArray())
         .andExpect(jsonPath("$.data[0].id").value(post.getId()))
         .andExpect(jsonPath("$.data[0].title").value(post.getTitle()))
         .andExpect(jsonPath("$.data[0].content").value(post.getContent()));
+  }
+
+  private void thenListFavoredByUsersResultShouldBeExact(ResultActions result, UserDto user)
+      throws Exception {
+    result
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].id").value(user.getId()))
+        .andExpect(jsonPath("$.data[0].username").value(user.getUsername()))
+        .andExpect(jsonPath("$.data[0].type").value(user.getType().toString()))
+        .andExpect(jsonPath("$.data[0].firstName").value(user.getFirstName()))
+        .andExpect(jsonPath("$.data[0].lastName").value(user.getLastName()));
   }
 
   private void thenListResultShouldBeEmpty(ResultActions result) throws Exception {
