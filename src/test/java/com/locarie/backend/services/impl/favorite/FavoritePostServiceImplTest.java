@@ -76,6 +76,20 @@ public class FavoritePostServiceImplTest {
   }
 
   @Test
+  void testRepeatUnfavoriteAfterFavoriteShouldSucceed() {
+    Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
+    underTests.unfavoritePost(pair.getFirst().getId(), pair.getSecond().getId());
+    underTests.unfavoritePost(pair.getFirst().getId(), pair.getSecond().getId());
+
+    List<UserEntity> favoredBy =
+        postFindUtils.findPostById(pair.getSecond().getId()).getFavoredBy();
+    List<PostEntity> favoritePosts =
+        userFindUtils.findUserById(pair.getFirst().getId()).getFavoritePosts();
+    thenPostFavoredByShouldBeEmpty(favoredBy);
+    thenUserFavoritePostsShouldBeEmpty(favoritePosts);
+  }
+
+  @Test
   void testListFavoriteAfterFavoriteShouldReturnCorrectData() {
     Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
     List<PostDto> favoritePosts = underTests.listFavoritePosts(pair.getFirst().getId());
