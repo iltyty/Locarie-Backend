@@ -12,6 +12,7 @@ import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.time.LocalTime;
@@ -33,6 +34,7 @@ public class UserUpdateControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
   @Autowired private ObjectMapper objectMapper;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   private static String getEndpoint(Long userId) {
     return String.format("/api/v1/users/%d", userId);
@@ -44,7 +46,7 @@ public class UserUpdateControllerTest {
     UserUpdateDto userUpdateDto = givenFullPlainUserUpdateDto();
     MockHttpServletRequestBuilder request = givenUpdateUserRequest(id, userUpdateDto);
     ResultActions result = whenPerformUpdateUserRequest(request);
-    thenUpdateResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenUpdateResultShouldFullyEqualToPlainUserUpdateDto(result, userUpdateDto);
   }
 
@@ -54,7 +56,7 @@ public class UserUpdateControllerTest {
     UserUpdateDto userUpdateDto = givenPartialPlainUserUpdateDto();
     MockHttpServletRequestBuilder request = givenUpdateUserRequest(id, userUpdateDto);
     ResultActions result = whenPerformUpdateUserRequest(request);
-    thenUpdateResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenUpdateResultShouldPartiallyEqualToUserUpdateDto(result, userUpdateDto);
   }
 
@@ -64,7 +66,7 @@ public class UserUpdateControllerTest {
     UserUpdateDto userUpdateDto = givenFullBusinessUserUpdateDto();
     MockHttpServletRequestBuilder request = givenUpdateUserRequest(id, userUpdateDto);
     ResultActions result = whenPerformUpdateUserRequest(request);
-    thenUpdateResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenUpdateResultShouldFullyEqualToBusinessUserUpdateDto(result, userUpdateDto);
   }
 
@@ -74,12 +76,8 @@ public class UserUpdateControllerTest {
     UserUpdateDto userUpdateDto = givenPartialBusinessUserUpdateDto();
     MockHttpServletRequestBuilder request = givenUpdateUserRequest(id, userUpdateDto);
     ResultActions result = whenPerformUpdateUserRequest(request);
-    thenUpdateResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenUpdateResultShouldPartiallyEqualToUserUpdateDto(result, userUpdateDto);
-    result.andDo(
-        res -> {
-          System.out.println(res.getResponse().getContentAsString());
-        });
   }
 
   @Test
@@ -128,12 +126,6 @@ public class UserUpdateControllerTest {
   private ResultActions whenPerformUpdateUserRequest(MockHttpServletRequestBuilder request)
       throws Exception {
     return mockMvc.perform(request);
-  }
-
-  private void thenUpdateResultShouldBeSuccess(ResultActions result) throws Exception {
-    result
-        .andExpect(resultStatusCodeShouldBeSuccess())
-        .andExpect(resultStatusCodeShouldBeSuccess());
   }
 
   private void thenUpdateResultShouldFullyEqualToPlainUserUpdateDto(

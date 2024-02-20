@@ -1,35 +1,37 @@
 package com.locarie.backend.utils.matchers;
 
 import com.locarie.backend.global.ResultCode;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class ControllerResultMatcherUtil {
-  public static ResultMatcher resultStatusShouldBeOk() {
+@Component
+public class ResultMatcherUtil {
+  public ResultMatcher resultStatusShouldBeOk() {
     return MockMvcResultMatchers.status().isOk();
   }
 
-  public static ResultMatcher resultStatusShouldBeCreated() {
+  public ResultMatcher resultStatusShouldBeCreated() {
     return MockMvcResultMatchers.status().isCreated();
   }
 
-  public static ResultMatcher resultStatusCodeShouldBeSuccess() {
+  public ResultMatcher resultStatusCodeShouldBeSuccess() {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode());
   }
 
-  public static ResultMatcher resultStatusCodeShouldBeFailure() {
+  public ResultMatcher resultStatusCodeShouldBeFailure() {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.FAIL.getCode());
   }
 
-  public static ResultMatcher resultStatusCodeShouldBeInvalidParameters() {
+  public ResultMatcher resultStatusCodeShouldBeInvalidParameters() {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.RC101.getCode());
   }
 
-  public static ResultMatcher resultMessageShouldBeSuccess() {
+  public ResultMatcher resultMessageShouldBeSuccess() {
     return MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage());
   }
 
-  public static ResultMatcher resultMessageShouldBeFailure() {
+  public ResultMatcher resultMessageShouldBeFailure() {
     return MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.FAIL.getMessage());
   }
 }

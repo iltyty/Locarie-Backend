@@ -2,7 +2,7 @@ package com.locarie.backend.controllers.user.images;
 
 import com.locarie.backend.datacreators.image.MockImageCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
-import com.locarie.backend.utils.matchers.ControllerResultMatcherUtil;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserProfileImagesControllerTest {
   @Autowired private UserTestsDataCreator userDataCreator;
   @Autowired private MockMvc mockMvc;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   private static String getEndpoint(Long userId) {
     return String.format("/api/v1/users/%d/profile-images", userId);
@@ -32,7 +33,7 @@ public class UserProfileImagesControllerTest {
     MockMultipartHttpServletRequestBuilder request =
         givenProfileImagesUploadRequest(userId, images);
     ResultActions result = whenPerformRequest(request);
-    thenResultShouldBeOk(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
   }
 
   private MockMultipartHttpServletRequestBuilder givenProfileImagesUploadRequest(
@@ -48,11 +49,5 @@ public class UserProfileImagesControllerTest {
   private ResultActions whenPerformRequest(MockMultipartHttpServletRequestBuilder request)
       throws Exception {
     return mockMvc.perform(request);
-  }
-
-  private void thenResultShouldBeOk(ResultActions result) throws Exception {
-    result
-        .andExpect(ControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(ControllerResultMatcherUtil.resultMessageShouldBeSuccess());
   }
 }

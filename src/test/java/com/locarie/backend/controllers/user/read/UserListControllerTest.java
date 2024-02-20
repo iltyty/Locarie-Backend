@@ -9,6 +9,7 @@ import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.user.UserEntityDtoMapperImpl;
 import com.locarie.backend.repositories.user.UserRepository;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -29,15 +30,15 @@ public class UserListControllerTest {
   private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
 
   @Autowired private MockMvc mockMvc;
-
-  @Autowired UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   @Test
   void testListShouldSucceed() throws Exception {
     List<UserDto> dtos = givenUserRegistrationDtosAfterCreated();
     MockHttpServletRequestBuilder request = givenListRequest();
     ResultActions result = whenPerformListRequest(request);
-    thenListResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenListResultShouldContainDtos(result, dtos);
   }
 
@@ -65,10 +66,6 @@ public class UserListControllerTest {
           userEntity.setId(savedUserEntity.getId());
         });
     return userEntities;
-  }
-
-  private void thenListResultShouldBeSuccess(ResultActions result) throws Exception {
-    result.andExpect(resultStatusCodeShouldBeSuccess()).andExpect(resultMessageShouldBeSuccess());
   }
 
   private void thenListResultShouldContainDtos(ResultActions result, List<UserDto> dtos)

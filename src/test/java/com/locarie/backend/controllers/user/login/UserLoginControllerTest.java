@@ -9,6 +9,7 @@ import com.locarie.backend.domain.dto.user.UserLoginRequestDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.utils.DataFormatConverter;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,14 @@ public class UserLoginControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   @Test
   void testLoginShouldSucceed() throws Exception {
     UserLoginRequestDto userRegistrationDto = givenUserLoginRequestDtoAfterCreated();
     MockHttpServletRequestBuilder request = givenLoginRequest(userRegistrationDto);
     ResultActions result = whenPerformLoginRequest(request);
-    thenLoginResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenLoginResultShouldContainValidData(result);
   }
 
@@ -55,10 +57,6 @@ public class UserLoginControllerTest {
   private ResultActions whenPerformLoginRequest(MockHttpServletRequestBuilder request)
       throws Exception {
     return mockMvc.perform(request);
-  }
-
-  private void thenLoginResultShouldBeSuccess(ResultActions result) throws Exception {
-    result.andExpect(resultStatusCodeShouldBeSuccess()).andExpect(resultMessageShouldBeSuccess());
   }
 
   private void thenLoginResultShouldContainValidData(ResultActions result) throws Exception {

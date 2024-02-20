@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.datacreators.user.UserRegistrationDtoCreator;
 import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
+import com.locarie.backend.utils.matchers.ResultMatcherUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class UserRegisterControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
+  @Autowired private ResultMatcherUtil resultMatcherUtil;
 
   @Test
   void testRegisterPlainUserShouldSucceed() throws Exception {
@@ -153,10 +155,6 @@ public class UserRegisterControllerTest {
     result.andExpect(status().isCreated());
   }
 
-  private void thenRegisterResultStatusShouldBeOk(ResultActions result) throws Exception {
-    result.andExpect(status().isOk());
-  }
-
   private void thenRegisterResultStatusShouldBeBadRequest(ResultActions result) throws Exception {
     result.andExpect(status().isBadRequest());
   }
@@ -164,8 +162,8 @@ public class UserRegisterControllerTest {
   private void thenRegisterResultShouldContainUser(ResultActions result, UserRegistrationDto dto)
       throws Exception {
     result
-        .andExpect(resultStatusCodeShouldBeSuccess())
-        .andExpect(resultMessageShouldBeSuccess())
+        .andExpect(resultMatcherUtil.resultStatusCodeShouldBeSuccess())
+        .andExpect(resultMatcherUtil.resultMessageShouldBeSuccess())
         .andExpect(jsonPath("$.data.id").isNumber())
         .andExpect(jsonPath("$.data.type").value(dto.getType().toString()))
         .andExpect(jsonPath("$.data.username").value(dto.getUsername()))
@@ -180,7 +178,7 @@ public class UserRegisterControllerTest {
 
   private void thenRegisterResultStatusShouldBeInvalidParameters(ResultActions result)
       throws Exception {
-    result.andExpect(resultStatusCodeShouldBeInvalidParameters());
+    result.andExpect(resultMatcherUtil.resultStatusCodeShouldBeInvalidParameters());
   }
 
   private void thenRegisterResultMessageContainType(ResultActions resultActions) throws Exception {

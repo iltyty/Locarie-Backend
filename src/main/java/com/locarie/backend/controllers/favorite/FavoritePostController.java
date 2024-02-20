@@ -20,14 +20,14 @@ public class FavoritePostController {
   public ResponseEntity<Boolean> favoritePost(
       @RequestParam("userId") Long userId, @RequestParam("postId") Long postId) {
     service.favoritePost(userId, postId);
-    return new ResponseEntity<>(true, HttpStatus.CREATED);
+    return new ResponseEntity<>(true, HttpStatus.OK);
   }
 
   @PostMapping("/unfavorite")
   public ResponseEntity<Boolean> unfavoritePost(
       @RequestParam("userId") Long userId, @RequestParam("postId") Long postId) {
     service.unfavoritePost(userId, postId);
-    return new ResponseEntity<>(true, HttpStatus.CREATED);
+    return new ResponseEntity<>(true, HttpStatus.OK);
   }
 
   @GetMapping("/favorite")

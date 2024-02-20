@@ -4,7 +4,7 @@ import org.hamcrest.core.StringContains;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class UserControllerResultMatcherUtil extends ControllerResultMatcherUtil {
+public class UserControllerResultMatcherUtil extends ResultMatcherUtil {
 
   public static ResultMatcher resultMessageShouldContainType() {
     return resultMessageShouldContainField("type");

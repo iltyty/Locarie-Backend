@@ -1,12 +1,12 @@
 package com.locarie.backend.controllers.user.read;
 
-import static com.locarie.backend.utils.matchers.ControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class UserGetControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   @Test
   void testGetExistedUserShouldSucceed() throws Exception {
     UserEntity userEntity = givenUserEntityAfterCreated();
     MockHttpServletRequestBuilder request = givenGetUserRequest(userEntity.getId());
     ResultActions result = whenPerformGetUserRequest(request);
-    thenGetResultShouldBeSuccess(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenGetResultShouldContainUser(result, userEntity);
   }
 
@@ -55,20 +56,9 @@ public class UserGetControllerTest {
     return mockMvc.perform(request);
   }
 
-  private void thenGetResultShouldBeSuccess(ResultActions result) throws Exception {
-    result
-        .andExpect(resultStatusCodeShouldBeSuccess())
-        .andExpect(resultStatusCodeShouldBeSuccess());
-  }
-
   private void thenGetResultShouldContainUser(ResultActions result, UserEntity userEntity)
       throws Exception {
-    result
-        .andDo(
-            result1 -> {
-              System.out.println(result1.getResponse().getContentAsString());
-            })
-        .andExpect(jsonPath("$.data.id").value(userEntity.getId()));
+    result.andExpect(jsonPath("$.data.id").value(userEntity.getId()));
   }
 
   private void thenGetResultShouldBeNotFound(ResultActions result) throws Exception {

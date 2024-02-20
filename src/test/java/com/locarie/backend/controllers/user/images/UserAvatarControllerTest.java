@@ -3,7 +3,7 @@ package com.locarie.backend.controllers.user.images;
 import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.user.UserRepository;
-import com.locarie.backend.utils.matchers.ControllerResultMatcherUtil;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ public class UserAvatarControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   private static String getEndpoint(Long userId) {
     return String.format("/api/v1/users/%d/avatar", userId);
@@ -35,7 +36,7 @@ public class UserAvatarControllerTest {
     MockMultipartFile avatar = givenAvatar();
     MockHttpServletRequestBuilder request = givenUploadAvatarRequest(userId, avatar);
     ResultActions result = whenPerformHttpRequest(request);
-    thenResultShouldBeOk(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
   }
 
   private UserEntity givenUserEntityAfterCreated() {
@@ -56,11 +57,5 @@ public class UserAvatarControllerTest {
   private ResultActions whenPerformHttpRequest(MockHttpServletRequestBuilder request)
       throws Exception {
     return mockMvc.perform(request);
-  }
-
-  private void thenResultShouldBeOk(ResultActions result) throws Exception {
-    result
-        .andExpect(ControllerResultMatcherUtil.resultStatusCodeShouldBeSuccess())
-        .andExpect(ControllerResultMatcherUtil.resultMessageShouldBeSuccess());
   }
 }

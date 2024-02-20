@@ -67,7 +67,7 @@ public class FavoriteBusinessServiceImplTest {
   @Test
   void testListAfterFavoriteShouldReturnCorrectData() {
     UserEntity[] users = favoriteBusinessAfterCreatingUsers();
-    List<UserDto> favoriteBusinesses = underTests.listFavoriteBusiness(users[0].getId());
+    List<UserDto> favoriteBusinesses = underTests.listFavoriteBusinesses(users[0].getId());
     UserDto businessUser = userMapper.mapTo(users[1]);
     thenResultShouldBeExactly(favoriteBusinesses, businessUser);
   }

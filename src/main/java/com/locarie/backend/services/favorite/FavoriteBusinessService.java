@@ -8,5 +8,5 @@ public interface FavoriteBusinessService {
 
   void unfavoriteBusiness(Long userId, Long businessId);
 
-  List<UserDto> listFavoriteBusiness(Long userId);
+  List<UserDto> listFavoriteBusinesses(Long userId);
 }

@@ -116,7 +116,7 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   @Override
-  public List<UserDto> listFavoriteBusiness(Long userId) {
+  public List<UserDto> listFavoriteBusinesses(Long userId) {
     UserEntity user = userFindUtils.findUserById(userId);
     return user.getFavoriteBusinesses().stream().map(userMapper::mapTo).toList();
   }

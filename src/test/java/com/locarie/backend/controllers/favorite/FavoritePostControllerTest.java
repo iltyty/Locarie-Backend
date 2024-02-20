@@ -1,11 +1,11 @@
 package com.locarie.backend.controllers.favorite;
 
-import static com.locarie.backend.utils.matchers.ControllerResultMatcherUtil.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
+import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,10 @@ public class FavoritePostControllerTest {
     return String.format("/api/v1/posts/favorite?userId=%d", userId);
   }
 
-  @Autowired MockMvc mockMvc;
-  @Autowired UserTestsDataCreator userTestsDataCreator;
-  @Autowired PostTestsDataCreator postTestsDataCreator;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private UserTestsDataCreator userTestsDataCreator;
+  @Autowired private PostTestsDataCreator postTestsDataCreator;
+  @Autowired private ResultExpectUtil resultExpectUtil;
 
   @Test
   void testFavoritePostShouldSucceed() throws Exception {
@@ -40,7 +41,7 @@ public class FavoritePostControllerTest {
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder request = givenFavoritePostRequest(userId, postId);
     ResultActions result = whenPerformRequest(request);
-    thenResultShouldBeCreated(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
   }
 
   @Test
@@ -50,7 +51,7 @@ public class FavoritePostControllerTest {
     MockHttpServletRequestBuilder request = givenFavoritePostRequest(userId, postId);
     whenPerformRequest(request);
     ResultActions result = whenPerformRequest(request);
-    thenResultShouldBeCreated(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
   }
 
   @Test
@@ -62,7 +63,7 @@ public class FavoritePostControllerTest {
 
     MockHttpServletRequestBuilder unfavoriteRequest = givenUnfavoritePostRequest(userId, postId);
     ResultActions result = whenPerformRequest(unfavoriteRequest);
-    thenResultShouldBeCreated(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
   }
 
   @Test
@@ -75,7 +76,7 @@ public class FavoritePostControllerTest {
     MockHttpServletRequestBuilder unfavoriteRequest = givenUnfavoritePostRequest(userId, postId);
     whenPerformRequest(unfavoriteRequest);
     ResultActions result = whenPerformRequest(unfavoriteRequest);
-    thenResultShouldBeCreated(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
   }
 
   @Test
@@ -87,7 +88,7 @@ public class FavoritePostControllerTest {
 
     MockHttpServletRequestBuilder listRequest = givenListFavoriteRequest(userId);
     ResultActions result = whenPerformRequest(listRequest);
-    thenResultShouldBeOk(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenListResultShouldBeExact(result, post);
   }
 
@@ -103,14 +104,13 @@ public class FavoritePostControllerTest {
 
     MockHttpServletRequestBuilder listRequest = givenListFavoriteRequest(userId);
     ResultActions result = whenPerformRequest(listRequest);
-    thenResultShouldBeOk(result);
+    resultExpectUtil.thenResultShouldBeOk(result);
     thenListResultShouldBeEmpty(result);
   }
 
   private MockHttpServletRequestBuilder givenFavoritePostRequest(Long userId, Long postId) {
-    MultiValueMap<String, String> params = preparePostParams(userId, postId);
     return MockMvcRequestBuilders.post(FAVORITE_ENDPOINT)
-        .params(params)
+        .params(preparePostParams(userId, postId))
         .contentType(MediaType.APPLICATION_FORM_URLENCODED);
   }
 
@@ -134,20 +134,6 @@ public class FavoritePostControllerTest {
 
   private ResultActions whenPerformRequest(MockHttpServletRequestBuilder request) throws Exception {
     return mockMvc.perform(request);
-  }
-
-  private void thenResultShouldBeCreated(ResultActions result) throws Exception {
-    result.andExpect(resultStatusShouldBeCreated());
-    thenResultShouldBeSuccess(result);
-  }
-
-  private void thenResultShouldBeOk(ResultActions result) throws Exception {
-    result.andExpect(resultStatusShouldBeOk());
-    thenResultShouldBeSuccess(result);
-  }
-
-  private void thenResultShouldBeSuccess(ResultActions result) throws Exception {
-    result.andExpect(resultStatusCodeShouldBeSuccess()).andExpect(resultMessageShouldBeSuccess());
   }
 
   private void thenListResultShouldBeExact(ResultActions result, PostDto post) throws Exception {
