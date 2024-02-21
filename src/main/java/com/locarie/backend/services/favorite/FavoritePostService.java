@@ -9,7 +9,11 @@ public interface FavoritePostService {
 
   void unfavoritePost(Long userId, Long postId);
 
+  List<UserDto> listFavoredBy(Long postId);
+
   List<PostDto> listFavoritePosts(Long userId);
 
-  List<UserDto> listFavoredBy(Long postId);
+  int countFavoredBy(Long postId);
+
+  int countFavoritePosts(Long userId);
 }

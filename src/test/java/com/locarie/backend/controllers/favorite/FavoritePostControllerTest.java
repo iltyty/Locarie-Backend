@@ -35,6 +35,14 @@ public class FavoritePostControllerTest {
     return String.format("/api/v1/posts/favored-by?postId=%d", postId);
   }
 
+  private static String countFavoriteEndpoint(Long userId) {
+    return String.format("/api/v1/posts/favorite/count?userId=%d", userId);
+  }
+
+  private static String countFavoredByEndpoint(Long postId) {
+    return String.format("/api/v1/posts/favored-by/count?postId=%d", postId);
+  }
+
   @Autowired private MockMvc mockMvc;
   @Autowired private UserTestsDataCreator userTestsDataCreator;
   @Autowired private PostTestsDataCreator postTestsDataCreator;
@@ -85,7 +93,7 @@ public class FavoritePostControllerTest {
   }
 
   @Test
-  void testListAfterFavoriteShouldReturnCorrectData() throws Exception {
+  void testListFavoritePostsAfterFavoriteShouldReturnCorrectResult() throws Exception {
     Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
     MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, post.getId());
@@ -98,7 +106,7 @@ public class FavoritePostControllerTest {
   }
 
   @Test
-  void testListAfterUnfavoriteShouldReturnEmptyData() throws Exception {
+  void testListFavoritePostsAfterUnfavoriteShouldReturnEmptyResult() throws Exception {
     Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
     Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
     MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
@@ -145,6 +153,32 @@ public class FavoritePostControllerTest {
     thenListResultShouldBeEmpty(result);
   }
 
+  @Test
+  void testCountFavoritePostsAfterFavoriteShouldReturnCorrectResult() throws Exception {
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
+    Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
+    MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder countRequest = givenCountFavoriteRequest(userId);
+    ResultActions result = whenPerformRequest(countRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenCountResultShouldBeOne(result);
+  }
+
+  @Test
+  void testCountFavoredByAfterFavoriteShouldReturnCorrectResult() throws Exception {
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
+    Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
+    MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder countRequest = givenCountFavoredByRequest(postId);
+    ResultActions result = whenPerformRequest(countRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenCountResultShouldBeOne(result);
+  }
+
   private MockHttpServletRequestBuilder givenFavoritePostRequest(Long userId, Long postId) {
     return MockMvcRequestBuilders.post(FAVORITE_ENDPOINT)
         .params(preparePostParams(userId, postId))
@@ -162,8 +196,18 @@ public class FavoritePostControllerTest {
     return MockMvcRequestBuilders.get(endpoint);
   }
 
-  private MockHttpServletRequestBuilder givenListFavoredByRequest(Long id) {
-    String endpoint = listFavoredByEndpoint(id);
+  private MockHttpServletRequestBuilder givenListFavoredByRequest(Long postId) {
+    String endpoint = listFavoredByEndpoint(postId);
+    return MockMvcRequestBuilders.get(endpoint);
+  }
+
+  private MockHttpServletRequestBuilder givenCountFavoriteRequest(Long userId) {
+    String endpoint = countFavoriteEndpoint(userId);
+    return MockMvcRequestBuilders.get(endpoint);
+  }
+
+  private MockHttpServletRequestBuilder givenCountFavoredByRequest(Long postId) {
+    String endpoint = countFavoredByEndpoint(postId);
     return MockMvcRequestBuilders.get(endpoint);
   }
 
@@ -184,6 +228,10 @@ public class FavoritePostControllerTest {
         .andExpect(jsonPath("$.data").isArray())
         .andExpect(jsonPath("$.data[0].id").value(post.getId()))
         .andExpect(jsonPath("$.data[0].content").value(post.getContent()));
+  }
+
+  private void thenCountResultShouldBeOne(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(1));
   }
 
   private void thenListFavoredByUsersResultShouldBeExact(ResultActions result, UserDto user)

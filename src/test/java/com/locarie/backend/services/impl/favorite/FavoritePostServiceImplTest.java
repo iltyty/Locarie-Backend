@@ -90,10 +90,17 @@ public class FavoritePostServiceImplTest {
   }
 
   @Test
-  void testListFavoriteAfterFavoriteShouldReturnCorrectData() {
+  void testListFavoriteAfterFavoriteShouldReturnCorrectResult() {
     Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
     List<PostDto> favoritePosts = underTests.listFavoritePosts(pair.getFirst().getId());
     thenUserFavoritePostsShouldBeExactly(favoritePosts, pair.getSecond());
+  }
+
+  @Test
+  void testCountFavoriteAfterFavoriteShouldReturnCorrectResult() {
+    Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
+    int favoriteCount = underTests.countFavoritePosts(pair.getFirst().getId());
+    assertThat(favoriteCount).isEqualTo(1);
   }
 
   @Test
@@ -101,6 +108,13 @@ public class FavoritePostServiceImplTest {
     Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
     List<UserDto> favoredBy = underTests.listFavoredBy(pair.getSecond().getId());
     thenPostFavoredByShouldBeExactly(favoredBy, pair.getFirst());
+  }
+
+  @Test
+  void testCountFavoredByAfterFavoriteShouldReturnCorrectResult() {
+    Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
+    int favoriteCount = underTests.countFavoredBy(pair.getSecond().getId());
+    assertThat(favoriteCount).isEqualTo(1);
   }
 
   private Pair<UserDto, PostDto> favoritePostAfterCreatingUserAndPost() {

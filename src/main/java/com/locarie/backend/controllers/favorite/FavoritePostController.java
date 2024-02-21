@@ -40,4 +40,14 @@ public class FavoritePostController {
   public List<UserDto> listFavoredByPosts(@RequestParam("postId") Long postId) {
     return service.listFavoredBy(postId);
   }
+
+  @GetMapping("/favorite/count")
+  public int countFavoritePosts(@RequestParam("userId") Long userId) {
+    return service.countFavoritePosts(userId);
+  }
+
+  @GetMapping("/favored-by/count")
+  public int countFavoredByPosts(@RequestParam("postId") Long postId) {
+    return service.countFavoredBy(postId);
+  }
 }

@@ -126,6 +126,16 @@ public class FavoritePostServiceImpl implements FavoritePostService {
   }
 
   @Override
+  public List<UserDto> listFavoredBy(Long postId) {
+    PostEntity post = postFindUtils.findPostById(postId);
+    List<UserEntity> favoredBy = post.getFavoredBy();
+    if (favoredBy == null) {
+      favoredBy = new ArrayList<>();
+    }
+    return favoredBy.stream().map(userMapper::mapTo).toList();
+  }
+
+  @Override
   public List<PostDto> listFavoritePosts(Long userId) {
     UserEntity user = userFindUtils.findUserById(userId);
     List<PostEntity> favoritePosts = user.getFavoritePosts();
@@ -136,12 +146,12 @@ public class FavoritePostServiceImpl implements FavoritePostService {
   }
 
   @Override
-  public List<UserDto> listFavoredBy(Long postId) {
-    PostEntity post = postFindUtils.findPostById(postId);
-    List<UserEntity> favoredBy = post.getFavoredBy();
-    if (favoredBy == null) {
-      favoredBy = new ArrayList<>();
-    }
-    return favoredBy.stream().map(userMapper::mapTo).toList();
+  public int countFavoredBy(Long postId) {
+    return listFavoredBy(postId).size();
+  }
+
+  @Override
+  public int countFavoritePosts(Long userId) {
+    return listFavoritePosts(userId).size();
   }
 }
