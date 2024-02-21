@@ -3,8 +3,6 @@ package com.locarie.backend.domain.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.locarie.backend.converters.BusinessCategoryConverter;
-import com.locarie.backend.domain.enums.BusinessCategory;
 import com.locarie.backend.serialization.deserializers.JtsPointDeserializer;
 import com.locarie.backend.serialization.serializers.JtsPointSerializer;
 import jakarta.persistence.*;

@@ -109,6 +109,8 @@ public class FavoriteBusinessServiceImplTest {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     underTests.favoriteBusiness(user.getId(), businessUser.getId());
+    user.setFavoriteBusinessesCount(1);
+    businessUser.setFavoredByCount(1);
     return new UserDto[] {user, businessUser};
   }
 
