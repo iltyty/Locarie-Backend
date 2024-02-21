@@ -91,6 +91,20 @@ public class FavoriteBusinessServiceImplTest {
     thenResultShouldBeExactly(favoredBy, users[0]);
   }
 
+  @Test
+  void testCountFavoriteAfterFavoriteShouldReturnCorrectResult() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    int count = underTests.countFavoriteBusinesses(users[0].getId());
+    assertThat(count).isEqualTo(1);
+  }
+
+  @Test
+  void testCountFavoredByAfterFavoriteShouldReturnCorrectResult() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    int count = underTests.countFavoredBy(users[1].getId());
+    assertThat(count).isEqualTo(1);
+  }
+
   private UserDto[] favoriteBusinessAfterCreatingUsers() {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();

@@ -8,7 +8,11 @@ public interface FavoriteBusinessService {
 
   void unfavoriteBusiness(Long userId, Long businessId);
 
+  List<UserDto> listFavoredBy(Long businessId);
+
   List<UserDto> listFavoriteBusinesses(Long userId);
 
-  List<UserDto> listFavoredBy(Long businessId);
+  int countFavoredBy(Long businessId);
+
+  int countFavoriteBusinesses(Long userId);
 }

@@ -39,4 +39,14 @@ public class FavoriteBusinessController {
   public List<UserDto> listFavoredBy(@RequestParam("businessId") Long businessId) {
     return service.listFavoredBy(businessId);
   }
+
+  @GetMapping("/favorite/count")
+  public int countFavoriteBusinesses(@RequestParam("userId") Long userId) {
+    return service.countFavoriteBusinesses(userId);
+  }
+
+  @GetMapping("/favored-by/count")
+  public int countFavoredBy(@RequestParam("businessId") Long businessId) {
+    return service.countFavoredBy(businessId);
+  }
 }

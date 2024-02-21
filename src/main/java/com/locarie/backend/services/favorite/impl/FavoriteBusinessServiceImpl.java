@@ -116,6 +116,16 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   @Override
+  public List<UserDto> listFavoredBy(Long businessId) {
+    UserEntity businessUser = userFindUtils.findUserById(businessId);
+    List<UserEntity> favoredBy = businessUser.getFavoredBy();
+    if (favoredBy == null) {
+      return new ArrayList<>();
+    }
+    return favoredBy.stream().map(userMapper::mapTo).toList();
+  }
+
+  @Override
   public List<UserDto> listFavoriteBusinesses(Long userId) {
     UserEntity user = userFindUtils.findUserById(userId);
     List<UserEntity> favoriteBusinesses = user.getFavoriteBusinesses();
@@ -126,12 +136,12 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   @Override
-  public List<UserDto> listFavoredBy(Long businessId) {
-    UserEntity businessUser = userFindUtils.findUserById(businessId);
-    List<UserEntity> favoredBy = businessUser.getFavoredBy();
-    if (favoredBy == null) {
-      return new ArrayList<>();
-    }
-    return favoredBy.stream().map(userMapper::mapTo).toList();
+  public int countFavoredBy(Long businessId) {
+    return listFavoredBy(businessId).size();
+  }
+
+  @Override
+  public int countFavoriteBusinesses(Long userId) {
+    return listFavoriteBusinesses(userId).size();
   }
 }

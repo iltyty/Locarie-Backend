@@ -25,12 +25,20 @@ public class FavoriteBusinessControllerTest {
   private static final String FAVORITE_ENDPOINT = "/api/v1/users/favorite";
   private static final String UNFAVORITE_ENDPOINT = "/api/v1/users/unfavorite";
 
-  private static String listFavoriteEndpoint(Long useId) {
-    return String.format("/api/v1/users/favorite?userId=%d", useId);
+  private static String listFavoriteEndpoint(Long userId) {
+    return String.format("/api/v1/users/favorite?userId=%d", userId);
   }
 
   private static String listFavoredByEndpoint(Long businessId) {
     return String.format("/api/v1/users/favored-by?businessId=%d", businessId);
+  }
+
+  private static String countFavoriteEndpoint(Long userId) {
+    return String.format("/api/v1/users/favorite/count?userId=%d", userId);
+  }
+
+  private static String countFavoredByEndpoint(Long businessId) {
+    return String.format("/api/v1/users/favored-by/count?businessId=%d", businessId);
   }
 
   @Autowired private MockMvc mockMvc;
@@ -90,7 +98,7 @@ public class FavoriteBusinessControllerTest {
   }
 
   @Test
-  void testListAfterFavoriteShouldReturnCorrectData() throws Exception {
+  void testListAfterFavoriteShouldReturnCorrectResult() throws Exception {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
@@ -103,7 +111,7 @@ public class FavoriteBusinessControllerTest {
   }
 
   @Test
-  void testListFavoriteAfterUnfavoriteShouldReturnEmptyData() throws Exception {
+  void testListFavoriteAfterUnfavoriteShouldReturnEmptyResult() throws Exception {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
@@ -121,7 +129,7 @@ public class FavoriteBusinessControllerTest {
   }
 
   @Test
-  void testListFavoredByAfterFavoriteShouldReturnCorrectData() throws Exception {
+  void testListFavoredByAfterFavoriteShouldReturnCorrectResult() throws Exception {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
@@ -134,7 +142,7 @@ public class FavoriteBusinessControllerTest {
   }
 
   @Test
-  void testListFavoredByAfterUnfavoriteShouldReturnEmptyData() throws Exception {
+  void testListFavoredByAfterUnfavoriteShouldReturnEmptyResult() throws Exception {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
     MockHttpServletRequestBuilder favoriteRequest =
@@ -149,6 +157,34 @@ public class FavoriteBusinessControllerTest {
     ResultActions result = whenPerformRequest(listRequest);
     resultExpectUtil.thenResultShouldBeOk(result);
     thenListResultShouldBeEmpty(result);
+  }
+
+  @Test
+  void testCountFavoriteAfterFavoriteShouldReturnCorrectResult() throws Exception {
+    Long userId = userTestsDataCreator.givenPlainUserAfterCreated().getId();
+    Long businessId = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockHttpServletRequestBuilder favoriteRequest =
+        givenFavoriteBusinessRequest(userId, businessId);
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder countRequest = givenCountFavoriteRequest(userId);
+    ResultActions result = whenPerformRequest(countRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenCountResultShouldBeOne(result);
+  }
+
+  @Test
+  void testCountFavoredByAfterFavoriteShouldReturnCorrectResult() throws Exception {
+    Long userId = userTestsDataCreator.givenPlainUserAfterCreated().getId();
+    Long businessId = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockHttpServletRequestBuilder favoriteRequest =
+        givenFavoriteBusinessRequest(userId, businessId);
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder countRequest = givenCountFavoredByRequest(businessId);
+    ResultActions result = whenPerformRequest(countRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenCountResultShouldBeOne(result);
   }
 
   private MockHttpServletRequestBuilder givenFavoriteBusinessRequest(Long userId, Long businessId) {
@@ -172,6 +208,14 @@ public class FavoriteBusinessControllerTest {
     return MockMvcRequestBuilders.get(listFavoredByEndpoint(businessId));
   }
 
+  private MockHttpServletRequestBuilder givenCountFavoriteRequest(Long userId) {
+    return MockMvcRequestBuilders.get(countFavoriteEndpoint(userId));
+  }
+
+  private MockHttpServletRequestBuilder givenCountFavoredByRequest(Long businessId) {
+    return MockMvcRequestBuilders.get(countFavoredByEndpoint(businessId));
+  }
+
   private ResultActions whenPerformRequest(MockHttpServletRequestBuilder request) throws Exception {
     return mockMvc.perform(request);
   }
@@ -190,6 +234,10 @@ public class FavoriteBusinessControllerTest {
   private void thenListResultShouldBeEmpty(ResultActions result) throws Exception {
     result.andExpect(jsonPath("$.data").isArray());
     result.andExpect(jsonPath("$.data").isEmpty());
+  }
+
+  private void thenCountResultShouldBeOne(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(1));
   }
 
   private MultiValueMap<String, String> preparePostParams(Long userId, Long businessId) {
