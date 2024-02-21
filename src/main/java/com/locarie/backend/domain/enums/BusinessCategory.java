@@ -1,13 +1,17 @@
 package com.locarie.backend.domain.enums;
 
-public enum BusinessTag {
+import lombok.Getter;
+
+@Getter
+public enum BusinessCategory {
   FOOD("Food & Drink"),
   SHOP("Shop"),
   ART("Art"),
   LIFESTYLE("Lifestyle");
+
   private final String value;
 
-  BusinessTag(String value) {
+  BusinessCategory(String value) {
     this.value = value;
   }
 }

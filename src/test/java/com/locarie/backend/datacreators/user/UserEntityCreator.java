@@ -3,7 +3,7 @@ package com.locarie.backend.datacreators.user;
 import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.datacreators.businesshours.BusinessHoursEntityCreator;
 import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.domain.enums.BusinessTag;
+import com.locarie.backend.domain.enums.BusinessCategory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +37,9 @@ public class UserEntityCreator {
         .avatarUrl("https://picsum.photos/200/200")
         .birthday(Instant.now())
         .businessName("Big Jo Bakery")
-        .tags(new ArrayList<>(List.of(BusinessTag.FOOD, BusinessTag.SHOP)))
+        .categories(new ArrayList<>(List.of(BusinessCategory.FOOD.getValue(), BusinessCategory.SHOP.getValue())))
         .profileImageUrls(new ArrayList<>(List.of("https://picsum.photos/800/450")))
         .homepageUrl("https://www.bigjobakery.com/")
-        .category("Restaurant")
         .introduction(
             "WE ARE A BAKERY & RESTAURANT WHICH SUPPORT REGENERATIVE FOOD SYSTEMS &"
                 + " ETHICAL FARMING.")
@@ -64,12 +63,11 @@ public class UserEntityCreator {
         .avatarUrl("https://www.shreejinewsagents.com/cdn/shop/files/shreeji-logo_400x.png")
         .birthday(Instant.now())
         .businessName("Shreeji Newsagents")
-        .tags(new ArrayList<>(List.of(BusinessTag.ART, BusinessTag.LIFESTYLE)))
+        .categories(new ArrayList<>(List.of(BusinessCategory.ART.getValue(), BusinessCategory.LIFESTYLE.getValue())))
         .profileImageUrls(
             new ArrayList<>(
                 List.of("https://www.shreejinewsagents.com/cdn/shop/files/6_3024x.jpg")))
         .homepageUrl("https://www.shreejinewsagents.com/")
-        .category("Newsagent")
         .introduction(
             "We offer a reliable delivery service for specific titles, newspapers or magazines.")
         .phone("+442079355055")

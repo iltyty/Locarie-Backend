@@ -17,7 +17,7 @@ public class UserUpdateDto {
   private Instant birthday;
   private String businessName;
   private String homepageUrl;
-  private String category;
+  private List<String> categories;
   private String introduction;
   private String phone;
   private List<BusinessHoursDto> businessHours;
