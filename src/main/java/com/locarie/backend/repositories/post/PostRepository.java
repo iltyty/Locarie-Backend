@@ -33,4 +33,10 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
 
   @Query(value = "select p from PostEntity p where p.user.id = :id")
   List<PostEntity> findByUserId(Long id);
+
+  @Query(
+      value =
+          "select count(p) from PostEntity p join p.favoredBy u where p.id = :postId and u.id ="
+              + " :userId")
+  int hasBeenSaved(Long userId, Long postId);
 }

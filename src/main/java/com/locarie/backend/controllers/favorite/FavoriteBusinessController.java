@@ -49,4 +49,10 @@ public class FavoriteBusinessController {
   public int countFavoredBy(@RequestParam("businessId") Long businessId) {
     return service.countFavoredBy(businessId);
   }
+
+  @GetMapping("/is-favored-by")
+  public boolean isFavoredBy(
+      @RequestParam("userId") Long userId, @RequestParam("businessId") Long businessId) {
+    return service.isFavoredBy(userId, businessId);
+  }
 }

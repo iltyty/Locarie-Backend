@@ -3,7 +3,6 @@ package com.locarie.backend.datacreators.user;
 import com.locarie.backend.datacreators.businesshours.BusinessHoursDtoCreator;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.enums.BusinessCategory;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

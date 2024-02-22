@@ -15,4 +15,6 @@ public interface FavoriteBusinessService {
   int countFavoredBy(Long businessId);
 
   int countFavoriteBusinesses(Long userId);
+
+  boolean isFavoredBy(Long userId, Long businessId);
 }

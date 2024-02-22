@@ -117,6 +117,23 @@ public class FavoritePostServiceImplTest {
     assertThat(count).isEqualTo(1);
   }
 
+  @Test
+  void testHasBeenSavedAfterFavoriteShouldReturnTrue() {
+    Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
+    boolean hasBeenFollowed =
+        underTests.isFavoredBy(pair.getFirst().getId(), pair.getSecond().getId());
+    assertThat(hasBeenFollowed).isTrue();
+  }
+
+  @Test
+  void testHasBeenSavedAfterUnFavoriteShouldReturnTrue() {
+    Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
+    underTests.unfavoritePost(pair.getFirst().getId(), pair.getSecond().getId());
+    boolean hasBeenFollowed =
+        underTests.isFavoredBy(pair.getFirst().getId(), pair.getSecond().getId());
+    assertThat(hasBeenFollowed).isFalse();
+  }
+
   private Pair<UserDto, PostDto> favoritePostAfterCreatingUserAndPost() {
     UserDto user = userTestsDataCreator.givenBusinessUserShreejiAfterCreated();
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();

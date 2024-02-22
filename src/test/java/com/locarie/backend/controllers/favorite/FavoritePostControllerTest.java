@@ -43,6 +43,10 @@ public class FavoritePostControllerTest {
     return String.format("/api/v1/posts/favored-by/count?postId=%d", postId);
   }
 
+  private static String checkHasBeenSavedEndpoint(Long userId, Long postId) {
+    return String.format("/api/v1/posts/is-favored-by?userId=%d&postId=%d", userId, postId);
+  }
+
   @Autowired private MockMvc mockMvc;
   @Autowired private UserTestsDataCreator userTestsDataCreator;
   @Autowired private PostTestsDataCreator postTestsDataCreator;
@@ -179,6 +183,35 @@ public class FavoritePostControllerTest {
     thenCountResultShouldBeOne(result);
   }
 
+  @Test
+  void testIsFavoredByAfterFavoriteShouldReturnTrue() throws Exception {
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
+    Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
+    MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder hasBeenSavedRequest = givenHasBeenSavedRequest(userId, postId);
+    ResultActions result = whenPerformRequest(hasBeenSavedRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenDataShouldBeTrue(result);
+  }
+
+  @Test
+  void testIsFavoredByAfterUnFavoriteShouldReturnTrue() throws Exception {
+    Long userId = userTestsDataCreator.givenBusinessUserShreejiAfterCreated().getId();
+    Long postId = postTestsDataCreator.givenPostDtoShreeji1AfterCreated().getId();
+    MockHttpServletRequestBuilder favoriteRequest = givenFavoritePostRequest(userId, postId);
+    whenPerformRequest(favoriteRequest);
+
+    MockHttpServletRequestBuilder unfavoriteRequest = givenUnfavoritePostRequest(userId, postId);
+    whenPerformRequest(unfavoriteRequest);
+
+    MockHttpServletRequestBuilder hasBeenSavedRequest = givenHasBeenSavedRequest(userId, postId);
+    ResultActions result = whenPerformRequest(hasBeenSavedRequest);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenDataShouldBeFalse(result);
+  }
+
   private MockHttpServletRequestBuilder givenFavoritePostRequest(Long userId, Long postId) {
     return MockMvcRequestBuilders.post(FAVORITE_ENDPOINT)
         .params(preparePostParams(userId, postId))
@@ -211,6 +244,11 @@ public class FavoritePostControllerTest {
     return MockMvcRequestBuilders.get(endpoint);
   }
 
+  private MockHttpServletRequestBuilder givenHasBeenSavedRequest(Long userId, Long postId) {
+    String endpoint = checkHasBeenSavedEndpoint(userId, postId);
+    return MockMvcRequestBuilders.get(endpoint);
+  }
+
   private MultiValueMap<String, String> preparePostParams(Long userId, Long postId) {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("userId", userId.toString());
@@ -230,10 +268,6 @@ public class FavoritePostControllerTest {
         .andExpect(jsonPath("$.data[0].content").value(post.getContent()));
   }
 
-  private void thenCountResultShouldBeOne(ResultActions result) throws Exception {
-    result.andExpect(jsonPath("$.data").value(1));
-  }
-
   private void thenListFavoredByUsersResultShouldBeExact(ResultActions result, UserDto user)
       throws Exception {
     result
@@ -247,5 +281,17 @@ public class FavoritePostControllerTest {
 
   private void thenListResultShouldBeEmpty(ResultActions result) throws Exception {
     result.andExpect(jsonPath("$.data").isArray()).andExpect(jsonPath("$.data").isEmpty());
+  }
+
+  private void thenCountResultShouldBeOne(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(1));
+  }
+
+  private void thenDataShouldBeTrue(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(true));
+  }
+
+  private void thenDataShouldBeFalse(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(false));
   }
 }

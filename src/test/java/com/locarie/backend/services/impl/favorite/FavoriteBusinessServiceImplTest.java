@@ -105,6 +105,22 @@ public class FavoriteBusinessServiceImplTest {
     assertThat(count).isEqualTo(1);
   }
 
+  @Test
+  void testHasBeenFollowedAfterFavoriteShouldReturnTrue() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    underTests.unfavoriteBusiness(users[0].getId(), users[1].getId());
+    boolean hasBeenFollowed = underTests.isFavoredBy(users[0].getId(), users[1].getId());
+    assertThat(hasBeenFollowed).isFalse();
+  }
+
+  @Test
+  void testHasBeenFollowedAfterUnfavoriteShouldReturnFalse() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    underTests.unfavoriteBusiness(users[0].getId(), users[1].getId());
+    boolean hasBeenFollowed = underTests.isFavoredBy(users[0].getId(), users[1].getId());
+    assertThat(hasBeenFollowed).isFalse();
+  }
+
   private UserDto[] favoriteBusinessAfterCreatingUsers() {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();

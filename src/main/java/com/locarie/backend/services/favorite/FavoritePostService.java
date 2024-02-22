@@ -16,4 +16,6 @@ public interface FavoritePostService {
   int countFavoredBy(Long postId);
 
   int countFavoritePosts(Long userId);
+
+  boolean isFavoredBy(Long userId, Long postId);
 }

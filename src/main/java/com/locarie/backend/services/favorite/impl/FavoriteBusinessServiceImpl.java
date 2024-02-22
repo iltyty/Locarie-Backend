@@ -144,4 +144,9 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   public int countFavoriteBusinesses(Long userId) {
     return listFavoriteBusinesses(userId).size();
   }
+
+  @Override
+  public boolean isFavoredBy(Long userId, Long businessId) {
+    return userRepository.hasBeenFollowed(userId, businessId) > 0;
+  }
 }

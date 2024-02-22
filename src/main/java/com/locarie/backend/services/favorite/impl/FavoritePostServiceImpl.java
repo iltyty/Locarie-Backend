@@ -154,4 +154,9 @@ public class FavoritePostServiceImpl implements FavoritePostService {
   public int countFavoritePosts(Long userId) {
     return listFavoritePosts(userId).size();
   }
+
+  @Override
+  public boolean isFavoredBy(Long userId, Long postId) {
+    return postRepository.hasBeenSaved(userId, postId) > 0;
+  }
 }

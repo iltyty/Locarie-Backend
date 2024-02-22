@@ -50,4 +50,10 @@ public class FavoritePostController {
   public int countFavoredByPosts(@RequestParam("postId") Long postId) {
     return service.countFavoredBy(postId);
   }
+
+  @GetMapping("/is-favored-by")
+  public boolean isFavoredBy(
+      @RequestParam("userId") Long userId, @RequestParam("postId") Long postId) {
+    return service.isFavoredBy(userId, postId);
+  }
 }
