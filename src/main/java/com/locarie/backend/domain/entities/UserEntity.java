@@ -84,6 +84,7 @@ public class UserEntity {
   private Point location;
 
   private String address;
+  private String neighborhood;
 
   public enum Type {
     PLAIN,

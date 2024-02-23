@@ -48,6 +48,7 @@ public class UserEntityCreator {
         .phone("02039156760")
         .location(location)
         .address("318–326 HORNSEY ROAD N7 7HE")
+        .neighborhood("Upper Holloway")
         .businessHours(BusinessHoursEntityCreator.businessHoursEntities())
         .build();
   }
@@ -76,6 +77,7 @@ public class UserEntityCreator {
             "We offer a reliable delivery service for specific titles, newspapers or magazines.")
         .phone("+442079355055")
         .location(location)
+        .neighborhood("Marylebone")
         .address("6 Chiltern St, London W1U 7PT, United Kingdom")
         .businessHours(BusinessHoursEntityCreator.businessHoursEntities())
         .build();
