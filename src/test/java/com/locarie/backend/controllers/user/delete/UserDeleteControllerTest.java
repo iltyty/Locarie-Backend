@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,7 +44,7 @@ public class UserDeleteControllerTest {
   void testDeleteNonExistentUserShouldReturnStatusOk() throws Exception {
     MockHttpServletRequestBuilder request = givenDeleteRequest(0L);
     ResultActions result = mockMvc.perform(request);
-    expectUtil.thenResultShouldBeOk(result);
+    result.andExpect(status().isOk());
     expectUtil.thenResultShouldBeUserNotFound(result);
   }
 
