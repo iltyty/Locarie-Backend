@@ -1,6 +1,7 @@
 package com.locarie.backend.repositories.user;
 
 import com.locarie.backend.domain.entities.UserEntity;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
   boolean existsByEmail(String email);
+
+  @Query(value = "select u from UserEntity  u where u.type = 'BUSINESS'")
+  List<UserEntity> listBusinesses();
 
   Optional<UserEntity> findByEmail(String email);
 

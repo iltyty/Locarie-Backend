@@ -3,6 +3,7 @@ package com.locarie.backend.services.impl.user.read;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
+import com.locarie.backend.domain.dto.user.BusinessNameAvatarUrlDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
@@ -25,16 +26,25 @@ public class UserListServiceImplTest {
 
   @Test
   void testListAfterRegisteredShouldReturnAllUsers() {
-    List<UserEntity> userEntities = givenUserEntitiesAfterCreated();
-    List<UserRegistrationDto> userRegistrationDtos = givenUserRegistrationDtos(userEntities);
+    List<UserEntity> entities = givenUserEntitiesAfterCreated();
+    List<UserRegistrationDto> dtos = givenUserRegistrationDtos(entities);
     List<UserDto> result = whenListUsers();
-    thenListResultShouldContainsAllDtos(result, userRegistrationDtos);
+    thenListResultShouldContainsAllDtos(result, dtos);
+  }
+
+  @Test
+  void testListBusinessesAfterRegisteredShouldReturnCorrectResult() {
+    List<UserEntity> entities = givenUserEntitiesAfterCreated();
+    List<UserRegistrationDto> dtos = givenUserRegistrationDtos(entities);
+    List<BusinessNameAvatarUrlDto> result = whenListBusinesses();
+    thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
   }
 
   private List<UserEntity> givenUserEntitiesAfterCreated() {
     List<UserEntity> userEntities =
         Arrays.asList(
             UserEntityCreator.plainUserEntity(),
+            UserEntityCreator.businessUserEntityShreeji(),
             UserEntityCreator.businessUserEntityJoleneHornsey());
     return (List<UserEntity>) userRepository.saveAll(userEntities);
   }
@@ -47,6 +57,10 @@ public class UserListServiceImplTest {
     return underTests.list();
   }
 
+  private List<BusinessNameAvatarUrlDto> whenListBusinesses() {
+    return underTests.listBusinesses();
+  }
+
   private void thenListResultShouldContainsAllDtos(
       List<UserDto> result, List<UserRegistrationDto> dtos) {
     assertThat(result.size()).isEqualTo(dtos.size());
@@ -55,6 +69,18 @@ public class UserListServiceImplTest {
           .usingRecursiveComparison()
           .ignoringFields("id")
           .isEqualTo(dtos.get(i));
+    }
+  }
+
+  private void thenListBusinessesResultShouldBeExact(
+      List<BusinessNameAvatarUrlDto> result, List<UserRegistrationDto> dtos) {
+    assertThat(result.size()).isEqualTo(dtos.size());
+    for (int i = 0; i < result.size(); i++) {
+      BusinessNameAvatarUrlDto actual = result.get(i);
+      UserRegistrationDto expected = dtos.get(i);
+      assertThat(actual.getId()).isEqualTo(expected.getId());
+      assertThat(actual.getAvatarUrl()).isEqualTo(expected.getAvatarUrl());
+      assertThat(actual.getBusinessName()).isEqualTo(expected.getBusinessName());
     }
   }
 }

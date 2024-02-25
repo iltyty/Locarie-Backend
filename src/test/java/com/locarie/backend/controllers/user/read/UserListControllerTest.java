@@ -1,6 +1,5 @@
 package com.locarie.backend.controllers.user.read;
 
-import static com.locarie.backend.utils.matchers.UserControllerResultMatcherUtil.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
@@ -26,7 +25,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @Transactional
 @AutoConfigureMockMvc
 public class UserListControllerTest {
-  private static final String ENDPOINT = "/api/v1/users";
+  private static final String LIST_ALL_ENDPOINT = "/api/v1/users";
+  private static final String LIST_BUSINESSES_ENDPOINT = "/api/v1/users/businesses";
   private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
 
   @Autowired private MockMvc mockMvc;
@@ -37,9 +37,18 @@ public class UserListControllerTest {
   void testListShouldSucceed() throws Exception {
     List<UserDto> dtos = givenUserRegistrationDtosAfterCreated();
     MockHttpServletRequestBuilder request = givenListRequest();
-    ResultActions result = whenPerformListRequest(request);
+    ResultActions result = whenPerformRequest(request);
     resultExpectUtil.thenResultShouldBeOk(result);
-    thenListResultShouldContainDtos(result, dtos);
+    thenListUsersResultShouldContainDtos(result, dtos);
+  }
+
+  @Test
+  void testListBusinessesShouldSucceed() throws Exception {
+    List<UserDto> dtos = givenUserRegistrationDtosAfterCreated();
+    MockHttpServletRequestBuilder request = givenListBusinessesRequest();
+    ResultActions result = whenPerformRequest(request);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
   }
 
   List<UserDto> givenUserRegistrationDtosAfterCreated() {
@@ -48,10 +57,14 @@ public class UserListControllerTest {
   }
 
   MockHttpServletRequestBuilder givenListRequest() {
-    return MockMvcRequestBuilders.get(ENDPOINT);
+    return MockMvcRequestBuilders.get(LIST_ALL_ENDPOINT);
   }
 
-  ResultActions whenPerformListRequest(MockHttpServletRequestBuilder request) throws Exception {
+  MockHttpServletRequestBuilder givenListBusinessesRequest() {
+    return MockMvcRequestBuilders.get(LIST_BUSINESSES_ENDPOINT);
+  }
+
+  ResultActions whenPerformRequest(MockHttpServletRequestBuilder request) throws Exception {
     return mockMvc.perform(request);
   }
 
@@ -59,6 +72,7 @@ public class UserListControllerTest {
     List<UserEntity> userEntities =
         Arrays.asList(
             UserEntityCreator.plainUserEntity(),
+            UserEntityCreator.businessUserEntityShreeji(),
             UserEntityCreator.businessUserEntityJoleneHornsey());
     userEntities.forEach(
         userEntity -> {
@@ -68,15 +82,29 @@ public class UserListControllerTest {
     return userEntities;
   }
 
-  private void thenListResultShouldContainDtos(ResultActions result, List<UserDto> dtos)
+  private void thenListUsersResultShouldContainDtos(ResultActions result, List<UserDto> dtos)
       throws Exception {
-    result
-        .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data.length()").value(dtos.size()));
-
+    resultBeOfSize(result, dtos.size());
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
       result.andExpect(jsonPath("$.data[" + i + "].id").value(dto.getId()));
     }
+  }
+
+  private void thenListBusinessesResultShouldBeExact(ResultActions result, List<UserDto> dtos)
+      throws Exception {
+    resultBeOfSize(result, dtos.size());
+    for (int i = 0; i < dtos.size(); i++) {
+      UserDto dto = dtos.get(i);
+      result.andExpect(jsonPath("$.data[" + i + "].id").value(dto.getId()));
+      result.andExpect(jsonPath("$.data[" + i + "].avatarUrl").value(dto.getAvatarUrl()));
+      result.andExpect(jsonPath("$.data[" + i + "].businessName").value(dto.getBusinessName()));
+    }
+  }
+
+  private void resultBeOfSize(ResultActions result, int size) throws Exception {
+    result
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data.length()").value(size));
   }
 }
