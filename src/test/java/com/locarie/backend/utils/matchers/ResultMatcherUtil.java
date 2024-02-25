@@ -27,6 +27,10 @@ public class ResultMatcherUtil {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.RC101.getCode());
   }
 
+  public ResultMatcher resultStatusCodeShouldBeUserNotFound() {
+    return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.RC301.getCode());
+  }
+
   public ResultMatcher resultMessageShouldBeSuccess() {
     return MockMvcResultMatchers.jsonPath("$.message").value(ResultCode.SUCCESS.getMessage());
   }

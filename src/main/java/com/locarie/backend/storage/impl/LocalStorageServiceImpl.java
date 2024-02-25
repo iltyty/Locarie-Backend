@@ -43,6 +43,11 @@ public class LocalStorageServiceImpl implements StorageService {
   }
 
   @Override
+  public Path getUserDataDirPath(Long id) {
+    return rootLocation.resolve("user_" + id);
+  }
+
+  @Override
   public String store(MultipartFile file, String dirname) throws StorageException {
     checkInvalidFile(file);
     assert file.getOriginalFilename() != null;
@@ -112,5 +117,11 @@ public class LocalStorageServiceImpl implements StorageService {
     if (file.getOriginalFilename() == null) {
       throw new StorageException("Failed to store file without a name");
     }
+  }
+
+  @Override
+  public void deleteUserDataDir(Long id) {
+    Path userDir = rootLocation.resolve("user_" + id);
+    FileSystemUtils.deleteRecursively(userDir.toFile());
   }
 }

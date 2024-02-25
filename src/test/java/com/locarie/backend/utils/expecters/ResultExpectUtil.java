@@ -27,4 +27,8 @@ public class ResultExpectUtil {
         .andExpect(matcherUtil.resultStatusCodeShouldBeSuccess())
         .andExpect(matcherUtil.resultMessageShouldBeSuccess());
   }
+
+  public void thenResultShouldBeUserNotFound(ResultActions result) throws Exception {
+    result.andExpect(matcherUtil.resultStatusCodeShouldBeUserNotFound());
+  }
 }

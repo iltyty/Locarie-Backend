@@ -2,6 +2,7 @@ package com.locarie.backend.storage.impl;
 
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.storage.exceptions.StorageException;
+import java.nio.file.Path;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,14 @@ public class AwsStorageServiceImpl implements StorageService {
   public String store(MultipartFile file, String dirname) throws StorageException {
     return null;
   }
+
+  @Override
+  public Path getUserDataDirPath(Long id) {
+    return null;
+  }
+
+  @Override
+  public void deleteUserDataDir(Long id) {}
 
   @Override
   public void deleteAll() {}
