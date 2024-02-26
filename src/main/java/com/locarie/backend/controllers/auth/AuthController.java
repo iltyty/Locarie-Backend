@@ -24,4 +24,10 @@ public class AuthController {
       @RequestParam("userId") Long userId, @RequestParam("code") String code) {
     return service.validateForgotPasswordCode(userId, code);
   }
+
+  @PostMapping("/reset-password")
+  public ResponseEntity<Boolean> resetPassword(
+      @RequestParam("userId") Long userId, @RequestParam("password") String password) {
+    return new ResponseEntity<>(service.resetPassword(userId, password), HttpStatus.CREATED);
+  }
 }

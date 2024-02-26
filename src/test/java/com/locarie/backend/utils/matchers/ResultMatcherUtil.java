@@ -15,12 +15,20 @@ public class ResultMatcherUtil {
     return MockMvcResultMatchers.status().isCreated();
   }
 
+  public ResultMatcher resultStatusShouldBeUnauthorized() {
+    return MockMvcResultMatchers.status().isUnauthorized();
+  }
+
   public ResultMatcher resultStatusCodeShouldBeSuccess() {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.SUCCESS.getCode());
   }
 
   public ResultMatcher resultStatusCodeShouldBeFailure() {
     return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.FAIL.getCode());
+  }
+
+  public ResultMatcher resultStatusCodeShouldBeUnauthorized() {
+    return MockMvcResultMatchers.jsonPath("$.status").value(ResultCode.RC203.getCode());
   }
 
   public ResultMatcher resultStatusCodeShouldBeInvalidParameters() {

@@ -3,10 +3,7 @@ package com.locarie.backend.global;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locarie.backend.domain.dto.ResponseDto;
-import com.locarie.backend.exceptions.PostNotFoundException;
-import com.locarie.backend.exceptions.RequestArgumentNotValidException;
-import com.locarie.backend.exceptions.UserAlreadyExistsException;
-import com.locarie.backend.exceptions.UserNotFoundException;
+import com.locarie.backend.exceptions.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -40,6 +37,13 @@ public class GlobalExceptionHandler {
   public ResponseDto<String> handleRequestArgumentNotValidException(
       RequestArgumentNotValidException e) {
     return ResponseDto.fail(ResultCode.RC101, e.getMessage());
+  }
+
+  @ExceptionHandler(NotAuthorizedOperationException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ResponseDto<String> handleNotAuthorizedOperationException(
+      NotAuthorizedOperationException e) {
+    return ResponseDto.fail(ResultCode.RC203, e.getMessage());
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)

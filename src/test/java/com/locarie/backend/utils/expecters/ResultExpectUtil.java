@@ -38,4 +38,10 @@ public class ResultExpectUtil {
   public void thenResultShouldBeUserNotFound(ResultActions result) throws Exception {
     result.andExpect(matcherUtil.resultStatusCodeShouldBeUserNotFound());
   }
+
+  public void thenResultShouldBeUnauthorized(ResultActions result) throws Exception {
+    result
+        .andExpect(matcherUtil.resultStatusShouldBeUnauthorized())
+        .andExpect(matcherUtil.resultStatusCodeShouldBeUnauthorized());
+  }
 }

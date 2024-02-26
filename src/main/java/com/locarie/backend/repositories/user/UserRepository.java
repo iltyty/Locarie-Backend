@@ -3,6 +3,7 @@ package com.locarie.backend.repositories.user;
 import com.locarie.backend.domain.entities.UserEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
           "select count(u) from UserEntity u join u.favoredBy b where u.id = :businessId and b.id ="
               + " :userId")
   int hasBeenFollowed(Long userId, Long businessId);
+
+  @Modifying
+  @Query(value = "update UserEntity u set u.password = :password where u.id = :userId")
+  void updatePassword(Long userId, String password);
 }

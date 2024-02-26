@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.domain.redis.ResetPasswordEntry;
+import com.locarie.backend.exceptions.NotAuthorizedOperationException;
 import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.services.auth.impl.AuthServiceImpl;
@@ -75,6 +76,39 @@ public class AuthServiceImplTest {
 
     boolean result = underTests.validateForgotPasswordCode(userId, code);
     assertThat(result).isFalse();
+  }
+
+  @Test
+  void testResetPasswordAfterValidatedShouldSucceed() {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    underTests.forgotPassword(userId);
+
+    String code = assertAndGetResetPasswordCode(userId);
+    underTests.validateForgotPasswordCode(userId, code);
+
+    String password = "88888888";
+    boolean result = underTests.resetPassword(userId, password);
+
+    assertThat(result).isTrue();
+    assertThat(repository.existsById(userId)).isFalse();
+  }
+
+  @Test
+  void testResetPasswordWithoutForgotShouldFail() {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    String password = "88888888";
+    assertThatThrownBy(() -> underTests.resetPassword(userId, password))
+        .isInstanceOf(NotAuthorizedOperationException.class);
+  }
+
+  @Test
+  void testResetPasswordWithoutValidationShouldFail() {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    underTests.forgotPassword(userId);
+
+    String password = "88888888";
+    assertThatThrownBy(() -> underTests.resetPassword(userId, password))
+        .isInstanceOf(NotAuthorizedOperationException.class);
   }
 
   private void thenResetPasswordCodeShouldBeNotValidated(Long userId) {

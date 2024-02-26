@@ -32,6 +32,7 @@ public class AuthControllerTest {
   private static final String FORGOT_PASSWORD_ENDPOINT = "/api/v1/auth/forgot-password";
   private static final String VALIDATE_FORGOT_PASSWORD_ENDPOINT =
       "/api/v1/auth/forgot-password/validate";
+  private static final String RESET_PASSWORD_ENDPOINT = "/api/v1/auth/reset-password";
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ResultExpectUtil expectUtil;
@@ -112,6 +113,51 @@ public class AuthControllerTest {
     thenResultDataShouldBeFalse(result);
   }
 
+  @Test
+  void testResetPasswordAfterValidatedShouldSucceed() throws Exception {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockHttpServletRequestBuilder forgotPasswordRequest = givenForgotPasswordRequest(userId);
+    mockMvc.perform(forgotPasswordRequest);
+
+    String code = assertAndGetResetPasswordCode(userId);
+    MockHttpServletRequestBuilder validateRequest =
+        givenValidateForgotPasswordRequest(userId, code);
+    mockMvc.perform(validateRequest);
+
+    String password = "88888888";
+    MockHttpServletRequestBuilder resetPasswordRequest =
+        givenResetPasswordRequest(userId, password);
+    ResultActions result = mockMvc.perform(resetPasswordRequest);
+
+    expectUtil.thenResultShouldBeCreated(result);
+    thenResultDataShouldBeTrue(result);
+    assertThat(repository.existsById(userId)).isFalse();
+  }
+
+  @Test
+  void testResetPasswordWithoutForgotShouldFail() throws Exception {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    String password = "88888888";
+    MockHttpServletRequestBuilder resetPasswordRequest =
+        givenResetPasswordRequest(userId, password);
+    ResultActions result = mockMvc.perform(resetPasswordRequest);
+    expectUtil.thenResultShouldBeUnauthorized(result);
+  }
+
+  @Test
+  void testResetPasswordWithoutValidationShouldFail() throws Exception {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockHttpServletRequestBuilder forgotPasswordRequest = givenForgotPasswordRequest(userId);
+    mockMvc.perform(forgotPasswordRequest);
+
+    String password = "88888888";
+    MockHttpServletRequestBuilder resetPasswordRequest =
+        givenResetPasswordRequest(userId, password);
+    ResultActions result = mockMvc.perform(resetPasswordRequest);
+
+    expectUtil.thenResultShouldBeUnauthorized(result);
+  }
+
   private void expireForgotPasswordCode(Long userId) {
     repository.deleteById(userId);
   }
@@ -127,6 +173,11 @@ public class AuthControllerTest {
         .params(prepareValidateForgotPasswordParams(userId, code));
   }
 
+  private MockHttpServletRequestBuilder givenResetPasswordRequest(Long userId, String password) {
+    return MockMvcRequestBuilders.post(RESET_PASSWORD_ENDPOINT)
+        .params(prepareResetPasswordParams(userId, password));
+  }
+
   private MultiValueMap<String, String> prepareForgotPasswordParams(Long userId) {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("userId", userId.toString());
@@ -138,6 +189,13 @@ public class AuthControllerTest {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("userId", userId.toString());
     params.add("code", code);
+    return params;
+  }
+
+  private MultiValueMap<String, String> prepareResetPasswordParams(Long userId, String password) {
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("userId", userId.toString());
+    params.add("password", password);
     return params;
   }
 
