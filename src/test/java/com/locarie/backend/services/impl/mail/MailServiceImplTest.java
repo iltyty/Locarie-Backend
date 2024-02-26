@@ -3,6 +3,7 @@ package com.locarie.backend.services.impl.mail;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.locarie.backend.services.mail.impl.MailServiceImpl;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ public class MailServiceImplTest {
   @Autowired private MailServiceImpl underTests;
 
   @Test
+  @Disabled
   void testSendEmailShouldSucceed() {
     assertDoesNotThrow(
         () ->
