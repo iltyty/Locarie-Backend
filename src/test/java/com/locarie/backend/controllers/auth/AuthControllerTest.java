@@ -28,6 +28,8 @@ import org.testcontainers.utility.DockerImageName;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class AuthControllerTest {
   private static final String FORGOT_PASSWORD_ENDPOINT = "/api/v1/auth/forgot-password";
+  private static final String VALIDATE_FORGOT_PASSWORD_ENDPOINT =
+      "/api/v1/auth/forgot-password/validate";
 
   @Autowired private MockMvc mockMvc;
   @Autowired private RedisService redis;
@@ -47,15 +49,74 @@ public class AuthControllerTest {
   void testForgotPasswordShouldGenerateOneCodeInRedis() throws Exception {
     Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     MockHttpServletRequestBuilder request = givenForgotPasswordRequest(userId);
+
     ResultActions result = mockMvc.perform(request);
+
+    thenRedisShouldContainKey(userId.toString());
     expectUtil.thenResultShouldBeCreated(result);
     thenResultDataShouldBeTrue(result);
-    thenRedisShouldContainKey(userId.toString());
+  }
+
+  @Test
+  void testForgotPasswordForNonExistentUserShouldFail() throws Exception {
+    MockHttpServletRequestBuilder request = givenForgotPasswordRequest(0L);
+    ResultActions result = mockMvc.perform(request);
+    expectUtil.thenResultShouldBeUserNotFound(result);
+  }
+
+  @Test
+  void testValidateAfterForgotPasswordShouldSucceed() throws Exception {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockHttpServletRequestBuilder forgotPasswordRequest = givenForgotPasswordRequest(userId);
+    mockMvc.perform(forgotPasswordRequest);
+
+    String code = (String) redis.get(userId.toString());
+    MockHttpServletRequestBuilder validateRequest =
+        givenValidateForgotPasswordRequest(userId, code);
+    ResultActions result = mockMvc.perform(validateRequest);
+
+    expectUtil.thenResultShouldBeOk(result);
+    thenResultDataShouldBeTrue(result);
+  }
+
+  @Test
+  void testValidateForgotPasswordForNonExistentUserShouldFail() throws Exception {
+    MockHttpServletRequestBuilder request = givenValidateForgotPasswordRequest(0L, "");
+    ResultActions result = mockMvc.perform(request);
+    expectUtil.thenResultShouldBeUserNotFound(result);
+  }
+
+  @Test
+  void testValidateForgotPasswordAfterCodeExpiredShouldFail() throws Exception {
+    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockHttpServletRequestBuilder forgotPasswordRequest = givenForgotPasswordRequest(userId);
+    mockMvc.perform(forgotPasswordRequest);
+
+    String code = (String) redis.get(userId.toString());
+    expireForgotPasswordCode(userId);
+
+    MockHttpServletRequestBuilder validateRequest =
+        givenValidateForgotPasswordRequest(userId, code);
+    ResultActions result = mockMvc.perform(validateRequest);
+
+    expectUtil.thenResultShouldBeOk(result);
+    thenResultDataShouldBeFalse(result);
+  }
+
+  private void expireForgotPasswordCode(Long userId) {
+    String key = userId.toString();
+    redis.delete(key);
   }
 
   private MockHttpServletRequestBuilder givenForgotPasswordRequest(Long userId) {
     return MockMvcRequestBuilders.post(FORGOT_PASSWORD_ENDPOINT)
         .params(prepareForgotPasswordParams(userId));
+  }
+
+  private MockHttpServletRequestBuilder givenValidateForgotPasswordRequest(
+      Long userId, String code) {
+    return MockMvcRequestBuilders.get(VALIDATE_FORGOT_PASSWORD_ENDPOINT)
+        .params(prepareValidateForgotPasswordParams(userId, code));
   }
 
   private MultiValueMap<String, String> prepareForgotPasswordParams(Long userId) {
@@ -64,11 +125,23 @@ public class AuthControllerTest {
     return params;
   }
 
-  private void thenResultDataShouldBeTrue(ResultActions result) throws Exception {
-    result.andExpect(jsonPath("$.data").value("true"));
+  private MultiValueMap<String, String> prepareValidateForgotPasswordParams(
+      Long userId, String code) {
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("userId", userId.toString());
+    params.add("code", code);
+    return params;
   }
 
   private void thenRedisShouldContainKey(String key) {
     assertThat(redis.hasKey(key)).isTrue();
+  }
+
+  private void thenResultDataShouldBeTrue(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(true));
+  }
+
+  private void thenResultDataShouldBeFalse(ResultActions result) throws Exception {
+    result.andExpect(jsonPath("$.data").value(false));
   }
 }

@@ -41,4 +41,20 @@ public class AuthServiceImpl implements AuthService {
     long code = random.nextLong(900000) + 100000;
     return Long.toString(code);
   }
+
+  @Override
+  public boolean validateForgotPassword(Long userId, String code) {
+    if (!repository.existsById(userId)) {
+      throw new UserNotFoundException("user with id " + userId + " not found");
+    }
+    return validateForgotPasswordCode(userId, code);
+  }
+
+  private boolean validateForgotPasswordCode(Long userId, String code) {
+    String existingCode = (String) redis.get(userId.toString());
+    if (existingCode == null) {
+      return false;
+    }
+    return existingCode.equals(code);
+  }
 }

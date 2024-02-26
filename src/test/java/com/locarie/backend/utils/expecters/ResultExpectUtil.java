@@ -22,6 +22,13 @@ public class ResultExpectUtil {
     thenResultShouldBeSuccess(result);
   }
 
+  public void thenResultShouldBeFailed(ResultActions result) throws Exception {
+    result
+        .andExpect(matcherUtil.resultStatusCodeShouldBeFailure())
+        .andExpect(matcherUtil.resultStatusShouldBeOk())
+        .andExpect(matcherUtil.resultMessageShouldBeFailure());
+  }
+
   public void thenResultShouldBeSuccess(ResultActions result) throws Exception {
     result
         .andExpect(matcherUtil.resultStatusCodeShouldBeSuccess())

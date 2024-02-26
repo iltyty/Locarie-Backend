@@ -7,7 +7,7 @@ public interface RedisService {
 
   Object get(String key);
 
-  void setExpireInMinutes(String key, long expire);
+  void delete(String key);
 
-  long getExpireInMinutes(String key);
+  void setExpireInMinutes(String key, long expire);
 }

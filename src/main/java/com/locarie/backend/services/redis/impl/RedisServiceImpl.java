@@ -29,13 +29,12 @@ public class RedisServiceImpl implements RedisService {
   }
 
   @Override
-  public void setExpireInMinutes(String key, long expire) {
-    redis.expire(key, expire, TimeUnit.MINUTES);
+  public void delete(String key) {
+    redis.delete(key);
   }
 
   @Override
-  public long getExpireInMinutes(String key) {
-    Long expire = redis.getExpire(key, TimeUnit.MINUTES);
-    return expire == null ? 0 : expire;
+  public void setExpireInMinutes(String key, long expire) {
+    redis.expire(key, expire, TimeUnit.MINUTES);
   }
 }
