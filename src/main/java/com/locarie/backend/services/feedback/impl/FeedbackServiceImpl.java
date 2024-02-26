@@ -21,9 +21,10 @@ public class FeedbackServiceImpl implements FeedbackService {
   }
 
   @Override
-  public void sendFeedback(Long userId, String content) {
+  public boolean sendFeedback(Long userId, String content) {
     UserEntity user = userFindUtils.findUserById(userId);
     String subject = String.format("Feedback from @%s (%s)", user.getUsername(), user.getEmail());
     mailService.sendMail(to, subject, content);
+    return true;
   }
 }

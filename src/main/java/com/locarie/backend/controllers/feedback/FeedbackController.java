@@ -11,16 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/feedback")
 public class FeedbackController {
-  private final FeedbackService feedbackService;
+  private final FeedbackService service;
 
-  public FeedbackController(FeedbackService feedbackService) {
-    this.feedbackService = feedbackService;
+  public FeedbackController(FeedbackService service) {
+    this.service = service;
   }
 
   @PostMapping
-  public ResponseEntity<Void> sendFeedback(
+  public ResponseEntity<Boolean> sendFeedback(
       @RequestParam("userId") Long userId, @RequestParam("content") String content) {
-    feedbackService.sendFeedback(userId, content);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(service.sendFeedback(userId, content) ,HttpStatus.CREATED);
   }
 }

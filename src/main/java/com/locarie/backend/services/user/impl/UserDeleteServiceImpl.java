@@ -29,13 +29,14 @@ public class UserDeleteServiceImpl implements UserDeleteService {
   }
 
   @Override
-  public void delete(Long id) {
+  public boolean delete(Long id) {
     UserEntity user = userFindUtils.findUserById(id);
     deleteAllUserPosts(user);
     updatePostsFavoredBy(user);
     updateBusinessFavoredBy(user);
     deleteUserDataDir(user);
     userRepository.delete(user);
+    return true;
   }
 
   private void deleteAllUserPosts(UserEntity user) {
