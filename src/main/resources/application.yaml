@@ -12,12 +12,13 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: luty@locarie.com
-    password: "preg sadp ilru enuc"
+    password: "gbqm ukpt dbsr uqzq"
     properties:
-      smtp:
-        auth: true
-        starttls:
-          enable: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   jpa:
     hibernate:
