@@ -1,9 +1,12 @@
 package com.locarie.backend.services.auth.impl;
 
+import com.locarie.backend.domain.redis.ResetPasswordEntry;
 import com.locarie.backend.exceptions.UserNotFoundException;
+import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.auth.AuthService;
 import com.locarie.backend.services.redis.RedisService;
+import java.util.Optional;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,17 +16,20 @@ public class AuthServiceImpl implements AuthService {
   @Value("${validation.code.expire:5}")
   private long expire;
 
-  private final UserRepository repository;
-  private final RedisService redis;
+  private final UserRepository userRepository;
+  private final ResetPasswordEntryRepository resetPasswordEntryRepository;
 
-  public AuthServiceImpl(UserRepository repository, RedisService redis) {
-    this.repository = repository;
-    this.redis = redis;
+  public AuthServiceImpl(
+      UserRepository repository,
+      RedisService redis,
+      ResetPasswordEntryRepository resetPasswordEntryRepository) {
+    this.userRepository = repository;
+    this.resetPasswordEntryRepository = resetPasswordEntryRepository;
   }
 
   @Override
   public boolean forgotPassword(Long userId) {
-    if (!repository.existsById(userId)) {
+    if (!userRepository.existsById(userId)) {
       throw new UserNotFoundException("user with id " + userId + " not found");
     }
     generateForgotPasswordValidationCode(userId);
@@ -32,8 +38,14 @@ public class AuthServiceImpl implements AuthService {
 
   private void generateForgotPasswordValidationCode(Long userId) {
     String key = userId.toString();
-    redis.set(key, randomCode());
-    redis.setExpireInMinutes(key, expire);
+    ResetPasswordEntry entry =
+        ResetPasswordEntry.builder()
+            .id(userId)
+            .code(randomCode())
+            .validated(false)
+            .ttl(expire)
+            .build();
+    resetPasswordEntryRepository.save(entry);
   }
 
   private String randomCode() {
@@ -43,18 +55,32 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public boolean validateForgotPassword(Long userId, String code) {
-    if (!repository.existsById(userId)) {
+  public boolean validateForgotPasswordCode(Long userId, String code) {
+    if (!userRepository.existsById(userId)) {
       throw new UserNotFoundException("user with id " + userId + " not found");
     }
-    return validateForgotPasswordCode(userId, code);
+    return doValidateForgotPasswordCode(userId, code);
   }
 
-  private boolean validateForgotPasswordCode(Long userId, String code) {
-    String existingCode = (String) redis.get(userId.toString());
-    if (existingCode == null) {
+  private boolean doValidateForgotPasswordCode(Long userId, String code) {
+    Optional<ResetPasswordEntry> optionalEntry = resetPasswordEntryRepository.findById(userId);
+    if (optionalEntry.isEmpty()) {
       return false;
     }
-    return existingCode.equals(code);
+    ResetPasswordEntry entry = optionalEntry.get();
+    if (isCodeCorrect(code, entry)) {
+      setEntryCodeValidated(entry);
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isCodeCorrect(String code, ResetPasswordEntry entry) {
+    return entry.getCode().equals(code);
+  }
+
+  private void setEntryCodeValidated(ResetPasswordEntry entry) {
+    entry.setValidated(true);
+    resetPasswordEntryRepository.save(entry);
   }
 }

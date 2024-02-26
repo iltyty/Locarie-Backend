@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
-import com.locarie.backend.services.redis.RedisService;
+import com.locarie.backend.domain.redis.ResetPasswordEntry;
+import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.utils.expecters.ResultExpectUtil;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +34,9 @@ public class AuthControllerTest {
       "/api/v1/auth/forgot-password/validate";
 
   @Autowired private MockMvc mockMvc;
-  @Autowired private RedisService redis;
-  @Autowired private UserTestsDataCreator dataCreator;
   @Autowired private ResultExpectUtil expectUtil;
+  @Autowired private UserTestsDataCreator dataCreator;
+  @Autowired private ResetPasswordEntryRepository repository;
 
   @BeforeAll
   static void startRedisContainer() {
@@ -52,7 +54,7 @@ public class AuthControllerTest {
 
     ResultActions result = mockMvc.perform(request);
 
-    thenRedisShouldContainKey(userId.toString());
+    thenResetPasswordCodeShouldBeNotValidated(userId);
     expectUtil.thenResultShouldBeCreated(result);
     thenResultDataShouldBeTrue(result);
   }
@@ -70,13 +72,20 @@ public class AuthControllerTest {
     MockHttpServletRequestBuilder forgotPasswordRequest = givenForgotPasswordRequest(userId);
     mockMvc.perform(forgotPasswordRequest);
 
-    String code = (String) redis.get(userId.toString());
+    String code = assertAndGetResetPasswordCode(userId);
     MockHttpServletRequestBuilder validateRequest =
         givenValidateForgotPasswordRequest(userId, code);
     ResultActions result = mockMvc.perform(validateRequest);
 
+    thenResetPasswordCodeShouldBeValidated(userId);
     expectUtil.thenResultShouldBeOk(result);
     thenResultDataShouldBeTrue(result);
+  }
+
+  private String assertAndGetResetPasswordCode(Long userId) {
+    Optional<ResetPasswordEntry> optionalEntry = repository.findById(userId);
+    assertThat(optionalEntry.isPresent()).isTrue();
+    return optionalEntry.get().getCode();
   }
 
   @Test
@@ -92,7 +101,7 @@ public class AuthControllerTest {
     MockHttpServletRequestBuilder forgotPasswordRequest = givenForgotPasswordRequest(userId);
     mockMvc.perform(forgotPasswordRequest);
 
-    String code = (String) redis.get(userId.toString());
+    String code = assertAndGetResetPasswordCode(userId);
     expireForgotPasswordCode(userId);
 
     MockHttpServletRequestBuilder validateRequest =
@@ -104,8 +113,7 @@ public class AuthControllerTest {
   }
 
   private void expireForgotPasswordCode(Long userId) {
-    String key = userId.toString();
-    redis.delete(key);
+    repository.deleteById(userId);
   }
 
   private MockHttpServletRequestBuilder givenForgotPasswordRequest(Long userId) {
@@ -133,8 +141,22 @@ public class AuthControllerTest {
     return params;
   }
 
-  private void thenRedisShouldContainKey(String key) {
-    assertThat(redis.hasKey(key)).isTrue();
+  private void thenResetPasswordCodeShouldBeNotValidated(Long userId) {
+    thenResetPasswordEntryShouldExist(userId);
+    Optional<ResetPasswordEntry> optional = repository.findById(userId);
+    assertThat(optional.isPresent()).isTrue();
+    assertThat(optional.get().isValidated()).isFalse();
+  }
+
+  private void thenResetPasswordCodeShouldBeValidated(Long userId) {
+    thenResetPasswordEntryShouldExist(userId);
+    Optional<ResetPasswordEntry> optional = repository.findById(userId);
+    assertThat(optional.isPresent()).isTrue();
+    assertThat(optional.get().isValidated()).isTrue();
+  }
+
+  private void thenResetPasswordEntryShouldExist(Long userId) {
+    assertThat(repository.existsById(userId)).isTrue();
   }
 
   private void thenResultDataShouldBeTrue(ResultActions result) throws Exception {

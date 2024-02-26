@@ -22,6 +22,6 @@ public class AuthController {
   @GetMapping("/forgot-password/validate")
   public boolean validateForgotPassword(
       @RequestParam("userId") Long userId, @RequestParam("code") String code) {
-    return service.validateForgotPassword(userId, code);
+    return service.validateForgotPasswordCode(userId, code);
   }
 }

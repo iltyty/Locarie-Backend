@@ -1,13 +1,14 @@
 package com.locarie.backend.services.impl.auth;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
+import com.locarie.backend.domain.redis.ResetPasswordEntry;
 import com.locarie.backend.exceptions.UserNotFoundException;
+import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.services.auth.impl.AuthServiceImpl;
-import com.locarie.backend.services.redis.RedisService;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,13 @@ import org.testcontainers.utility.DockerImageName;
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class AuthServiceImplTest {
-  private static GenericContainer<?> container;
-
   @Autowired private AuthServiceImpl underTests;
-  @Autowired private RedisService redis;
+  @Autowired private ResetPasswordEntryRepository repository;
   @Autowired private UserTestsDataCreator dataCreator;
 
   @BeforeAll
   static void startRedisContainer() {
-    container =
+    GenericContainer<?> container =
         new GenericContainer<>(DockerImageName.parse("redis:6.0-alpine")).withExposedPorts(6379);
     container.start();
     System.setProperty("spring.data.redis.host", container.getHost());
@@ -40,7 +39,7 @@ public class AuthServiceImplTest {
     Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     boolean result = underTests.forgotPassword(userId);
     assertThat(result).isTrue();
-    assertThat(redis.hasKey(userId.toString())).isTrue();
+    thenResetPasswordCodeShouldBeNotValidated(userId);
   }
 
   @Test
@@ -54,19 +53,49 @@ public class AuthServiceImplTest {
     Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     underTests.forgotPassword(userId);
 
-    String code = (String) redis.get(userId.toString());
-    boolean result = underTests.validateForgotPassword(userId, code);
+    String code = assertAndGetResetPasswordCode(userId);
+    boolean result = underTests.validateForgotPasswordCode(userId, code);
     assertThat(result).isTrue();
+    thenResetPasswordCodeShouldBeValidated(userId);
+  }
+
+  private String assertAndGetResetPasswordCode(Long userId) {
+    Optional<ResetPasswordEntry> optionalEntry = repository.findById(userId);
+    assertThat(optionalEntry.isPresent()).isTrue();
+    return optionalEntry.get().getCode();
   }
 
   @Test
   void testValidateForgotPasswordCodeAfterExpiredShouldFail() {
     Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
     underTests.forgotPassword(userId);
-    redis.delete(userId.toString());
 
-    String code = (String) redis.get(userId.toString());
-    boolean result = underTests.validateForgotPassword(userId, code);
+    String code = assertAndGetResetPasswordCode(userId);
+    expireCode(userId);
+
+    boolean result = underTests.validateForgotPasswordCode(userId, code);
     assertThat(result).isFalse();
+  }
+
+  private void thenResetPasswordCodeShouldBeNotValidated(Long userId) {
+    thenResetPasswordEntryShouldExist(userId);
+    Optional<ResetPasswordEntry> optional = repository.findById(userId);
+    assertThat(optional.isPresent()).isTrue();
+    assertThat(optional.get().isValidated()).isFalse();
+  }
+
+  private void thenResetPasswordCodeShouldBeValidated(Long userId) {
+    thenResetPasswordEntryShouldExist(userId);
+    Optional<ResetPasswordEntry> optional = repository.findById(userId);
+    assertThat(optional.isPresent()).isTrue();
+    assertThat(optional.get().isValidated()).isTrue();
+  }
+
+  private void thenResetPasswordEntryShouldExist(Long userId) {
+    assertThat(repository.existsById(userId)).isTrue();
+  }
+
+  private void expireCode(Long userId) {
+    repository.deleteById(userId);
   }
 }
