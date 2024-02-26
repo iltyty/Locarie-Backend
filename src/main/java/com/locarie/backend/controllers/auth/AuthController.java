@@ -19,10 +19,10 @@ public class AuthController {
     return new ResponseEntity<>(service.forgotPassword(userId), HttpStatus.CREATED);
   }
 
-  @GetMapping("/forgot-password/validate")
-  public boolean validateForgotPassword(
+  @PostMapping("/forgot-password/validate")
+  public ResponseEntity<Boolean> validateForgotPassword(
       @RequestParam("userId") Long userId, @RequestParam("code") String code) {
-    return service.validateForgotPasswordCode(userId, code);
+    return new ResponseEntity<>(service.validateForgotPasswordCode(userId, code), HttpStatus.CREATED);
   }
 
   @PostMapping("/reset-password")

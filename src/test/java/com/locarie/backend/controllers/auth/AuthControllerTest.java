@@ -79,7 +79,7 @@ public class AuthControllerTest {
     ResultActions result = mockMvc.perform(validateRequest);
 
     thenResetPasswordCodeShouldBeValidated(userId);
-    expectUtil.thenResultShouldBeOk(result);
+    expectUtil.thenResultShouldBeCreated(result);
     thenResultDataShouldBeTrue(result);
   }
 
@@ -109,7 +109,7 @@ public class AuthControllerTest {
         givenValidateForgotPasswordRequest(userId, code);
     ResultActions result = mockMvc.perform(validateRequest);
 
-    expectUtil.thenResultShouldBeOk(result);
+    expectUtil.thenResultShouldBeCreated(result);
     thenResultDataShouldBeFalse(result);
   }
 
@@ -169,7 +169,7 @@ public class AuthControllerTest {
 
   private MockHttpServletRequestBuilder givenValidateForgotPasswordRequest(
       Long userId, String code) {
-    return MockMvcRequestBuilders.get(VALIDATE_FORGOT_PASSWORD_ENDPOINT)
+    return MockMvcRequestBuilders.post(VALIDATE_FORGOT_PASSWORD_ENDPOINT)
         .params(prepareValidateForgotPasswordParams(userId, code));
   }
 
