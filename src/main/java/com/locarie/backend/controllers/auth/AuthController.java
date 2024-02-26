@@ -15,19 +15,20 @@ public class AuthController {
   }
 
   @PostMapping("/forgot-password")
-  public ResponseEntity<Boolean> forgotPassword(@RequestParam("userId") Long userId) {
-    return new ResponseEntity<>(service.forgotPassword(userId), HttpStatus.CREATED);
+  public ResponseEntity<Boolean> forgotPassword(@RequestParam("email") String email) {
+    return new ResponseEntity<>(service.forgotPassword(email), HttpStatus.CREATED);
   }
 
   @PostMapping("/forgot-password/validate")
   public ResponseEntity<Boolean> validateForgotPassword(
-      @RequestParam("userId") Long userId, @RequestParam("code") String code) {
-    return new ResponseEntity<>(service.validateForgotPasswordCode(userId, code), HttpStatus.CREATED);
+      @RequestParam("email") String email, @RequestParam("code") String code) {
+    return new ResponseEntity<>(
+        service.validateForgotPasswordCode(email, code), HttpStatus.CREATED);
   }
 
   @PostMapping("/reset-password")
   public ResponseEntity<Boolean> resetPassword(
-      @RequestParam("userId") Long userId, @RequestParam("password") String password) {
-    return new ResponseEntity<>(service.resetPassword(userId, password), HttpStatus.CREATED);
+      @RequestParam("email") String email, @RequestParam("password") String password) {
+    return new ResponseEntity<>(service.resetPassword(email, password), HttpStatus.CREATED);
   }
 }

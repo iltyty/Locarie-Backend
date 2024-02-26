@@ -24,6 +24,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
   int hasBeenFollowed(Long userId, Long businessId);
 
   @Modifying
-  @Query(value = "update UserEntity u set u.password = :password where u.id = :userId")
-  void updatePassword(Long userId, String password);
+  @Query(value = "update UserEntity u set u.password = :password where u.email = :email")
+  void updatePassword(String email, String password);
 }

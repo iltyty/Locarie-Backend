@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-  @Value("${validation.code.expire:5}")
+  @Value("${validation.code.expire:300}")
   private long expire;
 
   private final UserRepository userRepository;
@@ -26,18 +26,18 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public boolean forgotPassword(Long userId) {
-    if (!userRepository.existsById(userId)) {
-      throw new UserNotFoundException("user with id " + userId + " not found");
+  public boolean forgotPassword(String email) {
+    if (!userRepository.existsByEmail(email)) {
+      throw new UserNotFoundException("user with email " + email + " not found");
     }
-    generateForgotPasswordValidationCode(userId);
+    generateForgotPasswordValidationCode(email);
     return true;
   }
 
-  private void generateForgotPasswordValidationCode(Long userId) {
+  private void generateForgotPasswordValidationCode(String email) {
     ResetPasswordEntry entry =
         ResetPasswordEntry.builder()
-            .id(userId)
+            .email(email)
             .code(randomCode())
             .validated(false)
             .ttl(expire)
@@ -52,25 +52,24 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public boolean validateForgotPasswordCode(Long userId, String code) {
-    throwIfUserNotExists(userId);
-    return doValidateForgotPasswordCode(userId, code);
+  public boolean validateForgotPasswordCode(String email, String code) {
+    throwIfUserNotExists(email);
+    return doValidateForgotPasswordCode(email, code);
   }
 
-  private void throwIfUserNotExists(Long userId) {
-    if (!userRepository.existsById(userId)) {
-      throw new UserNotFoundException("user with id " + userId + " not found");
+  private void throwIfUserNotExists(String email) {
+    if (!userRepository.existsByEmail(email)) {
+      throw new UserNotFoundException("user with email " + email + " not found");
     }
   }
 
-  private boolean doValidateForgotPasswordCode(Long userId, String code) {
-    Optional<ResetPasswordEntry> optionalEntry = resetPasswordEntryRepository.findById(userId);
-    if (optionalEntry.isEmpty()) {
+  private boolean doValidateForgotPasswordCode(String email, String code) {
+    Optional<ResetPasswordEntry> optional = resetPasswordEntryRepository.findById(email);
+    if (optional.isEmpty()) {
       return false;
     }
-    ResetPasswordEntry entry = optionalEntry.get();
-    if (isCodeCorrect(code, entry)) {
-      setEntryCodeValidated(entry);
+    if (isCodeCorrect(code, optional.get())) {
+      setEntryCodeValidated(optional.get());
       return true;
     }
     return false;
@@ -86,34 +85,30 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public boolean resetPassword(Long userId, String password) {
-    throwIfUserNotExists(userId);
-    throwIfResetPasswordEntryCodeNotValidated(userId);
-    doResetPassword(userId, password);
-    deleteResetPasswordEntry(userId);
+  public boolean resetPassword(String email, String password) {
+    throwIfUserNotExists(email);
+    throwIfResetPasswordEntryCodeNotValidated(email);
+    doResetPassword(email, password);
+    deleteResetPasswordEntry(email);
     return true;
   }
 
-  private void throwIfResetPasswordEntryCodeNotValidated(Long userId) {
-    if (!checkResetPasswordEntryCodeValidated(userId)) {
+  private void throwIfResetPasswordEntryCodeNotValidated(String email) {
+    if (!checkResetPasswordEntryCodeValidated(email)) {
       throw new NotAuthorizedOperationException("unauthorized operation");
     }
   }
 
-  private boolean checkResetPasswordEntryCodeValidated(Long userId) {
-    if (!resetPasswordEntryRepository.existsById(userId)) {
-      return false;
-    }
-    Optional<ResetPasswordEntry> optional = resetPasswordEntryRepository.findById(userId);
-    assert optional.isPresent();
-    return optional.get().isValidated();
+  private boolean checkResetPasswordEntryCodeValidated(String email) {
+    Optional<ResetPasswordEntry> optional = resetPasswordEntryRepository.findById(email);
+    return optional.map(ResetPasswordEntry::isValidated).orElse(false);
   }
 
-  private void doResetPassword(Long userId, String password) {
-    userRepository.updatePassword(userId, password);
+  private void doResetPassword(String email, String password) {
+    userRepository.updatePassword(email, password);
   }
 
-  private void deleteResetPasswordEntry(Long userId) {
-    resetPasswordEntryRepository.deleteById(userId);
+  private void deleteResetPasswordEntry(String email) {
+    resetPasswordEntryRepository.deleteById(email);
   }
 }

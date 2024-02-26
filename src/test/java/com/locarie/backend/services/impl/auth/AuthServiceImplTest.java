@@ -1,6 +1,7 @@
 package com.locarie.backend.services.impl.auth;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.domain.redis.ResetPasswordEntry;
@@ -9,7 +10,6 @@ import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.services.auth.impl.AuthServiceImpl;
 import jakarta.transaction.Transactional;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,99 +37,91 @@ public class AuthServiceImplTest {
 
   @Test
   void testForgotPasswordShouldGenerateOneCodeInRedis() {
-    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
-    boolean result = underTests.forgotPassword(userId);
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    boolean result = underTests.forgotPassword(email);
     assertThat(result).isTrue();
-    thenResetPasswordCodeShouldBeNotValidated(userId);
+    thenResetPasswordCodeShouldBeNotValidated(email);
   }
 
   @Test
   void testForgotPasswordForNonExistingUserShouldThrow() {
-    assertThatThrownBy(() -> underTests.forgotPassword(0L))
+    assertThatThrownBy(() -> underTests.forgotPassword("non-existent@email.com"))
         .isInstanceOf(UserNotFoundException.class);
   }
 
   @Test
   void testValidateForgotPasswordCodeAfterGenerationShouldSucceed() {
-    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
-    underTests.forgotPassword(userId);
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    underTests.forgotPassword(email);
 
-    String code = assertAndGetResetPasswordCode(userId);
-    boolean result = underTests.validateForgotPasswordCode(userId, code);
+    String code = repository.findById(email).get().getCode();
+    boolean result = underTests.validateForgotPasswordCode(email, code);
     assertThat(result).isTrue();
-    thenResetPasswordCodeShouldBeValidated(userId);
-  }
-
-  private String assertAndGetResetPasswordCode(Long userId) {
-    Optional<ResetPasswordEntry> optionalEntry = repository.findById(userId);
-    assertThat(optionalEntry.isPresent()).isTrue();
-    return optionalEntry.get().getCode();
+    thenResetPasswordCodeShouldBeValidated(email);
   }
 
   @Test
   void testValidateForgotPasswordCodeAfterExpiredShouldFail() {
-    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
-    underTests.forgotPassword(userId);
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    underTests.forgotPassword(email);
 
-    String code = assertAndGetResetPasswordCode(userId);
-    expireCode(userId);
+    String code = repository.findById(email).get().getCode();
+    expireCode(email);
 
-    boolean result = underTests.validateForgotPasswordCode(userId, code);
+    boolean result = underTests.validateForgotPasswordCode(email, code);
     assertThat(result).isFalse();
   }
 
   @Test
   void testResetPasswordAfterValidatedShouldSucceed() {
-    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
-    underTests.forgotPassword(userId);
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    underTests.forgotPassword(email);
 
-    String code = assertAndGetResetPasswordCode(userId);
-    underTests.validateForgotPasswordCode(userId, code);
+    String code = repository.findById(email).get().getCode();
+    underTests.validateForgotPasswordCode(email, code);
 
     String password = "88888888";
-    boolean result = underTests.resetPassword(userId, password);
+    boolean result = underTests.resetPassword(email, password);
 
     assertThat(result).isTrue();
-    assertThat(repository.existsById(userId)).isFalse();
+    assertThat(repository.existsById(email)).isFalse();
   }
 
   @Test
   void testResetPasswordWithoutForgotShouldFail() {
-    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
     String password = "88888888";
-    assertThatThrownBy(() -> underTests.resetPassword(userId, password))
+    assertThatThrownBy(() -> underTests.resetPassword(email, password))
         .isInstanceOf(NotAuthorizedOperationException.class);
   }
 
   @Test
   void testResetPasswordWithoutValidationShouldFail() {
-    Long userId = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
-    underTests.forgotPassword(userId);
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    underTests.forgotPassword(email);
 
     String password = "88888888";
-    assertThatThrownBy(() -> underTests.resetPassword(userId, password))
+    assertThatThrownBy(() -> underTests.resetPassword(email, password))
         .isInstanceOf(NotAuthorizedOperationException.class);
   }
 
-  private void thenResetPasswordCodeShouldBeNotValidated(Long userId) {
-    thenResetPasswordEntryShouldExist(userId);
-    Optional<ResetPasswordEntry> optional = repository.findById(userId);
-    assertThat(optional.isPresent()).isTrue();
-    assertThat(optional.get().isValidated()).isFalse();
+  private void thenResetPasswordCodeShouldBeNotValidated(String email) {
+    thenResetPasswordEntryShouldExist(email);
+    ResetPasswordEntry entry = repository.findById(email).get();
+    assertThat(entry.isValidated()).isFalse();
   }
 
-  private void thenResetPasswordCodeShouldBeValidated(Long userId) {
-    thenResetPasswordEntryShouldExist(userId);
-    Optional<ResetPasswordEntry> optional = repository.findById(userId);
-    assertThat(optional.isPresent()).isTrue();
-    assertThat(optional.get().isValidated()).isTrue();
+  private void thenResetPasswordCodeShouldBeValidated(String email) {
+    thenResetPasswordEntryShouldExist(email);
+    ResetPasswordEntry entry = repository.findById(email).get();
+    assertThat(entry.isValidated()).isTrue();
   }
 
-  private void thenResetPasswordEntryShouldExist(Long userId) {
-    assertThat(repository.existsById(userId)).isTrue();
+  private void thenResetPasswordEntryShouldExist(String email) {
+    assertThat(repository.existsById(email)).isTrue();
   }
 
-  private void expireCode(Long userId) {
-    repository.deleteById(userId);
+  private void expireCode(String email) {
+    repository.deleteById(email);
   }
 }

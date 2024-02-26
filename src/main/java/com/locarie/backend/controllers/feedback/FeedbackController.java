@@ -20,6 +20,6 @@ public class FeedbackController {
   @PostMapping
   public ResponseEntity<Boolean> sendFeedback(
       @RequestParam("userId") Long userId, @RequestParam("content") String content) {
-    return new ResponseEntity<>(service.sendFeedback(userId, content) ,HttpStatus.CREATED);
+    return new ResponseEntity<>(service.sendFeedback(userId, content), HttpStatus.CREATED);
   }
 }

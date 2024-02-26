@@ -5,4 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ResetPasswordEntryRepository extends CrudRepository<ResetPasswordEntry, Long> {}
+public interface ResetPasswordEntryRepository extends CrudRepository<ResetPasswordEntry, String> {}

@@ -40,4 +40,4 @@ jwt:
 
 validation:
   code:
-    expire: 5
+    expire: 300  # unit: s
