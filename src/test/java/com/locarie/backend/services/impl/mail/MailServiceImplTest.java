@@ -1,5 +1,6 @@
 package com.locarie.backend.services.impl.mail;
 
+import com.locarie.backend.services.mail.MailService;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.locarie.backend.services.mail.impl.MailServiceImpl;
@@ -14,7 +15,7 @@ public class MailServiceImplTest {
   @Value("${spring.mail.username}")
   private String from;
 
-  @Autowired private MailServiceImpl underTests;
+  @Autowired private MailService underTests;
 
   @Test
   @Disabled

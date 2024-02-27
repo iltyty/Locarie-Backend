@@ -18,7 +18,7 @@ public class PostDto {
   private Long id;
   private UserDto user;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   private Instant time;
 
   @NotEmpty(message = "content cannot be empty")
