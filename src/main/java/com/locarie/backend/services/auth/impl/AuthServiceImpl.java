@@ -8,6 +8,8 @@ import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.auth.AuthService;
 import java.util.Optional;
 import java.util.Random;
+
+import com.locarie.backend.services.mail.MailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,13 @@ public class AuthServiceImpl implements AuthService {
 
   private final UserRepository userRepository;
   private final ResetPasswordEntryRepository resetPasswordEntryRepository;
+  private final MailService mailService;
 
   public AuthServiceImpl(
-      UserRepository repository, ResetPasswordEntryRepository resetPasswordEntryRepository) {
+      UserRepository repository, ResetPasswordEntryRepository resetPasswordEntryRepository, MailService mailService) {
     this.userRepository = repository;
     this.resetPasswordEntryRepository = resetPasswordEntryRepository;
+    this.mailService = mailService;
   }
 
   @Override
@@ -30,19 +34,22 @@ public class AuthServiceImpl implements AuthService {
     if (!userRepository.existsByEmail(email)) {
       throw new UserNotFoundException("user with email " + email + " not found");
     }
-    generateForgotPasswordValidationCode(email);
+    String code = generateForgotPasswordValidationCode(email);
+    sendValidationCodeEmail(email, code);
     return true;
   }
 
-  private void generateForgotPasswordValidationCode(String email) {
+  private String generateForgotPasswordValidationCode(String email) {
+    String code = randomCode();
     ResetPasswordEntry entry =
         ResetPasswordEntry.builder()
             .email(email)
-            .code(randomCode())
+            .code(code)
             .validated(false)
             .ttl(expire)
             .build();
     resetPasswordEntryRepository.save(entry);
+    return code;
   }
 
   private String randomCode() {
@@ -57,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
     return doValidateForgotPasswordCode(email, code);
   }
 
+
   private void throwIfUserNotExists(String email) {
     if (!userRepository.existsByEmail(email)) {
       throw new UserNotFoundException("user with email " + email + " not found");
@@ -68,11 +76,11 @@ public class AuthServiceImpl implements AuthService {
     if (optional.isEmpty()) {
       return false;
     }
-    if (isCodeCorrect(code, optional.get())) {
-      setEntryCodeValidated(optional.get());
-      return true;
+    if (!isCodeCorrect(code, optional.get())) {
+      return false;
     }
-    return false;
+    setEntryCodeValidated(optional.get());
+    return true;
   }
 
   private boolean isCodeCorrect(String code, ResetPasswordEntry entry) {
@@ -82,6 +90,10 @@ public class AuthServiceImpl implements AuthService {
   private void setEntryCodeValidated(ResetPasswordEntry entry) {
     entry.setValidated(true);
     resetPasswordEntryRepository.save(entry);
+  }
+
+  private void sendValidationCodeEmail(String email, String code) {
+    mailService.sendMail(email, "Validation code from locarie.", "Hello, your validation code is: " + code + ".");
   }
 
   @Override
