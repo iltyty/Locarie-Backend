@@ -1,4 +1,4 @@
-package com.locarie.backend.config;
+package com.locarie.backend.configurations;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

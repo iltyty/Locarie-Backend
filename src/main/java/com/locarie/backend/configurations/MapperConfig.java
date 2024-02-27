@@ -1,4 +1,4 @@
-package com.locarie.backend.config;
+package com.locarie.backend.configurations;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
