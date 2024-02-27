@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    username: admin
+    password: Yu7KtHMU3rGdwX0iT0sf
+    url: jdbc:mariadb://locarie-db.c9ks62mikoko.eu-west-2.rds.amazonaws.com:3306/locarie
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: luty@locarie.com
+    password: "gbqm ukpt dbsr uqzq"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+storage:
+  type: local
+  url-prefix: https://ec2-3-10-234-239.eu-west-2.compute.amazonaws.com:8080/
+
+validation:
+  code:
+    expire: 300  # unit: s

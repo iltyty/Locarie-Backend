@@ -1,43 +1,14 @@
-server:
-  tomcat:
-    max-http-form-post-size: 100MB
-
-spring:
-  datasource:
-    username: root
-    password: "0924"
-    url: jdbc:mariadb://localhost:3306/locarie
-
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: luty@locarie.com
-    password: "gbqm ukpt dbsr uqzq"
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
-
-storage:
-  type: local
-  url-prefix: http://localhost:8080/
-
 jwt:
   issuer: locarie
   secret: lulu-locarie
   expiration: 259200  # unit: s, 30 days
 
-validation:
-  code:
-    expire: 300  # unit: s
+server:
+  tomcat:
+    max-http-form-post-size: 100MB
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
