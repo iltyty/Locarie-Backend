@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.generator.EventType;
 
@@ -30,7 +31,7 @@ public class PostEntity {
   @ManyToMany private List<UserEntity> favoredBy;
 
   @Column(columnDefinition = "timestamp")
-  @CurrentTimestamp(event = EventType.INSERT)
+  @CreationTimestamp
   private Instant time; // post publish time
 
   @Column(nullable = false)
