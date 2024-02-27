@@ -41,4 +41,13 @@ public class PostReadController {
   public List<PostDto> listUserPosts(@PathVariable("id") Long id) {
     return service.listUserPosts(id);
   }
+
+  @GetMapping("within")
+  public List<PostDto> listWithin(
+      @RequestParam("minLatitude") double minLatitude,
+      @RequestParam("maxLatitude") double maxLatitude,
+      @RequestParam("minLongitude") double minLongitude,
+      @RequestParam("maxLongitude") double maxLongitude) {
+    return service.listWithin(minLatitude, maxLatitude, minLongitude, maxLongitude);
+  }
 }

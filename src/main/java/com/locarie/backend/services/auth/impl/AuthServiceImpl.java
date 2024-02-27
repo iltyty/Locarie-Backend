@@ -6,10 +6,9 @@ import com.locarie.backend.exceptions.UserNotFoundException;
 import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.auth.AuthService;
+import com.locarie.backend.services.mail.MailService;
 import java.util.Optional;
 import java.util.Random;
-
-import com.locarie.backend.services.mail.MailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,9 @@ public class AuthServiceImpl implements AuthService {
   private final MailService mailService;
 
   public AuthServiceImpl(
-      UserRepository repository, ResetPasswordEntryRepository resetPasswordEntryRepository, MailService mailService) {
+      UserRepository repository,
+      ResetPasswordEntryRepository resetPasswordEntryRepository,
+      MailService mailService) {
     this.userRepository = repository;
     this.resetPasswordEntryRepository = resetPasswordEntryRepository;
     this.mailService = mailService;
@@ -64,7 +65,6 @@ public class AuthServiceImpl implements AuthService {
     return doValidateForgotPasswordCode(email, code);
   }
 
-
   private void throwIfUserNotExists(String email) {
     if (!userRepository.existsByEmail(email)) {
       throw new UserNotFoundException("user with email " + email + " not found");
@@ -93,7 +93,8 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private void sendValidationCodeEmail(String email, String code) {
-    mailService.sendMail(email, "Validation code from locarie.", "Hello, your validation code is: " + code + ".");
+    mailService.sendMail(
+        email, "Validation code from locarie.", "Hello, your validation code is: " + code + ".");
   }
 
   @Override

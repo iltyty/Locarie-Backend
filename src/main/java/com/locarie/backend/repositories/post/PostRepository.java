@@ -2,6 +2,7 @@ package com.locarie.backend.repositories.post;
 
 import com.locarie.backend.domain.entities.PostEntity;
 import java.util.List;
+import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -39,4 +40,11 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
           "select count(p) from PostEntity p join p.favoredBy u where p.id = :postId and u.id ="
               + " :userId")
   int hasBeenSaved(Long userId, Long postId);
+
+  @Query(
+      value =
+          "select p from PostEntity p where p.id = (select p1.id from PostEntity p1 where p1.user ="
+              + " p.user order by p1.time desc, p1.id desc limit 1) and within(p.user.location,"
+              + " :bound) = true")
+  List<PostEntity> findWithin(Geometry bound);
 }

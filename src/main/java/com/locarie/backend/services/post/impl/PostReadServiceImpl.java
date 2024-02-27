@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 import lombok.extern.log4j.Log4j2;
+import org.locationtech.jts.geom.*;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -46,5 +47,21 @@ public class PostReadServiceImpl implements PostReadService {
   @Override
   public List<PostDto> listUserPosts(Long id) {
     return repository.findByUserId(id).stream().map(mapper::mapTo).toList();
+  }
+
+  @Override
+  public List<PostDto> listWithin(
+      double minLatitude, double maxLatitude, double minLongitude, double maxLongitude) {
+    Geometry bound = pointsToBound(minLatitude, maxLatitude, minLongitude, maxLongitude);
+    return repository.findWithin(bound).stream().map(mapper::mapTo).toList();
+  }
+
+  private Geometry pointsToBound(
+      double minLatitude, double maxLatitude, double minLongitude, double maxLongitude) {
+    GeometryFactory factory = new GeometryFactory();
+    Coordinate northwest = new Coordinate(minLongitude, maxLatitude);
+    Coordinate southeast = new Coordinate(maxLongitude, minLatitude);
+    Envelope envelope = new Envelope(northwest, southeast);
+    return factory.toGeometry(envelope);
   }
 }

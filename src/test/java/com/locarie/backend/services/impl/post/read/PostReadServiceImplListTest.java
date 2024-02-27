@@ -2,9 +2,11 @@ package com.locarie.backend.services.impl.post.read;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.services.post.impl.PostReadServiceImpl;
+import com.locarie.backend.utils.LocationBoundUtil;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class PostReadServiceImplListTest {
     postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
     Point location = givenEmptyLocation();
     List<PostDto> listResult = whenListNearbyPostsWithin0km(location);
-    thenResultShouldContainNoPost(listResult);
+    thenResultShouldBeEmpty(listResult);
   }
 
   @Test
@@ -45,6 +47,29 @@ public class PostReadServiceImplListTest {
     List<PostDto> expectedPostDtos =
         List.of(postDtosOfJoleneHornsey.getLast(), postDtosOfShreeji.getLast());
     thenResultShouldContainAllPosts(listResult, expectedPostDtos);
+  }
+
+  @Test
+  void testListPostsWithinBoundShouldReturnFirstPostOfEachUserInBounds() {
+    List<PostDto> posts1 = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
+    List<PostDto> posts2 = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    Point[] bound = LocationBoundUtil.postLocationBound(posts1.getLast(), posts2.getLast());
+    List<PostDto> result = whenListWithin(bound);
+    List<PostDto> expect = List.of(posts1.getLast(), posts2.getLast());
+    thenResultShouldContainAllPosts(result, expect);
+  }
+
+  @Test
+  void testListPostWithinZeroBoundShouldReturnEmptyResult() {
+    List<PostDto> posts1 = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
+    List<PostDto> posts2 = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    Point[] bound = emptyBound();
+    List<PostDto> result = whenListWithin(bound);
+    thenResultShouldBeEmpty(result);
+  }
+
+  private Point[] emptyBound() {
+    return new Point[] {LocationCreator.location(0, 0), LocationCreator.location(0, 0)};
   }
 
   @Test
@@ -70,6 +95,11 @@ public class PostReadServiceImplListTest {
     return underTests.listNearby(location.getY(), location.getX(), Integer.MAX_VALUE);
   }
 
+  private List<PostDto> whenListWithin(Point[] bound) {
+    return underTests.listWithin(
+        bound[1].getY(), bound[0].getY(), bound[1].getX(), bound[0].getX());
+  }
+
   private void thenResultShouldContainAllPosts(List<PostDto> result, List<PostDto> postDtos) {
     assertThat(result.size()).isEqualTo(postDtos.size());
     for (PostDto postDto : postDtos) {
@@ -77,7 +107,7 @@ public class PostReadServiceImplListTest {
     }
   }
 
-  private void thenResultShouldContainNoPost(List<PostDto> result) {
-    assertThat(result.size()).isEqualTo(0);
+  private void thenResultShouldBeEmpty(List<PostDto> result) {
+    assertThat(result.isEmpty()).isTrue();
   }
 }

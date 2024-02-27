@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.CurrentTimestamp;
-import org.hibernate.generator.EventType;
 
 @Data
 @NoArgsConstructor

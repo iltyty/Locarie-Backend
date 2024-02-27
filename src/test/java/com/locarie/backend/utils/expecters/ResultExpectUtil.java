@@ -3,6 +3,7 @@ package com.locarie.backend.utils.expecters;
 import com.locarie.backend.utils.matchers.ResultMatcherUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @Component
 public class ResultExpectUtil {
@@ -20,6 +21,10 @@ public class ResultExpectUtil {
   public void thenResultShouldBeOk(ResultActions result) throws Exception {
     result.andExpect(matcherUtil.resultStatusShouldBeOk());
     thenResultShouldBeSuccess(result);
+  }
+
+  public void thenResultStatusShouldBeNotFound(ResultActions result) throws Exception {
+    result.andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   public void thenResultShouldBeFailed(ResultActions result) throws Exception {

@@ -25,7 +25,7 @@ public class UserEntityCreator {
   }
 
   public static UserEntity businessUserEntityJoleneHornsey() {
-    Point location = LocationCreator.location(51.560595, -0.116913);
+    Point location = LocationCreator.location(1, 1);
     return UserEntity.builder()
         .id(2L)
         .type(UserEntity.Type.BUSINESS)
@@ -54,7 +54,7 @@ public class UserEntityCreator {
   }
 
   public static UserEntity businessUserEntityShreeji() {
-    Point location = LocationCreator.location(51.51871309884953, -0.15449968748875476);
+    Point location = LocationCreator.location(2, 2);
     return UserEntity.builder()
         .id(3L)
         .type(UserEntity.Type.BUSINESS)

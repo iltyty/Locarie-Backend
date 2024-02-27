@@ -1,9 +1,8 @@
 package com.locarie.backend.services.impl.mail;
 
-import com.locarie.backend.services.mail.MailService;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import com.locarie.backend.services.mail.impl.MailServiceImpl;
+import com.locarie.backend.services.mail.MailService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
