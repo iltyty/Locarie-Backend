@@ -5,4 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserProfileImagesService {
   List<String> uploadProfileImages(Long id, MultipartFile[] images);
+
+  List<String> getProfileImages(Long userId);
 }

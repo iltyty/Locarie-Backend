@@ -19,4 +19,9 @@ public class UserProfileImagesController {
       @PathVariable("id") Long id, @RequestPart("images") MultipartFile[] profileImages) {
     return service.uploadProfileImages(id, profileImages);
   }
+
+  @GetMapping("/{id}/profile-images")
+  public List<String> getProfileImages(@PathVariable("id") Long userId) {
+    return service.getProfileImages(userId);
+  }
 }

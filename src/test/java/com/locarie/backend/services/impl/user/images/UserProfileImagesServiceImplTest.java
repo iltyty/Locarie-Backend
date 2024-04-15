@@ -36,6 +36,16 @@ public class UserProfileImagesServiceImplTest {
     thenResultShouldThrowStorageExceptionWhenUploadProfileImages(userId, profileImages);
   }
 
+  @Test
+  void testGetAfterUploadingShouldSucceed() {
+    Long userId = userDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
+    MockMultipartFile[] profileImages = givenProfileImages();
+    List<String> imageUrls = whenUploadProfileImages(userId, profileImages);
+    List<String> result = underTests.getProfileImages(userId);
+    thenResultShouldBeOfSize(result, imageUrls.size());
+    assertThat(result).isEqualTo(imageUrls);
+  }
+
   private MockMultipartFile[] givenProfileImages() {
     return new MockMultipartFile[] {
       MockImageCreator.pngImage(), MockImageCreator.jpgImage(), MockImageCreator.jpegImage()

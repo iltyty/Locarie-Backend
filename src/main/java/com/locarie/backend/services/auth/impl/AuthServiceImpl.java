@@ -43,12 +43,7 @@ public class AuthServiceImpl implements AuthService {
   private String generateForgotPasswordValidationCode(String email) {
     String code = randomCode();
     ResetPasswordEntry entry =
-        ResetPasswordEntry.builder()
-            .email(email)
-            .code(code)
-            .validated(false)
-            .ttl(expire)
-            .build();
+        ResetPasswordEntry.builder().email(email).code(code).validated(false).ttl(expire).build();
     resetPasswordEntryRepository.save(entry);
     return code;
   }
