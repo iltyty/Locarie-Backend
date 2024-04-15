@@ -1,8 +1,21 @@
+server:
+  port: 443
+  ssl:
+    key-alias: tomcat
+    key-store-password: 123456
+    key-store-type: PKCS12
+    key-store: classpath:api.locarie.com.jks
+
+
 spring:
+  data:
+    redis:
+      host: lulu-redis-7mrd1j.serverless.euw2.cache.amazonaws.com
+      port: 6379
   datasource:
-    username: admin
-    password: Yu7KtHMU3rGdwX0iT0sf
-    url: jdbc:mariadb://locarie-db.c9ks62mikoko.eu-west-2.rds.amazonaws.com:3306/locarie
+    username: qiu
+    password: qiuyh227515
+    url: jdbc:mariadb://luludb.c9ks62mikoko.eu-west-2.rds.amazonaws.com:3306/locarie
 
   mail:
     host: smtp.gmail.com
@@ -22,8 +35,9 @@ spring:
 
 storage:
   type: local
-  url-prefix: https://ec2-3-10-234-239.eu-west-2.compute.amazonaws.com:8080/
+  url-prefix: https://api.locarie.com/
 
 validation:
   code:
     expire: 300  # unit: s
+
