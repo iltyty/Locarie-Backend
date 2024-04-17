@@ -4,10 +4,14 @@ import lombok.Getter;
 
 @Getter
 public enum BusinessCategory {
-  FOOD("Food & Drink"),
+  COFFEE("Coffee"),
+  RESTAURANT("Restaurant"),
+  DRINKS("Drinks"),
   SHOP("Shop"),
   ART("Art"),
-  LIFESTYLE("Lifestyle");
+  LIFESTYLE("Lifestyle"),
+  FASHION("Fashion"),
+  FRESH_PRODUCE("Fresh Produce");
 
   private final String value;
 

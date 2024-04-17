@@ -39,7 +39,7 @@ public class UserEntityCreator {
         .businessName("Big Jo Bakery")
         .categories(
             new ArrayList<>(
-                List.of(BusinessCategory.FOOD.getValue(), BusinessCategory.SHOP.getValue())))
+                List.of(BusinessCategory.FRESH_PRODUCE.getValue(), BusinessCategory.SHOP.getValue())))
         .profileImageUrls(new ArrayList<>(List.of("https://picsum.photos/800/450")))
         .homepageUrl("https://www.bigjobakery.com/")
         .introduction(
