@@ -24,5 +24,7 @@ public class PostDto {
   @NotEmpty(message = "content cannot be empty")
   private String content;
 
+  private int favoredByCount;
+
   List<String> imageUrls;
 }

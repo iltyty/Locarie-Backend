@@ -21,27 +21,20 @@ public class UserEntityDtoMapperImpl implements Mapper<UserEntity, UserDto> {
   private void addEntityToDtoTypeMap() {
     TypeMap<UserEntity, UserDto> typeMap =
         modelMapper.createTypeMap(UserEntity.class, UserDto.class);
-    Converter<Collection<?>, Integer> collectionToSize =
-        c -> {
-          if (c.getSource() == null) {
-            return 0;
-          }
-          return c.getSource().size();
-        };
     typeMap.addMappings(
         mapping ->
             mapping
-                .using(collectionToSize)
+                .using(COLLECTION_TO_SIZE_CONVERTER)
                 .map(UserEntity::getFavoredBy, UserDto::setFavoredByCount));
     typeMap.addMappings(
         mapping ->
             mapping
-                .using(collectionToSize)
+                .using(COLLECTION_TO_SIZE_CONVERTER)
                 .map(UserEntity::getFavoritePosts, UserDto::setFavoritePostsCount));
     typeMap.addMappings(
         mapping ->
             mapping
-                .using(collectionToSize)
+                .using(COLLECTION_TO_SIZE_CONVERTER)
                 .map(UserEntity::getFavoriteBusinesses, UserDto::setFavoriteBusinessesCount));
   }
 
