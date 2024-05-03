@@ -139,6 +139,7 @@ public class FavoritePostServiceImplTest {
     PostDto post = postTestsDataCreator.givenPostDtoShreeji1AfterCreated();
     underTests.favoritePost(user.getId(), post.getId());
     user.setFavoritePostsCount(1);
+    post.setFavoredByCount(1);
     return Pair.of(user, post);
   }
 

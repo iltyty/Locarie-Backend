@@ -34,6 +34,7 @@ public class PostReadServiceImpl implements PostReadService {
   public List<PostDto> list() {
     return StreamSupport.stream(repository.findAll().spliterator(), false)
         .map(mapper::mapTo)
+        .sorted((a, b) -> b.getTime().compareTo(a.getTime()))
         .toList();
   }
 
@@ -41,19 +42,26 @@ public class PostReadServiceImpl implements PostReadService {
   public List<PostDto> listNearby(double latitude, double longitude, double distance) {
     return repository.findNearby(latitude, longitude, distance).stream()
         .map(mapper::mapTo)
+        .sorted((a, b) -> b.getTime().compareTo(a.getTime()))
         .toList();
   }
 
   @Override
   public List<PostDto> listUserPosts(Long id) {
-    return repository.findByUserId(id).stream().map(mapper::mapTo).toList();
+    return repository.findByUserId(id).stream()
+        .map(mapper::mapTo)
+        .sorted((a, b) -> b.getTime().compareTo(a.getTime()))
+        .toList();
   }
 
   @Override
   public List<PostDto> listWithin(
       double minLatitude, double maxLatitude, double minLongitude, double maxLongitude) {
     Geometry bound = pointsToBound(minLatitude, maxLatitude, minLongitude, maxLongitude);
-    return repository.findWithin(bound).stream().map(mapper::mapTo).toList();
+    return repository.findWithin(bound).stream()
+        .map(mapper::mapTo)
+        .sorted((a, b) -> b.getTime().compareTo(a.getTime()))
+        .toList();
   }
 
   private Geometry pointsToBound(

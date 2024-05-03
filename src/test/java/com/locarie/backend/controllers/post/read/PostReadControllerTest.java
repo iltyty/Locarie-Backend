@@ -53,7 +53,7 @@ class PostReadControllerTest {
     PostDto post2 = dataCreator.givenPostDtoJoleneHornsey2AfterCreated();
     ResultActions result = mockMvc.perform(request);
     expectUtil.thenResultShouldBeOk(result);
-    thenResultShouldBeList(result, List.of(post1, post2));
+    thenResultShouldBeList(result, List.of(post2, post1));
   }
 
   @Test
@@ -87,7 +87,7 @@ class PostReadControllerTest {
         givenListUserPostsRequest(posts.getFirst().getUser().getId());
     ResultActions result = mockMvc.perform(request);
     expectUtil.thenResultShouldBeOk(result);
-    thenResultShouldBeList(result, posts);
+    thenResultShouldBeList(result, posts.reversed());
   }
 
   @Test
@@ -96,7 +96,7 @@ class PostReadControllerTest {
     List<PostDto> posts2 = dataCreator.givenPostDtosJoleneHornseyAfterCreated();
     Point[] bound = LocationBoundUtil.postLocationBound(posts1.getLast(), posts2.getLast());
     MockHttpServletRequestBuilder request = givenListWithinRequest(bound);
-    List<PostDto> expect = List.of(posts1.getLast(), posts2.getLast());
+    List<PostDto> expect = List.of(posts2.getLast(), posts1.getLast());
 
     ResultActions result = mockMvc.perform(request);
     expectUtil.thenResultShouldBeOk(result);
