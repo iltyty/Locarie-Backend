@@ -1,6 +1,5 @@
 package com.locarie.backend.controllers.user.read;
 
-import com.locarie.backend.domain.dto.user.BusinessNameAvatarUrlDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.services.user.UserListService;
 import java.util.List;
@@ -23,7 +22,7 @@ public class UserListController {
   }
 
   @GetMapping("/businesses")
-  public List<BusinessNameAvatarUrlDto> listBusinesses() {
+  public List<UserDto> listBusinesses() {
     return service.listBusinesses();
   }
 }

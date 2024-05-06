@@ -3,7 +3,6 @@ package com.locarie.backend.services.impl.user.read;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.user.BusinessNameAvatarUrlDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.domain.entities.UserEntity;
@@ -36,7 +35,7 @@ public class UserListServiceImplTest {
   void testListBusinessesAfterRegisteredShouldReturnCorrectResult() {
     List<UserEntity> entities = givenUserEntitiesAfterCreated();
     List<UserRegistrationDto> dtos = givenUserRegistrationDtos(entities);
-    List<BusinessNameAvatarUrlDto> result = whenListBusinesses();
+    List<UserDto> result = whenListBusinesses();
     thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
   }
 
@@ -57,7 +56,7 @@ public class UserListServiceImplTest {
     return underTests.list();
   }
 
-  private List<BusinessNameAvatarUrlDto> whenListBusinesses() {
+  private List<UserDto> whenListBusinesses() {
     return underTests.listBusinesses();
   }
 
@@ -73,14 +72,15 @@ public class UserListServiceImplTest {
   }
 
   private void thenListBusinessesResultShouldBeExact(
-      List<BusinessNameAvatarUrlDto> result, List<UserRegistrationDto> dtos) {
+      List<UserDto> result, List<UserRegistrationDto> dtos) {
     assertThat(result.size()).isEqualTo(dtos.size());
     for (int i = 0; i < result.size(); i++) {
-      BusinessNameAvatarUrlDto actual = result.get(i);
+      UserDto actual = result.get(i);
       UserRegistrationDto expected = dtos.get(i);
-      assertThat(actual.getId()).isEqualTo(expected.getId());
-      assertThat(actual.getAvatarUrl()).isEqualTo(expected.getAvatarUrl());
-      assertThat(actual.getBusinessName()).isEqualTo(expected.getBusinessName());
+      assertThat(actual)
+          .usingRecursiveComparison()
+          .ignoringFields("id")
+          .isEqualTo(expected);
     }
   }
 }

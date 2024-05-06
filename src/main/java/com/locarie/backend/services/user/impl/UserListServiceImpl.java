@@ -1,6 +1,5 @@
 package com.locarie.backend.services.user.impl;
 
-import com.locarie.backend.domain.dto.user.BusinessNameAvatarUrlDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
@@ -28,15 +27,9 @@ public class UserListServiceImpl implements UserListService {
   }
 
   @Override
-  public List<BusinessNameAvatarUrlDto> listBusinesses() {
+  public List<UserDto> listBusinesses() {
     return repository.listBusinesses().stream()
-        .map(
-            x ->
-                BusinessNameAvatarUrlDto.builder()
-                    .id(x.getId())
-                    .avatarUrl(x.getAvatarUrl())
-                    .businessName(x.getBusinessName())
-                    .build())
+        .map(mapper::mapTo)
         .toList();
   }
 }
