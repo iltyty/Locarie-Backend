@@ -74,6 +74,9 @@ public class UserEntity {
 
   @ManyToMany private List<UserEntity> favoredBy;
 
+  @Column(columnDefinition = "timestamp")
+  private Instant lastUpdate;
+
   private String homepageUrl;
   private String introduction;
   private String phone;

@@ -2,11 +2,15 @@ package com.locarie.backend.services.post.impl;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
+import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.impl.post.PostEntityDtoMapper;
 import com.locarie.backend.repositories.post.PostRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.post.PostCreateService;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.storage.utils.StorageUtil;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,15 +20,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service("PostCreate")
 public class PostCreateServiceImpl implements PostCreateService {
-  private final PostRepository repository;
+  private final PostRepository postRepository;
+  private final UserRepository userRepository;
 
   private final PostEntityDtoMapper mapper;
 
   private final StorageService storageService;
 
   public PostCreateServiceImpl(
-      PostRepository repository, PostEntityDtoMapper mapper, StorageService storageService) {
-    this.repository = repository;
+      PostRepository postRepository, UserRepository userRepository, PostEntityDtoMapper mapper, StorageService storageService) {
+    this.postRepository = postRepository;
+    this.userRepository = userRepository;
     this.mapper = mapper;
     this.storageService = storageService;
   }
@@ -34,6 +40,7 @@ public class PostCreateServiceImpl implements PostCreateService {
     PostEntity postEntity = createPost(postDto);
     List<String> imageUrls = savePostImages(postEntity, images);
     updatePostEntityImageUrls(postEntity, imageUrls);
+    updateUserLastUpdate(postEntity.getUser());
     return mapper.mapTo(postEntity);
   }
 
@@ -49,11 +56,16 @@ public class PostCreateServiceImpl implements PostCreateService {
 
   private PostEntity createPost(PostDto postDto) {
     PostEntity postEntity = mapper.mapFrom(postDto);
-    return repository.save(postEntity);
+    return postRepository.save(postEntity);
   }
 
   private void updatePostEntityImageUrls(PostEntity postEntity, List<String> imageUrls) {
     postEntity.setImageUrls(imageUrls);
-    repository.save(postEntity);
+    postRepository.save(postEntity);
+  }
+
+  private void updateUserLastUpdate(UserEntity user) {
+    user.setLastUpdate(Instant.now());
+    userRepository.save(user);
   }
 }

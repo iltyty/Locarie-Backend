@@ -1,5 +1,7 @@
 package com.locarie.backend.services.impl.post.create;
 
+import com.locarie.backend.domain.entities.UserEntity;
+import com.locarie.backend.repositories.user.UserRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.image.MockImageCreator;
@@ -10,6 +12,9 @@ import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.services.post.impl.PostCreateServiceImpl;
 import jakarta.transaction.Transactional;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostCreateServiceImplTest {
   @Autowired private PostCreateServiceImpl underTests;
   @Autowired private PostRepository postRepository;
+  @Autowired private UserRepository userRepository;
   @Autowired private UserTestsDataCreator userTestsDataCreator;
 
   @Test
@@ -31,6 +37,7 @@ public class PostCreateServiceImplTest {
     Optional<PostEntity> postEntity = whenFindPostById(result.getId());
     assertThat(postEntity.isPresent()).isTrue();
     thenResultIdShouldEqualsToPostId(result.getId(), postEntity.get().getId());
+    thenUserLatestUpdateShouldBeNow(postDto.getUser().getId());
   }
 
   private PostDto givenPostDto() {
@@ -55,5 +62,13 @@ public class PostCreateServiceImplTest {
 
   private void thenResultIdShouldEqualsToPostId(Long resultId, Long postId) {
     assertThat(resultId).isEqualTo(postId);
+  }
+
+  private void thenUserLatestUpdateShouldBeNow(Long userId) {
+    Optional<UserEntity> userOptional = userRepository.findById(userId);
+    assertThat(userOptional.isPresent()).isTrue();
+    UserEntity user = userOptional.get();
+    Duration duration = Duration.between(user.getLastUpdate(), Instant.now());
+    assertThat(duration.getSeconds()).isLessThan(3);
   }
 }

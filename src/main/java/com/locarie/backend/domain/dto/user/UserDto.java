@@ -58,6 +58,9 @@ public class UserDto {
 
   @JsonManagedReference private List<BusinessHoursDto> businessHours;
 
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  private Instant lastUpdate;
+
   @JsonSerialize(using = JtsPointSerializer.class)
   @JsonDeserialize(using = JtsPointDeserializer.class)
   private Point location;
