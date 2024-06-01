@@ -50,6 +50,30 @@ public class PostReadServiceImplListTest {
   }
 
   @Test
+  void testListNearbyAllShouldReturnFirstPostOfEachUser() {
+    List<PostDto> postDtosOfJoleneHornsey =
+        postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    List<PostDto> postDtosOfShreeji = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
+    Point location = postDtosOfJoleneHornsey.getFirst().getUser().getLocation();
+    List<PostDto> listResult = whenListNearbyAllPosts(location);
+    List<PostDto> expectedPostDtos =
+        List.of(postDtosOfJoleneHornsey.getLast(), postDtosOfShreeji.getLast());
+    thenResultShouldContainAllPosts(listResult, expectedPostDtos);
+  }
+
+  @Test
+  void testListNearbyAllShouldReturnPostsAccordingToTimeAndDistance() {
+    List<PostDto> postDtosOfJoleneHornsey =
+        postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    List<PostDto> postDtosOfShreeji = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
+    Point location = postDtosOfShreeji.getFirst().getUser().getLocation();
+    List<PostDto> listResult = whenListNearbyAllPosts(location);
+    List<PostDto> expectedPostDtos =
+        List.of(postDtosOfShreeji.getLast(), postDtosOfJoleneHornsey.getLast());
+    thenResultShouldContainAllPosts(listResult, expectedPostDtos);
+  }
+
+  @Test
   void testListPostsWithinBoundShouldReturnFirstPostOfEachUserInBounds() {
     List<PostDto> posts1 = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
     List<PostDto> posts2 = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
@@ -93,6 +117,10 @@ public class PostReadServiceImplListTest {
 
   private List<PostDto> whenListNearbyPostsWithinInfiniteDistance(Point location) {
     return underTests.listNearby(location.getY(), location.getX(), Integer.MAX_VALUE);
+  }
+
+  private List<PostDto> whenListNearbyAllPosts(Point location) {
+    return underTests.listNearbyAll(location.getY(), location.getX());
   }
 
   private List<PostDto> whenListWithin(Point[] bound) {

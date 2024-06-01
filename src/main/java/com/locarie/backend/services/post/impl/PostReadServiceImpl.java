@@ -47,6 +47,13 @@ public class PostReadServiceImpl implements PostReadService {
   }
 
   @Override
+  public List<PostDto> listNearbyAll(double latitude, double longitude) {
+    return repository.findNearbyAll(latitude, longitude).stream()
+        .map(mapper::mapTo)
+        .toList();
+  }
+
+  @Override
   public List<PostDto> listUserPosts(Long id) {
     return repository.findByUserId(id).stream()
         .map(mapper::mapTo)

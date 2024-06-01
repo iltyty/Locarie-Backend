@@ -11,6 +11,8 @@ public interface PostReadService {
 
   List<PostDto> listNearby(double latitude, double longitude, double distance);
 
+  List<PostDto> listNearbyAll(double latitude, double longitude);
+
   List<PostDto> listUserPosts(Long id);
 
   List<PostDto> listWithin(

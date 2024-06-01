@@ -29,6 +29,13 @@ public class PostReadController {
     return service.listNearby(latitude, longitude, distance);
   }
 
+  @GetMapping("/nearby-all")
+  public List<PostDto> listNearbyAll(
+      @RequestParam(value = "latitude") double latitude,
+      @RequestParam(value = "longitude") double longitude) {
+    return service.listNearbyAll(latitude, longitude);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<PostDto> get(@PathVariable Long id) {
     return service
