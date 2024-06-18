@@ -1,5 +1,6 @@
 package com.locarie.backend.controllers.favorite;
 
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.services.favorite.FavoriteBusinessService;
 import java.util.List;
@@ -33,6 +34,11 @@ public class FavoriteBusinessController {
   @GetMapping("/favorite")
   public List<UserDto> listFavoriteBusinesses(@RequestParam("userId") Long userId) {
     return service.listFavoriteBusinesses(userId);
+  }
+
+  @GetMapping("/favorite/posts")
+  public List<PostDto> getLatestPostsOfFavoriteBusinesses(@RequestParam("userId") Long userId) {
+    return service.getLatestPostsOfFavoriteBusinesses(userId);
   }
 
   @GetMapping("/favored-by")

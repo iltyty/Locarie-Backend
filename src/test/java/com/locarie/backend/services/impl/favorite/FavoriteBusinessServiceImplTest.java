@@ -1,5 +1,7 @@
 package com.locarie.backend.services.impl.favorite;
 
+import com.locarie.backend.datacreators.post.PostTestsDataCreator;
+import com.locarie.backend.domain.dto.post.PostDto;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
@@ -19,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class FavoriteBusinessServiceImplTest {
   @Autowired private FavoriteBusinessServiceImpl underTests;
   @Autowired private UserTestsDataCreator userTestsDataCreator;
+  @Autowired private PostTestsDataCreator postTestsDataCreator;
   @Autowired private UserFindUtils userFindUtils;
   @Autowired private Mapper<UserEntity, UserDto> userMapper;
 
@@ -121,6 +124,14 @@ public class FavoriteBusinessServiceImplTest {
     assertThat(hasBeenFollowed).isFalse();
   }
 
+  @Test
+  void testGetLatestPostsOfFavoriteBusinessesShouldReturnCorrectData() {
+    UserDto[] users = favoriteBusinessAfterCreatingUsers();
+    PostDto post = postTestsDataCreator.givenPostDtoJoleneHornsey1AfterCreated();
+    List<PostDto> latestPosts = underTests.getLatestPostsOfFavoriteBusinesses(users[0].getId());
+    thenListBeExactly(latestPosts, post);
+  }
+
   private UserDto[] favoriteBusinessAfterCreatingUsers() {
     UserDto user = userTestsDataCreator.givenPlainUserAfterCreated();
     UserDto businessUser = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated();
@@ -131,10 +142,10 @@ public class FavoriteBusinessServiceImplTest {
   }
 
   private void thenResultShouldBeExactly(List<UserDto> favoriteBusinesses, UserDto businessUser) {
-    listBeExactly(favoriteBusinesses, businessUser);
+    thenListBeExactly(favoriteBusinesses, businessUser);
   }
 
-  private <T> void listBeExactly(List<T> actual, T expected) {
+  private <T> void thenListBeExactly(List<T> actual, T expected) {
     assertThat(actual).isNotNull();
     assertThat(actual.size()).isEqualTo(1);
     assertThat(actual.getFirst()).isEqualTo(expected);

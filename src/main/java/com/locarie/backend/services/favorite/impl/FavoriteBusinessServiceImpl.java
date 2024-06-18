@@ -1,8 +1,11 @@
 package com.locarie.backend.services.favorite.impl;
 
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
+import com.locarie.backend.domain.entities.PostEntity;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
+import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.favorite.FavoriteBusinessService;
 import com.locarie.backend.services.utils.UserFindUtils;
@@ -15,17 +18,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   private final UserRepository userRepository;
+  private final PostRepository postRepository;
 
   private final UserFindUtils userFindUtils;
   private final Mapper<UserEntity, UserDto> userMapper;
+  private final Mapper<PostEntity, PostDto> postMapper;
 
   public FavoriteBusinessServiceImpl(
-      UserRepository userRepository,
+      UserRepository userRepository, PostRepository postRepository,
       UserFindUtils userFindUtils,
-      Mapper<UserEntity, UserDto> userMapper) {
+      Mapper<UserEntity, UserDto> userMapper, Mapper<PostEntity, PostDto> postMapper) {
     this.userRepository = userRepository;
+    this.postRepository = postRepository;
     this.userFindUtils = userFindUtils;
     this.userMapper = userMapper;
+    this.postMapper = postMapper;
   }
 
   @Override
@@ -148,5 +155,12 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   @Override
   public boolean isFavoredBy(Long userId, Long businessId) {
     return userRepository.hasBeenFollowed(userId, businessId) > 0;
+  }
+
+  @Override
+  public List<PostDto> getLatestPostsOfFavoriteBusinesses(Long userId) {
+    UserEntity user = userFindUtils.findUserById(userId);
+    List<Long> favoriteBusinessIds = user.getFavoriteBusinesses().stream().map(UserEntity::getId).toList();
+    return postRepository.findByUserIds(favoriteBusinessIds).stream().map(postMapper::mapTo).toList();
   }
 }

@@ -1,5 +1,6 @@
 package com.locarie.backend.services.favorite;
 
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface FavoriteBusinessService {
   int countFavoriteBusinesses(Long userId);
 
   boolean isFavoredBy(Long userId, Long businessId);
+
+  List<PostDto> getLatestPostsOfFavoriteBusinesses(Long userId);
 }
