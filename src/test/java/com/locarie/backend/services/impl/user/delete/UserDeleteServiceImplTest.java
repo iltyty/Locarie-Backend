@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class UserDeleteServiceImplTest {
   @Autowired private UserDeleteServiceImpl underTests;
   @Autowired private UserRepository repository;
-  @Autowired private PostRepository postRepository;
   @Autowired private UserTestsDataCreator userDataCreator;
   @Autowired private PostTestsDataCreator postTestsDataCreator;
 
