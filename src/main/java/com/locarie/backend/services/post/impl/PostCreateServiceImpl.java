@@ -7,6 +7,7 @@ import com.locarie.backend.mapper.impl.post.PostEntityDtoMapper;
 import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.post.PostCreateService;
+import com.locarie.backend.services.utils.UserFindUtils;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.storage.utils.StorageUtil;
 
@@ -22,15 +23,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostCreateServiceImpl implements PostCreateService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
+  private final UserFindUtils userFindUtils;
 
   private final PostEntityDtoMapper mapper;
 
   private final StorageService storageService;
 
   public PostCreateServiceImpl(
-      PostRepository postRepository, UserRepository userRepository, PostEntityDtoMapper mapper, StorageService storageService) {
+      PostRepository postRepository, UserRepository userRepository, UserFindUtils userFindUtils, PostEntityDtoMapper mapper, StorageService storageService) {
     this.postRepository = postRepository;
     this.userRepository = userRepository;
+    this.userFindUtils = userFindUtils;
     this.mapper = mapper;
     this.storageService = storageService;
   }
@@ -40,7 +43,7 @@ public class PostCreateServiceImpl implements PostCreateService {
     PostEntity postEntity = createPost(postDto);
     List<String> imageUrls = savePostImages(postEntity, images);
     updatePostEntityImageUrls(postEntity, imageUrls);
-    updateUserLastUpdate(postEntity.getUser());
+    updateUserLastUpdate(postEntity.getUser().getId());
     return mapper.mapTo(postEntity);
   }
 
@@ -64,7 +67,8 @@ public class PostCreateServiceImpl implements PostCreateService {
     postRepository.save(postEntity);
   }
 
-  private void updateUserLastUpdate(UserEntity user) {
+  private void updateUserLastUpdate(Long userId) {
+    UserEntity user = userFindUtils.findUserById(userId);
     user.setLastUpdate(Instant.now());
     userRepository.save(user);
   }

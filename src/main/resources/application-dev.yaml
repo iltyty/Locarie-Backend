@@ -1,8 +1,11 @@
 spring:
   datasource:
-    username: root
-    password: "0924"
-    url: jdbc:mariadb://localhost:3306/locarie
+#    username: root
+#    password: "0924"
+#    url: jdbc:mariadb://localhost:3306/locarie
+    username: qiu
+    password: qiuyh227515
+    url: jdbc:mariadb://luludb.c9ks62mikoko.eu-west-2.rds.amazonaws.com:3306/locarie
 
   mail:
     host: smtp.gmail.com
