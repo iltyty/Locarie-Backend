@@ -21,7 +21,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: luty@locarie.com
-    password: "gbqm ukpt dbsr uqzq"
+    password: "umog ijue lbeh rupt"
     properties:
       mail:
         smtp:
