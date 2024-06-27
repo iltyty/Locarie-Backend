@@ -35,15 +35,15 @@ public class AuthServiceImpl implements AuthService {
     if (!userRepository.existsByEmail(email)) {
       throw new UserNotFoundException("user with email " + email + " not found");
     }
-    String code = generateForgotPasswordValidationCode(email);
+    String code = generateAndSaveRandomCode(email, false);
     sendValidationCodeEmail(email, code);
     return true;
   }
 
-  private String generateForgotPasswordValidationCode(String email) {
+  private String generateAndSaveRandomCode(String email, boolean validated) {
     String code = randomCode();
     ResetPasswordEntry entry =
-        ResetPasswordEntry.builder().email(email).code(code).validated(false).ttl(expire).build();
+        ResetPasswordEntry.builder().email(email).code(code).validated(validated).ttl(expire).build();
     resetPasswordEntryRepository.save(entry);
     return code;
   }
@@ -99,6 +99,15 @@ public class AuthServiceImpl implements AuthService {
     doResetPassword(email, password);
     deleteResetPasswordEntry(email);
     return true;
+  }
+
+  @Override
+  public String validatePassword(String email, String password) {
+    throwIfUserNotExists(email);
+    if (!userRepository.existsByEmailAndPassword(email, password)) {
+      return "";
+    }
+    return generateAndSaveRandomCode(email, true);
   }
 
   private void throwIfResetPasswordEntryCodeNotValidated(String email) {

@@ -6,4 +6,6 @@ public interface AuthService {
   boolean validateForgotPasswordCode(String email, String code);
 
   boolean resetPassword(String email, String password);
+
+  String validatePassword(String email, String password);
 }

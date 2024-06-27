@@ -28,4 +28,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
   @Modifying
   @Query(value = "update UserEntity u set u.password = :password where u.email = :email")
   void updatePassword(String email, String password);
+
+  boolean existsByEmailAndPassword(String email, String password);
 }

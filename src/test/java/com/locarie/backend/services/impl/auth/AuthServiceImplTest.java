@@ -1,5 +1,8 @@
 package com.locarie.backend.services.impl.auth;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
+import com.locarie.backend.domain.dto.user.UserDto;
+import com.locarie.backend.domain.entities.UserEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -96,12 +99,42 @@ public class AuthServiceImplTest {
   }
 
   @Test
-  void testResetPasswordWithoutValidationShouldFail() {
+  void testResetPasswordWithoutForgotValidationShouldFail() {
     String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
     underTests.forgotPassword(email);
 
     String password = "88888888";
     assertThatThrownBy(() -> underTests.resetPassword(email, password))
+        .isInstanceOf(NotAuthorizedOperationException.class);
+  }
+
+  @Test
+  void testValidateCorrectPasswordShouldSucceed() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
+    UserDto userDto = dataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    String result = underTests.validatePassword(userDto.getEmail(), userEntity.getPassword());
+    assertThat(result).isNotEmpty();
+  }
+
+  @Test
+  void testValidateIncorrectPasswordShouldFail() {
+    UserDto userDto = dataCreator.givenBusinessUserJoleneHornseyAfterCreated();
+    String result = underTests.validatePassword(userDto.getEmail(), "incorrect-password");
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  void testResetPasswordWithPasswordValidationShouldSucceed() {
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    String code = underTests.validatePassword(email, "88888888");
+    boolean result = underTests.resetPassword(email, code);
+    assertThat(result).isTrue();
+  }
+
+  @Test
+  void testResetPasswordWithoutPasswordValidationShouldFail() {
+    String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
+    assertThatThrownBy(() -> underTests.resetPassword(email, "88888888"))
         .isInstanceOf(NotAuthorizedOperationException.class);
   }
 
