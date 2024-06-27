@@ -33,7 +33,7 @@ public class AuthController {
   }
 
   @PostMapping("/reset-password/validate")
-  public ResponseEntity<String> validatePassword(
+  public ResponseEntity<Boolean> validatePassword(
       @RequestParam("email") String email, @RequestParam("password") String password) {
     return new ResponseEntity<>(service.validatePassword(email, password), HttpStatus.CREATED);
   }

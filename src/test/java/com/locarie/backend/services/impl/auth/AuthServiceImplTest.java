@@ -112,22 +112,23 @@ public class AuthServiceImplTest {
   void testValidateCorrectPasswordShouldSucceed() {
     UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
     UserDto userDto = dataCreator.givenBusinessUserJoleneHornseyAfterCreated();
-    String result = underTests.validatePassword(userDto.getEmail(), userEntity.getPassword());
-    assertThat(result).isNotEmpty();
+    boolean result = underTests.validatePassword(userDto.getEmail(), userEntity.getPassword());
+    assertThat(result).isTrue();
   }
 
   @Test
   void testValidateIncorrectPasswordShouldFail() {
     UserDto userDto = dataCreator.givenBusinessUserJoleneHornseyAfterCreated();
-    String result = underTests.validatePassword(userDto.getEmail(), "incorrect-password");
-    assertThat(result).isEmpty();
+    boolean result = underTests.validatePassword(userDto.getEmail(), "incorrect-password");
+    assertThat(result).isFalse();
   }
 
   @Test
   void testResetPasswordWithPasswordValidationShouldSucceed() {
+    UserEntity userEntity = UserEntityCreator.businessUserEntityJoleneHornsey();
     String email = dataCreator.givenBusinessUserJoleneHornseyAfterCreated().getEmail();
-    String code = underTests.validatePassword(email, "88888888");
-    boolean result = underTests.resetPassword(email, code);
+    underTests.validatePassword(email, userEntity.getPassword());
+    boolean result = underTests.resetPassword(email, "99999999");
     assertThat(result).isTrue();
   }
 

@@ -102,12 +102,13 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public String validatePassword(String email, String password) {
+  public boolean validatePassword(String email, String password) {
     throwIfUserNotExists(email);
     if (!userRepository.existsByEmailAndPassword(email, password)) {
-      return "";
+      return false;
     }
-    return generateAndSaveRandomCode(email, true);
+    generateAndSaveRandomCode(email, true);
+    return true;
   }
 
   private void throwIfResetPasswordEntryCodeNotValidated(String email) {

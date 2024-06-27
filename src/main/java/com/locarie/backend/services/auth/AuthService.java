@@ -7,5 +7,5 @@ public interface AuthService {
 
   boolean resetPassword(String email, String password);
 
-  String validatePassword(String email, String password);
+  boolean validatePassword(String email, String password);
 }
