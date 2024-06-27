@@ -31,6 +31,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
     return UserLoginResponseDto.builder()
         .id(result.getId())
+        .email(result.getEmail())
         .type(result.getType().toString())
         .username(result.getUsername())
         .avatarUrl(result.getAvatarUrl())

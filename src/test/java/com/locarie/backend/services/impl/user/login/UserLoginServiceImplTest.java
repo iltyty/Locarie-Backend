@@ -50,6 +50,7 @@ public class UserLoginServiceImplTest {
 
   private void thenLoginResultShouldBeSuccess(UserLoginResponseDto result) {
     assertThat(result).isNotNull();
+    assertThat(result.getEmail()).isNotEmpty();
     assertThat(result.getId()).isPositive();
     assertThat(result.getUsername()).isNotEmpty();
     assertThat(result.getJwtToken()).isNotEmpty();
