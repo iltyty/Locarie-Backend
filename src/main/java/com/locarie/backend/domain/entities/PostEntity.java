@@ -32,7 +32,7 @@ public class PostEntity {
   @CreationTimestamp
   private Instant time; // post publish time
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 500)
   private String content;
 
   @ElementCollection(fetch = FetchType.EAGER)
