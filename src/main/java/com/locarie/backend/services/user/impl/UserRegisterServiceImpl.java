@@ -54,7 +54,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     try {
       Resource resource = resourceLoader.getResource("classpath:welcome.txt");
       String body  = new String(Files.readAllBytes(Paths.get(resource.getURI())));
-      return String.format(body, firstName, firstName, firstName);
+      return String.format(body, firstName, firstName);
     } catch (IOException e) {
       log.error(e.getMessage());
       return "Welcome to Locarie!";
