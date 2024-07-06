@@ -8,15 +8,11 @@ import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.mail.MailService;
 import com.locarie.backend.services.user.UserRegisterService;
 import lombok.extern.log4j.Log4j2;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 
 @Service
 @Log4j2
@@ -24,13 +20,11 @@ public class UserRegisterServiceImpl implements UserRegisterService {
   private final UserRepository repository;
   private final Mapper<UserEntity, UserDto> mapper;
   private final MailService emailService;
-  private final ResourceLoader resourceLoader;
 
-  public UserRegisterServiceImpl(UserRepository repository, Mapper<UserEntity, UserDto> mapper, MailService emailService, ResourceLoader resourceLoader) {
+  public UserRegisterServiceImpl(UserRepository repository, Mapper<UserEntity, UserDto> mapper, MailService emailService) {
     this.repository = repository;
     this.mapper = mapper;
     this.emailService = emailService;
-    this.resourceLoader = resourceLoader;
   }
 
   @Override
@@ -52,8 +46,9 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
   private String readWelcomeText(String firstName) {
     try {
-      Resource resource = resourceLoader.getResource("classpath:welcome.txt");
-      String body  = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+      ClassPathResource resource = new ClassPathResource("classpath:welcome.txt");
+      InputStream inputStream = resource.getInputStream();
+      String body = new String(inputStream.readAllBytes());
       return String.format(body, firstName, firstName);
     } catch (IOException e) {
       log.error(e.getMessage());
