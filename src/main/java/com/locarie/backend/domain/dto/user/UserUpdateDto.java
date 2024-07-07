@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.locarie.backend.serialization.deserializers.JtsPointDeserializer;
 import com.locarie.backend.serialization.serializers.JtsPointSerializer;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
@@ -17,8 +19,11 @@ import org.locationtech.jts.geom.Point;
 @Builder
 public class UserUpdateDto {
   private String email;
+  @NotNull(message = "username is mandatory") @Size(min = 1, max = 25, message = "username must be between 1 and 25 characters")
   private String username;
+  @NotNull(message = "first name is mandatory") @Size(min = 1, max = 25, message = "first name must be between 1 and 25 characters")
   private String firstName;
+  @NotNull(message = "last name is mandatory") @Size(min = 1, max = 25, message = "last name must be between 1 and 25 characters")
   private String lastName;
   private Instant birthday;
   private String businessName;
