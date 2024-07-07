@@ -1,9 +1,15 @@
 package com.locarie.backend.domain.dto.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.domain.dto.businesshours.BusinessHoursDto;
 import java.time.Instant;
 import java.util.List;
+
+import com.locarie.backend.serialization.deserializers.JtsPointDeserializer;
+import com.locarie.backend.serialization.serializers.JtsPointSerializer;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 @Data
 @NoArgsConstructor
@@ -21,4 +27,11 @@ public class UserUpdateDto {
   private String introduction;
   private String phone;
   private List<BusinessHoursDto> businessHours;
+
+  private String address;
+  private String neighborhood;
+
+  @JsonSerialize(using = JtsPointSerializer.class)
+  @JsonDeserialize(using = JtsPointDeserializer.class)
+  private Point location;
 }

@@ -1,5 +1,6 @@
 package com.locarie.backend.datacreators.user;
 
+import com.locarie.backend.datacreators.LocationCreator;
 import com.locarie.backend.datacreators.businesshours.BusinessHoursDtoCreator;
 import com.locarie.backend.domain.dto.user.UserUpdateDto;
 import com.locarie.backend.domain.enums.BusinessCategory;
@@ -35,6 +36,9 @@ public class UserUpdateDtoCreator {
         .introduction("Introduction")
         .phone("12345678")
         .businessHours(BusinessHoursDtoCreator.businessHoursDtos())
+        .address("new address")
+        .neighborhood("new neighborhood")
+        .location(LocationCreator.location(20, 20))
         .build();
   }
 
