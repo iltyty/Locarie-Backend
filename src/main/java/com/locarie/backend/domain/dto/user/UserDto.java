@@ -28,13 +28,13 @@ public class UserDto {
 
   @NotNull(message = "type = PLAIN/BUSINESS is mandatory") private Type type;
 
-  @NotNull(message = "username is mandatory") @Size(min = 2, max = 20, message = "username must be between 2 and 20 characters")
+  @NotNull(message = "username is mandatory") @Size(min = 1, max = 25, message = "username must be between 1 and 25 characters")
   private String username;
 
-  @NotNull(message = "first name is mandatory") @Size(min = 2, max = 20, message = "first name must be between 2 and 20 characters")
+  @NotNull(message = "first name is mandatory") @Size(min = 1, max = 25, message = "first name must be between 1 and 25 characters")
   private String firstName;
 
-  @NotNull(message = "last name is mandatory") @Size(min = 2, max = 20, message = "last name must be between 2 and 20 characters")
+  @NotNull(message = "last name is mandatory") @Size(min = 1, max = 25, message = "last name must be between 1 and 25 characters")
   private String lastName;
 
   @NotNull(message = "email is mandatory") private String email;
