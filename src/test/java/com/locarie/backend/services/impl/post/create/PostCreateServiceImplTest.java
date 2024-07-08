@@ -42,7 +42,7 @@ public class PostCreateServiceImplTest {
 
   private PostDto givenPostDto() {
     long userId = userTestsDataCreator.givenBusinessUserJoleneHornseyAfterCreated().getId();
-    PostDto postDto = PostDtoCreator.postDtoShreeji1();
+    PostDto postDto = PostDtoCreator.postDtoJoleneHornsey1();
     postDto.setId(null);
     postDto.getUser().setId(userId);
     return postDto;

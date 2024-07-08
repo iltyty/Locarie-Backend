@@ -13,7 +13,7 @@ public class PostEntityCreator {
     return PostEntity.builder()
         .id(1L)
         .user(user)
-        .content("On all week: Our Apple & Custard Danish! \uD83C\uDF4F\uD83D\uDC9A")
+        .content("中文测试 \uD83C\uDF4F\uD83D\uDC9A")
         .imageUrls(new ArrayList<>(List.of("https://i.ibb.co/82Qw0Tb/Jolene-Hornsey-Post1-1.jpg")))
         .build();
   }
