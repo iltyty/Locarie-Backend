@@ -11,6 +11,5 @@ Welcome aboard, %s.
 For more info, please visit locarie.com.
 
 
-
-                                                                                Cheers to Local Wonders,
-                                                                                        The Locarie Team🍊
+Cheers to Local Wonders,
+The Locarie Team🍊
