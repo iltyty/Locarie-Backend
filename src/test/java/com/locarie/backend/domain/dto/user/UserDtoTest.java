@@ -54,66 +54,84 @@ class UserDtoTest {
       		"id": null,
       		"dayOfWeek": "Monday",
       		"closed": false,
-      		"openingTime": {
+      		"openingTime": [{
       			"hour": 9,
       			"minute": 0
-      		},
-      		"closingTime": {
-      			"hour": 17,
+      		}, {
+            "hour": 18,
+            "minute": 0
+      		}],
+      		"closingTime": [{
+      			"hour": 16,
       			"minute": 0
-      		},
+      		}, {
+            "hour": 21,
+            "minute": 30
+      		}],
       		"user": null
       	}, {
       		"id": null,
       		"dayOfWeek": "Tuesday",
-      		"closed": false,
-      		"openingTime": {
-      			"hour": 9,
-      			"minute": 0
-      		},
-      		"closingTime": {
-      			"hour": 17,
-      			"minute": 0
-      		},
+      		"closed": true,
+      		"openingTime": null,
+      		"closingTime": null,
       		"user": null
       	}, {
       		"id": null,
       		"dayOfWeek": "Wednesday",
       		"closed": false,
-      		"openingTime": {
-      			"hour": 9,
+      		"openingTime": [{
+      			"hour": 8,
       			"minute": 0
-      		},
-      		"closingTime": {
-      			"hour": 17,
+      		}, {
+            "hour": 17,
+            "minute": 0
+      		}],
+      		"closingTime": [{
+      			"hour": 15,
       			"minute": 0
-      		},
+      		}, {
+            "hour": 20,
+            "minute": 30
+      		}],
       		"user": null
       	}, {
       		"id": null,
       		"dayOfWeek": "Thursday",
       		"closed": false,
-      		"openingTime": {
+      		"openingTime": [{
       			"hour": 9,
       			"minute": 0
-      		},
-      		"closingTime": {
-      			"hour": 17,
+      		}, {
+            "hour": 18,
+            "minute": 0
+      		}],
+      		"closingTime": [{
+      			"hour": 16,
       			"minute": 0
-      		},
+      		}, {
+            "hour": 21,
+            "minute": 30
+      		}],
       		"user": null
       	}, {
       		"id": null,
       		"dayOfWeek": "Friday",
       		"closed": false,
-      		"openingTime": {
+      		"openingTime": [{
       			"hour": 9,
       			"minute": 0
-      		},
-      		"closingTime": {
-      			"hour": 17,
+      		}, {
+            "hour": 18,
+            "minute": 0
+      		}],
+      		"closingTime": [{
+      			"hour": 16,
       			"minute": 0
-      		},
+      		}, {
+            "hour": 21,
+            "minute": 30
+      		}],
       		"user": null
       	}, {
       		"id": null,

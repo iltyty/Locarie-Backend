@@ -8,6 +8,8 @@ import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.serialization.deserializers.BusinessHoursTimeDeserializer;
 import com.locarie.backend.serialization.serializers.BusinessHoursTimeSerializer;
 import java.time.LocalTime;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,13 +24,13 @@ public class BusinessHoursDto {
   private DayOfWeek dayOfWeek;
   private Boolean closed;
 
-  @JsonSerialize(using = BusinessHoursTimeSerializer.class)
-  @JsonDeserialize(using = BusinessHoursTimeDeserializer.class)
-  private LocalTime openingTime;
+  @JsonSerialize(contentUsing = BusinessHoursTimeSerializer.class)
+  @JsonDeserialize(contentUsing = BusinessHoursTimeDeserializer.class)
+  private List<LocalTime> openingTime;
 
-  @JsonSerialize(using = BusinessHoursTimeSerializer.class)
-  @JsonDeserialize(using = BusinessHoursTimeDeserializer.class)
-  private LocalTime closingTime;
+  @JsonSerialize(contentUsing = BusinessHoursTimeSerializer.class)
+  @JsonDeserialize(contentUsing = BusinessHoursTimeDeserializer.class)
+  private List<LocalTime> closingTime;
 
   @JsonBackReference private UserDto user;
 

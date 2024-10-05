@@ -2,6 +2,8 @@ package com.locarie.backend.domain.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalTime;
+import java.util.List;
+
 import lombok.*;
 
 @Data
@@ -21,8 +23,14 @@ public class BusinessHoursEntity {
 
   private Boolean closed;
 
-  private LocalTime openingTime;
-  private LocalTime closingTime;
+  // some stores have two operating hours per day
+  @ElementCollection(fetch = FetchType.EAGER)
+  @OrderColumn(name = "image_index")
+  private List<LocalTime> openingTime;
+
+  @ElementCollection(fetch = FetchType.EAGER)
+  @OrderColumn(name = "image_index")
+  private List<LocalTime> closingTime;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

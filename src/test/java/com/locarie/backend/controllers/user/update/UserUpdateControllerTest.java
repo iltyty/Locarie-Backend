@@ -168,8 +168,8 @@ public class UserUpdateControllerTest {
     List<BusinessHoursDto> businessHoursDtos = userUpdateDto.getBusinessHours();
     for (int i = 0; i < businessHoursDtos.size(); i++) {
       BusinessHoursDto businessHours = businessHoursDtos.get(i);
-      LocalTime openingTime = businessHours.getOpeningTime();
-      LocalTime closingTime = businessHours.getClosingTime();
+      List<LocalTime> openingTime = businessHours.getOpeningTime();
+      List<LocalTime> closingTime = businessHours.getClosingTime();
       result
           .andExpect(
               jsonPath("$.data.businessHours[" + i + "].dayOfWeek")
@@ -177,19 +177,14 @@ public class UserUpdateControllerTest {
           .andExpect(
               jsonPath("$.data.businessHours[" + i + "].closed").value(businessHours.getClosed()));
       if (!businessHours.getClosed()) {
-        result
-            .andExpect(
-                jsonPath("$.data.businessHours[" + i + "].openingTime.hour")
-                    .value(openingTime.getHour()))
-            .andExpect(
-                jsonPath("$.data.businessHours[" + i + "].openingTime.minute")
-                    .value(openingTime.getMinute()))
-            .andExpect(
-                jsonPath("$.data.businessHours[" + i + "].closingTime.hour")
-                    .value(closingTime.getHour()))
-            .andExpect(
-                jsonPath("$.data.businessHours[" + i + "].closingTime.minute")
-                    .value(closingTime.getMinute()));
+        result.andExpect(jsonPath("$.data.businessHours[" + i + "].openingTime", hasSize(openingTime.size())));
+        result.andExpect(jsonPath("$.data.businessHours[" + i + "].closingTime", hasSize(closingTime.size())));
+        for (int j = 0; j < openingTime.size(); j++) {
+          result.andExpect(jsonPath("$.data.businessHours[" + i + "].openingTime[" + j + "].hour").value(openingTime.get(j).getHour()));
+          result.andExpect(jsonPath("$.data.businessHours[" + i + "].openingTime[" + j + "].hour").value(openingTime.get(j).getMinute()));
+          result.andExpect(jsonPath("$.data.businessHours[" + i + "].closingTime[" + j + "].hour").value(closingTime.get(j).getHour()));
+          result.andExpect(jsonPath("$.data.businessHours[" + i + "].closingTime[" + j + "].hour").value(closingTime.get(j).getMinute()));
+        }
       }
     }
   }
