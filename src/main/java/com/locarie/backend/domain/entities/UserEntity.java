@@ -78,6 +78,7 @@ public class UserEntity {
   private Instant lastUpdate;
 
   private String homepageUrl;
+  @Column(columnDefinition="VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
   private String introduction;
   private String phone;
 
