@@ -39,9 +39,19 @@ public class UserListServiceImplTest {
   void testListBusinessesWithPagination() {
     List<UserEntity> entities = givenUserEntitiesAfterCreated();
     List<UserDto> dtos = givenUserDtos(entities);
-    Page<UserDto> result = whenListBusinesses(0, 2);
+    Page<UserDto> result =
+        whenListBusinesses(
+            entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), 0, 2);
     thenListResultShouldContainsAllDtos(result, dtos.subList(1, 3));
-    result = whenListBusinesses(1, 1);
+
+    result =
+        whenListBusinesses(
+            entities.get(2).getLocation().getY(), entities.get(2).getLocation().getX(), 0, 2);
+    thenListResultShouldContainsAllDtos(result, dtos.subList(1, 3).reversed());
+
+    result =
+        whenListBusinesses(
+            entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), 1, 1);
     thenListResultShouldContainsAllDtos(result, dtos.subList(2, 3));
   }
 
@@ -70,8 +80,9 @@ public class UserListServiceImplTest {
     return underTests.list(PageRequest.of(page, pageSize));
   }
 
-  private Page<UserDto> whenListBusinesses(Integer page, Integer pageSize) {
-    return underTests.listBusinesses(PageRequest.of(page, pageSize));
+  private Page<UserDto> whenListBusinesses(
+      double latitude, double longitude, Integer page, Integer pageSize) {
+    return underTests.listBusinesses(latitude, longitude, PageRequest.of(page, pageSize));
   }
 
   private List<UserLocationDto> whenListAllBusinesses() {

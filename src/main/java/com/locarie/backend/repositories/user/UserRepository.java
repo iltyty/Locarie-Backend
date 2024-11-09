@@ -18,10 +18,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   List<UserEntity> findByType(UserEntity.Type type);
 
-  Page<UserEntity> findByType(UserEntity.Type type, Pageable pageable);
-
-  @Query(value = "select u from UserEntity u where u.type = 'BUSINESS'")
-  List<UserEntity> listBusinesses();
+  @Query(
+      value =
+          "select * from users u where u.type = 'BUSINESS' order by ST_DISTANCE_SPHERE(u.location,"
+              + " Point(:longitude, :latitude)), u.id",
+      nativeQuery = true)
+  Page<UserEntity> listBusinesses(double latitude, double longitude, Pageable pageable);
 
   Optional<UserEntity> findByEmail(String email);
 

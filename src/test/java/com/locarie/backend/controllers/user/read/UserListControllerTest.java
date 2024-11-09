@@ -54,7 +54,7 @@ public class UserListControllerTest {
     MockHttpServletRequestBuilder request = givenListBusinessesRequest();
     ResultActions result = whenPerformRequest(request);
     resultExpectUtil.thenResultShouldBeOk(result);
-    thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
+    thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3).reversed());
   }
 
   @Test
@@ -78,7 +78,7 @@ public class UserListControllerTest {
   }
 
   MockHttpServletRequestBuilder givenListBusinessesRequest() {
-    return MockMvcRequestBuilders.get(LIST_BUSINESSES_ENDPOINT);
+    return MockMvcRequestBuilders.get(LIST_BUSINESSES_ENDPOINT).param("latitude", "0").param("longitude", "0");
   }
 
   MockHttpServletRequestBuilder givenListAllBusinessesRequest() {

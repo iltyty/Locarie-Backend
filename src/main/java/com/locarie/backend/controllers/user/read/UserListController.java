@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,8 +26,11 @@ public class UserListController {
   }
 
   @GetMapping("/businesses")
-  public Page<UserDto> listBusinesses(Pageable pageable) {
-    return service.listBusinesses(pageable);
+  public Page<UserDto> listBusinesses(
+      @RequestParam(value = "latitude") double latitude,
+      @RequestParam(value = "longitude") double longitude,
+      Pageable pageable) {
+    return service.listBusinesses(latitude, longitude, pageable);
   }
 
   @GetMapping("/businesses/all")

@@ -34,8 +34,8 @@ public class UserListServiceImpl implements UserListService {
   }
 
   @Override
-  public Page<UserDto> listBusinesses(Pageable pageable) {
-    return repository.findByType(UserEntity.Type.BUSINESS, pageable).map(entityDtoMapper::mapTo);
+  public Page<UserDto> listBusinesses(double latitude, double longitude, Pageable pageable) {
+    return repository.listBusinesses(latitude, longitude, pageable).map(entityDtoMapper::mapTo);
   }
 
   @Override
