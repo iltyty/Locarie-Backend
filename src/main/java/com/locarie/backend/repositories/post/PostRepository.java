@@ -3,6 +3,8 @@ package com.locarie.backend.repositories.post;
 import com.locarie.backend.domain.entities.PostEntity;
 import java.util.List;
 import org.locationtech.jts.geom.Geometry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -38,8 +40,10 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " dist from posts p join users u on p.user_id = u.id where p.id = (select id from"
               + " posts where user_id = u.id order by time desc, id desc limit 1) order by p.time"
               + " desc, dist",
+      countQuery = "select count(p.id) from posts p join users u on p.user_id = u.id"
+              + " where p.id = (select id from posts where user_id = u.id order by time desc, id desc limit 1)",
       nativeQuery = true)
-  List<PostEntity> findNearbyAll(double latitude, double longitude);
+  Page<PostEntity> findNearbyAll(double latitude, double longitude, Pageable pageable);
 
   @Query(value = "select p from PostEntity p where p.user.id = :id")
   List<PostEntity> findByUserId(Long id);

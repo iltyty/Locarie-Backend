@@ -3,6 +3,9 @@ package com.locarie.backend.controllers.post.read;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.services.post.PostReadService;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +33,11 @@ public class PostReadController {
   }
 
   @GetMapping("/nearby-all")
-  public List<PostDto> listNearbyAll(
+  public Page<PostDto> listNearbyAll(
       @RequestParam(value = "latitude") double latitude,
-      @RequestParam(value = "longitude") double longitude) {
-    return service.listNearbyAll(latitude, longitude);
+      @RequestParam(value = "longitude") double longitude,
+      Pageable pageable) {
+    return service.listNearbyAll(latitude, longitude, pageable);
   }
 
   @GetMapping("/{id}")
