@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class UserListControllerTest {
   private static final String LIST_ALL_ENDPOINT = "/api/v1/users";
   private static final String LIST_BUSINESSES_ENDPOINT = "/api/v1/users/businesses";
+  private static final String LIST_ALL_BUSINESSES_ENDPOINT = "/api/v1/users/businesses/all";
   private static final Mapper<UserEntity, UserDto> mapper = new UserEntityDtoMapperImpl();
 
   @Autowired private MockMvc mockMvc;
@@ -56,6 +57,15 @@ public class UserListControllerTest {
     thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
   }
 
+  @Test
+  void testListAllBusinesses() throws Exception {
+    List<UserDto> dtos = givenUserRegistrationDtosAfterCreated();
+    MockHttpServletRequestBuilder request = givenListAllBusinessesRequest();
+    ResultActions result = whenPerformRequest(request);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenListAllBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
+  }
+
   List<UserDto> givenUserRegistrationDtosAfterCreated() {
     List<UserEntity> userEntities = createUserEntitiesInRepository();
     return userEntities.stream().map(mapper::mapTo).toList();
@@ -69,6 +79,10 @@ public class UserListControllerTest {
 
   MockHttpServletRequestBuilder givenListBusinessesRequest() {
     return MockMvcRequestBuilders.get(LIST_BUSINESSES_ENDPOINT);
+  }
+
+  MockHttpServletRequestBuilder givenListAllBusinessesRequest() {
+    return MockMvcRequestBuilders.get(LIST_ALL_BUSINESSES_ENDPOINT);
   }
 
   ResultActions whenPerformRequest(MockHttpServletRequestBuilder request) throws Exception {
@@ -91,7 +105,7 @@ public class UserListControllerTest {
 
   private void thenListUsersResultShouldContainDtos(ResultActions result, List<UserDto> dtos)
       throws Exception {
-    resultBeOfSize(result, dtos.size());
+    resultBeOfSize(result, "$.data.content", dtos.size());
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
       result.andExpect(jsonPath("$.data.content[" + i + "].id").value(dto.getId()));
@@ -100,7 +114,7 @@ public class UserListControllerTest {
 
   private void thenListBusinessesResultShouldBeExact(ResultActions result, List<UserDto> dtos)
       throws Exception {
-    resultBeOfSize(result, dtos.size());
+    resultBeOfSize(result, "$.data.content", dtos.size());
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
       result.andExpect(jsonPath("$.data.content[" + i + "].id").value(dto.getId()));
@@ -110,9 +124,23 @@ public class UserListControllerTest {
     }
   }
 
-  private void resultBeOfSize(ResultActions result, int size) throws Exception {
+  private void thenListAllBusinessesResultShouldBeExact(ResultActions result, List<UserDto> dtos)
+      throws Exception {
+    resultBeOfSize(result, "$.data", dtos.size());
+    for (int i = 0; i < dtos.size(); i++) {
+      UserDto dto = dtos.get(i);
+      result.andExpect(jsonPath("$.data.[" + i + "].id").value(dto.getId()));
+      result.andExpect(jsonPath("$.data.[" + i + "].avatarUrl").value(dto.getAvatarUrl()));
+      result.andExpect(
+          jsonPath("$.data.[" + i + "].location.latitude").value(dto.getLocation().getY()));
+      result.andExpect(
+          jsonPath("$.data.[" + i + "].location.longitude").value(dto.getLocation().getX()));
+    }
+  }
+
+  private void resultBeOfSize(ResultActions result, String jsonPath, int size) throws Exception {
     result
-        .andExpect(jsonPath("$.data.content").isArray())
-        .andExpect(jsonPath("$.data.content.length()").value(size));
+        .andExpect(jsonPath(jsonPath).isArray())
+        .andExpect(jsonPath(jsonPath + ".length()").value(size));
   }
 }

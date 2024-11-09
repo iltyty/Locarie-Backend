@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
   boolean existsByEmail(String email);
 
+  List<UserEntity> findByType(UserEntity.Type type);
+
   Page<UserEntity> findByType(UserEntity.Type type, Pageable pageable);
 
   @Query(value = "select u from UserEntity u where u.type = 'BUSINESS'")
