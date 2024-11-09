@@ -32,7 +32,9 @@ public class PostEntity {
   @CreationTimestamp
   private Instant time; // post publish time
 
-  @Column(nullable = false, columnDefinition="VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+  @Column(
+      nullable = false,
+      columnDefinition = "VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
   private String content;
 
   @ElementCollection(fetch = FetchType.EAGER)

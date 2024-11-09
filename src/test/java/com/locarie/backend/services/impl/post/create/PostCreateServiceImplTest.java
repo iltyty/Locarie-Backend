@@ -1,7 +1,5 @@
 package com.locarie.backend.services.impl.post.create;
 
-import com.locarie.backend.domain.entities.UserEntity;
-import com.locarie.backend.repositories.user.UserRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.image.MockImageCreator;
@@ -9,10 +7,11 @@ import com.locarie.backend.datacreators.post.PostDtoCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
+import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.post.PostRepository;
+import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.post.impl.PostCreateServiceImpl;
 import jakarta.transaction.Transactional;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;

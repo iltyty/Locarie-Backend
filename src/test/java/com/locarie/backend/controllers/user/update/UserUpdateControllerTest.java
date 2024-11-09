@@ -177,13 +177,23 @@ public class UserUpdateControllerTest {
           .andExpect(
               jsonPath("$.data.businessHours[" + i + "].closed").value(businessHours.getClosed()));
       if (!businessHours.getClosed()) {
-        result.andExpect(jsonPath("$.data.businessHours[" + i + "].openingTime", hasSize(openingTime.size())));
-        result.andExpect(jsonPath("$.data.businessHours[" + i + "].closingTime", hasSize(closingTime.size())));
+        result.andExpect(
+            jsonPath("$.data.businessHours[" + i + "].openingTime", hasSize(openingTime.size())));
+        result.andExpect(
+            jsonPath("$.data.businessHours[" + i + "].closingTime", hasSize(closingTime.size())));
         for (int j = 0; j < openingTime.size(); j++) {
-          result.andExpect(jsonPath("$.data.businessHours[" + i + "].openingTime[" + j + "].hour").value(openingTime.get(j).getHour()));
-          result.andExpect(jsonPath("$.data.businessHours[" + i + "].openingTime[" + j + "].hour").value(openingTime.get(j).getMinute()));
-          result.andExpect(jsonPath("$.data.businessHours[" + i + "].closingTime[" + j + "].hour").value(closingTime.get(j).getHour()));
-          result.andExpect(jsonPath("$.data.businessHours[" + i + "].closingTime[" + j + "].hour").value(closingTime.get(j).getMinute()));
+          result.andExpect(
+              jsonPath("$.data.businessHours[" + i + "].openingTime[" + j + "].hour")
+                  .value(openingTime.get(j).getHour()));
+          result.andExpect(
+              jsonPath("$.data.businessHours[" + i + "].openingTime[" + j + "].minute")
+                  .value(openingTime.get(j).getMinute()));
+          result.andExpect(
+              jsonPath("$.data.businessHours[" + i + "].closingTime[" + j + "].hour")
+                  .value(closingTime.get(j).getHour()));
+          result.andExpect(
+              jsonPath("$.data.businessHours[" + i + "].closingTime[" + j + "].minute")
+                  .value(closingTime.get(j).getMinute()));
         }
       }
     }

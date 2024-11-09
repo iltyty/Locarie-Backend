@@ -34,12 +34,17 @@ public class UserListControllerTest {
   @Autowired private ResultExpectUtil resultExpectUtil;
 
   @Test
-  void testListShouldSucceed() throws Exception {
+  void testList() throws Exception {
     List<UserDto> dtos = givenUserRegistrationDtosAfterCreated();
-    MockHttpServletRequestBuilder request = givenListRequest();
+    MockHttpServletRequestBuilder request = givenListRequest(0, 2);
     ResultActions result = whenPerformRequest(request);
     resultExpectUtil.thenResultShouldBeOk(result);
-    thenListUsersResultShouldContainDtos(result, dtos);
+    thenListUsersResultShouldContainDtos(result, dtos.subList(0, 2));
+
+    request = givenListRequest(1, 1);
+    result = whenPerformRequest(request);
+    resultExpectUtil.thenResultShouldBeOk(result);
+    thenListUsersResultShouldContainDtos(result, dtos.subList(1, 2));
   }
 
   @Test
@@ -56,8 +61,10 @@ public class UserListControllerTest {
     return userEntities.stream().map(mapper::mapTo).toList();
   }
 
-  MockHttpServletRequestBuilder givenListRequest() {
-    return MockMvcRequestBuilders.get(LIST_ALL_ENDPOINT);
+  MockHttpServletRequestBuilder givenListRequest(int page, int pageSize) {
+    return MockMvcRequestBuilders.get(LIST_ALL_ENDPOINT)
+        .param("page", String.valueOf(page))
+        .param("size", String.valueOf(pageSize));
   }
 
   MockHttpServletRequestBuilder givenListBusinessesRequest() {
@@ -87,7 +94,7 @@ public class UserListControllerTest {
     resultBeOfSize(result, dtos.size());
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
-      result.andExpect(jsonPath("$.data[" + i + "].id").value(dto.getId()));
+      result.andExpect(jsonPath("$.data.content[" + i + "].id").value(dto.getId()));
     }
   }
 
@@ -96,15 +103,16 @@ public class UserListControllerTest {
     resultBeOfSize(result, dtos.size());
     for (int i = 0; i < dtos.size(); i++) {
       UserDto dto = dtos.get(i);
-      result.andExpect(jsonPath("$.data[" + i + "].id").value(dto.getId()));
-      result.andExpect(jsonPath("$.data[" + i + "].avatarUrl").value(dto.getAvatarUrl()));
-      result.andExpect(jsonPath("$.data[" + i + "].businessName").value(dto.getBusinessName()));
+      result.andExpect(jsonPath("$.data.content[" + i + "].id").value(dto.getId()));
+      result.andExpect(jsonPath("$.data.content[" + i + "].avatarUrl").value(dto.getAvatarUrl()));
+      result.andExpect(
+          jsonPath("$.data.content[" + i + "].businessName").value(dto.getBusinessName()));
     }
   }
 
   private void resultBeOfSize(ResultActions result, int size) throws Exception {
     result
-        .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data.length()").value(size));
+        .andExpect(jsonPath("$.data.content").isArray())
+        .andExpect(jsonPath("$.data.content.length()").value(size));
   }
 }

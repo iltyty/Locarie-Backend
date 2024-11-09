@@ -9,7 +9,6 @@ import com.locarie.backend.serialization.deserializers.BusinessHoursTimeDeserial
 import com.locarie.backend.serialization.serializers.BusinessHoursTimeSerializer;
 import java.time.LocalTime;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

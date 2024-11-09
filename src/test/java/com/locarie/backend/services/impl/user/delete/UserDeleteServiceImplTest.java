@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
-import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.impl.UserDeleteServiceImpl;
 import jakarta.transaction.Transactional;

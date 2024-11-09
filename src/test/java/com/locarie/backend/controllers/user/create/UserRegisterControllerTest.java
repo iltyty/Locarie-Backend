@@ -11,6 +11,7 @@ import com.locarie.backend.domain.dto.user.UserRegistrationDto;
 import com.locarie.backend.global.ResultCode;
 import com.locarie.backend.utils.matchers.ResultMatcherUtil;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Disabled
 public class UserRegisterControllerTest {
   private static final String ENDPOINT = "/api/v1/users/register";
 

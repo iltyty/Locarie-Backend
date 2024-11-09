@@ -1,10 +1,10 @@
 package com.locarie.backend.services.impl.favorite;
 
-import com.locarie.backend.datacreators.post.PostTestsDataCreator;
-import com.locarie.backend.domain.dto.post.PostDto;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.locarie.backend.datacreators.post.PostTestsDataCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
+import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;

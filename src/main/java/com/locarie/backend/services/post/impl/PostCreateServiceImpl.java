@@ -10,7 +10,6 @@ import com.locarie.backend.services.post.PostCreateService;
 import com.locarie.backend.services.utils.UserFindUtils;
 import com.locarie.backend.storage.StorageService;
 import com.locarie.backend.storage.utils.StorageUtil;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +29,11 @@ public class PostCreateServiceImpl implements PostCreateService {
   private final StorageService storageService;
 
   public PostCreateServiceImpl(
-      PostRepository postRepository, UserRepository userRepository, UserFindUtils userFindUtils, PostEntityDtoMapper mapper, StorageService storageService) {
+      PostRepository postRepository,
+      UserRepository userRepository,
+      UserFindUtils userFindUtils,
+      PostEntityDtoMapper mapper,
+      StorageService storageService) {
     this.postRepository = postRepository;
     this.userRepository = userRepository;
     this.userFindUtils = userFindUtils;

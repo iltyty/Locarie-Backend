@@ -25,9 +25,11 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   private final Mapper<PostEntity, PostDto> postMapper;
 
   public FavoriteBusinessServiceImpl(
-      UserRepository userRepository, PostRepository postRepository,
+      UserRepository userRepository,
+      PostRepository postRepository,
       UserFindUtils userFindUtils,
-      Mapper<UserEntity, UserDto> userMapper, Mapper<PostEntity, PostDto> postMapper) {
+      Mapper<UserEntity, UserDto> userMapper,
+      Mapper<PostEntity, PostDto> postMapper) {
     this.userRepository = userRepository;
     this.postRepository = postRepository;
     this.userFindUtils = userFindUtils;
@@ -160,7 +162,10 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   @Override
   public List<PostDto> getLatestPostsOfFavoriteBusinesses(Long userId) {
     UserEntity user = userFindUtils.findUserById(userId);
-    List<Long> favoriteBusinessIds = user.getFavoriteBusinesses().stream().map(UserEntity::getId).toList();
-    return postRepository.findByUserIds(favoriteBusinessIds).stream().map(postMapper::mapTo).toList();
+    List<Long> favoriteBusinessIds =
+        user.getFavoriteBusinesses().stream().map(UserEntity::getId).toList();
+    return postRepository.findByUserIds(favoriteBusinessIds).stream()
+        .map(postMapper::mapTo)
+        .toList();
   }
 }

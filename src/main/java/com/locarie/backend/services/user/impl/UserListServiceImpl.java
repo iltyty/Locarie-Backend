@@ -5,9 +5,10 @@ import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.user.UserListService;
-import java.util.List;
-import java.util.stream.StreamSupport;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserListServiceImpl implements UserListService {
@@ -20,16 +21,13 @@ public class UserListServiceImpl implements UserListService {
   }
 
   @Override
-  public List<UserDto> list() {
-    return StreamSupport.stream(repository.findAll().spliterator(), false)
-        .map(mapper::mapTo)
-        .toList();
+  @Transactional(readOnly = true)
+  public Page<UserDto> list(Pageable pageable) {
+    return repository.findAll(pageable).map(mapper::mapTo);
   }
 
   @Override
-  public List<UserDto> listBusinesses() {
-    return repository.listBusinesses().stream()
-        .map(mapper::mapTo)
-        .toList();
+  public Page<UserDto> listBusinesses(Pageable pageable) {
+    return repository.findByType(UserEntity.Type.BUSINESS, pageable).map(mapper::mapTo);
   }
 }

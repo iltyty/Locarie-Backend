@@ -1,7 +1,6 @@
 package com.locarie.backend.datacreators.businesshours;
 
 import com.locarie.backend.domain.entities.BusinessHoursEntity;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +13,8 @@ public class BusinessHoursEntityCreator {
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.MONDAY)
                 .closed(false)
-                .openingTime(List.of(
-                    LocalTime.of(9, 0),
-                    LocalTime.of(18, 0)
-                ))
-                .closingTime(List.of(
-                    LocalTime.of(16, 0),
-                    LocalTime.of(21, 30)
-                ))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(9, 0), LocalTime.of(18, 0))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(16, 0), LocalTime.of(21, 30))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.TUESDAY)
@@ -30,38 +23,20 @@ public class BusinessHoursEntityCreator {
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.WEDNESDAY)
                 .closed(false)
-                .openingTime(List.of(
-                    LocalTime.of(8, 0),
-                    LocalTime.of(17, 0)
-                ))
-                .closingTime(List.of(
-                    LocalTime.of(15, 0),
-                    LocalTime.of(20, 30)
-                ))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(8, 0), LocalTime.of(17, 0))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(15, 0), LocalTime.of(20, 30))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.THURSDAY)
                 .closed(false)
-                .openingTime(List.of(
-                    LocalTime.of(9, 0),
-                    LocalTime.of(18, 0)
-                ))
-                .closingTime(List.of(
-                    LocalTime.of(16, 0),
-                    LocalTime.of(21, 30)
-                ))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(9, 0), LocalTime.of(18, 0))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(16, 0), LocalTime.of(21, 30))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.FRIDAY)
                 .closed(false)
-                .openingTime(List.of(
-                    LocalTime.of(9, 0),
-                    LocalTime.of(18, 0)
-                ))
-                .closingTime(List.of(
-                    LocalTime.of(16, 0),
-                    LocalTime.of(21, 30)
-                ))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(9, 0), LocalTime.of(18, 0))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(16, 0), LocalTime.of(21, 30))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.SATURDAY)
@@ -79,32 +54,32 @@ public class BusinessHoursEntityCreator {
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.MONDAY)
                 .closed(false)
-                .openingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
-                .closingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.TUESDAY)
                 .closed(false)
-                .openingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
-                .closingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.WEDNESDAY)
                 .closed(false)
-                .openingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
-                .closingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.THURSDAY)
                 .closed(false)
-                .openingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
-                .closingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.FRIDAY)
                 .closed(false)
-                .openingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
-                .closingTime(List.of(LocalTime.of(randomHour(), randomMinute())))
+                .openingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
+                .closingTime(new ArrayList<>(List.of(LocalTime.of(randomHour(), randomMinute()))))
                 .build(),
             BusinessHoursEntity.builder()
                 .dayOfWeek(BusinessHoursEntity.DayOfWeek.SATURDAY)

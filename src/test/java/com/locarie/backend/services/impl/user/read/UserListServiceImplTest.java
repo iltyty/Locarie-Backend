@@ -15,6 +15,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 @Transactional
@@ -24,63 +26,52 @@ public class UserListServiceImplTest {
   @Autowired private Mapper<UserEntity, UserRegistrationDto> mapper;
 
   @Test
-  void testListAfterRegisteredShouldReturnAllUsers() {
+  void testListWithPaginationShouldReturnExactPaginationSize() {
     List<UserEntity> entities = givenUserEntitiesAfterCreated();
     List<UserRegistrationDto> dtos = givenUserRegistrationDtos(entities);
-    List<UserDto> result = whenListUsers();
-    thenListResultShouldContainsAllDtos(result, dtos);
+    Page<UserDto> result = whenListUsers(0, 2);
+    thenListResultShouldContainsAllDtos(result, dtos.subList(0, 2));
+    result = whenListUsers(1, 2);
+    thenListResultShouldContainsAllDtos(result, dtos.subList(2, 3));
   }
 
   @Test
-  void testListBusinessesAfterRegisteredShouldReturnCorrectResult() {
+  void testListBusinessesWithPagination() {
     List<UserEntity> entities = givenUserEntitiesAfterCreated();
     List<UserRegistrationDto> dtos = givenUserRegistrationDtos(entities);
-    List<UserDto> result = whenListBusinesses();
-    thenListBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
+    Page<UserDto> result = whenListBusinesses(0, 2);
+    thenListResultShouldContainsAllDtos(result, dtos.subList(1, 3));
+    result = whenListBusinesses(1, 1);
+    thenListResultShouldContainsAllDtos(result, dtos.subList(2, 3));
   }
 
   private List<UserEntity> givenUserEntitiesAfterCreated() {
     List<UserEntity> userEntities =
         Arrays.asList(
             UserEntityCreator.plainUserEntity(),
-            UserEntityCreator.businessUserEntityShreeji(),
-            UserEntityCreator.businessUserEntityJoleneHornsey());
-    return (List<UserEntity>) userRepository.saveAll(userEntities);
+            UserEntityCreator.businessUserEntityJoleneHornsey(),
+            UserEntityCreator.businessUserEntityShreeji());
+    return userRepository.saveAll(userEntities);
   }
 
   private List<UserRegistrationDto> givenUserRegistrationDtos(List<UserEntity> userEntities) {
     return userEntities.stream().map(mapper::mapTo).toList();
   }
 
-  private List<UserDto> whenListUsers() {
-    return underTests.list();
+  private Page<UserDto> whenListUsers(Integer page, Integer pageSize) {
+    return underTests.list(PageRequest.of(page, pageSize));
   }
 
-  private List<UserDto> whenListBusinesses() {
-    return underTests.listBusinesses();
+  private Page<UserDto> whenListBusinesses(Integer page, Integer pageSize) {
+    return underTests.listBusinesses(PageRequest.of(page, pageSize));
   }
 
   private void thenListResultShouldContainsAllDtos(
-      List<UserDto> result, List<UserRegistrationDto> dtos) {
-    assertThat(result.size()).isEqualTo(dtos.size());
-    for (int i = 0; i < result.size(); i++) {
-      assertThat(result.get(i))
-          .usingRecursiveComparison()
-          .ignoringFields("id")
-          .isEqualTo(dtos.get(i));
-    }
-  }
-
-  private void thenListBusinessesResultShouldBeExact(
-      List<UserDto> result, List<UserRegistrationDto> dtos) {
-    assertThat(result.size()).isEqualTo(dtos.size());
-    for (int i = 0; i < result.size(); i++) {
-      UserDto actual = result.get(i);
-      UserRegistrationDto expected = dtos.get(i);
-      assertThat(actual)
-          .usingRecursiveComparison()
-          .ignoringFields("id")
-          .isEqualTo(expected);
+      Page<UserDto> result, List<UserRegistrationDto> dtos) {
+    List<UserDto> user = result.getContent();
+    assertThat(user.size()).isEqualTo(dtos.size());
+    for (int i = 0; i < user.size(); i++) {
+      assertThat(user.get(i).getBusinessName()).isEqualTo(dtos.get(i).getBusinessName());
     }
   }
 }

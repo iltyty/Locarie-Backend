@@ -6,7 +6,6 @@ import com.locarie.backend.domain.dto.ResponseDto;
 import com.locarie.backend.exceptions.*;
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

@@ -34,18 +34,20 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
 
   @Query(
       value =
-          "select p.*, u.location, ST_Distance_Sphere(u.location, Point(:longitude, :latitude)) as dist"
-              + " from posts p join users u on p.user_id = u.id where"
-              + " p.id = (select id from posts where user_id = u.id order by time desc, id desc limit 1)"
-              + " order by p.time desc, dist",
+          "select p.*, u.location, ST_Distance_Sphere(u.location, Point(:longitude, :latitude)) as"
+              + " dist from posts p join users u on p.user_id = u.id where p.id = (select id from"
+              + " posts where user_id = u.id order by time desc, id desc limit 1) order by p.time"
+              + " desc, dist",
       nativeQuery = true)
   List<PostEntity> findNearbyAll(double latitude, double longitude);
 
   @Query(value = "select p from PostEntity p where p.user.id = :id")
   List<PostEntity> findByUserId(Long id);
 
-
-  @Query(value = "select p1 from PostEntity p1 where p1.id in (select max(p2.id) from PostEntity p2 where p2.user.id in :ids group by p2.user.id)")
+  @Query(
+      value =
+          "select p1 from PostEntity p1 where p1.id in (select max(p2.id) from PostEntity p2 where"
+              + " p2.user.id in :ids group by p2.user.id)")
   List<PostEntity> findByUserIds(List<Long> ids);
 
   @Query(

@@ -3,7 +3,6 @@ package com.locarie.backend.domain.entities;
 import jakarta.persistence.*;
 import java.time.LocalTime;
 import java.util.List;
-
 import lombok.*;
 
 @Data

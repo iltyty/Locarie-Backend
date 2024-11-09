@@ -4,17 +4,21 @@ import com.locarie.backend.domain.entities.UserEntity;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Transactional
-public interface UserRepository extends CrudRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
   boolean existsByEmail(String email);
 
-  @Query(value = "select u from UserEntity  u where u.type = 'BUSINESS'")
+  Page<UserEntity> findByType(UserEntity.Type type, Pageable pageable);
+
+  @Query(value = "select u from UserEntity u where u.type = 'BUSINESS'")
   List<UserEntity> listBusinesses();
 
   Optional<UserEntity> findByEmail(String email);

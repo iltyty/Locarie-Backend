@@ -1,8 +1,7 @@
 package com.locarie.backend.mapper;
 
-import org.modelmapper.Converter;
-
 import java.util.Collection;
+import org.modelmapper.Converter;
 
 public interface Mapper<A, B> {
   B mapTo(A a);

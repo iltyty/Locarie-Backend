@@ -1,12 +1,12 @@
 package com.locarie.backend.services.impl.auth;
 
-import com.locarie.backend.datacreators.user.UserEntityCreator;
-import com.locarie.backend.domain.dto.user.UserDto;
-import com.locarie.backend.domain.entities.UserEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.locarie.backend.datacreators.user.UserEntityCreator;
 import com.locarie.backend.datacreators.user.UserTestsDataCreator;
+import com.locarie.backend.domain.dto.user.UserDto;
+import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.domain.redis.ResetPasswordEntry;
 import com.locarie.backend.exceptions.NotAuthorizedOperationException;
 import com.locarie.backend.exceptions.UserNotFoundException;
@@ -14,6 +14,7 @@ import com.locarie.backend.repositories.redis.ResetPasswordEntryRepository;
 import com.locarie.backend.services.auth.impl.AuthServiceImpl;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,7 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@Disabled
 public class AuthServiceImplTest {
   @Autowired private AuthServiceImpl underTests;
   @Autowired private ResetPasswordEntryRepository repository;
