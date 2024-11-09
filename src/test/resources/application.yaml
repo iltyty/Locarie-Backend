@@ -28,3 +28,9 @@ jwt:
 validation:
   code:
     expire: 300  # unit: s
+
+logging:
+  level:
+    org.hibernate.sql: debug
+
+

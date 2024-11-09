@@ -15,6 +15,8 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 @Transactional
@@ -55,10 +57,14 @@ public class PostReadServiceImplListTest {
         postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
     List<PostDto> postDtosOfShreeji = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
     Point location = postDtosOfJoleneHornsey.getFirst().getUser().getLocation();
-    List<PostDto> listResult = whenListNearbyAllPosts(location);
+    Page<PostDto> listResult = whenListNearbyAllPosts(location, 0, 5);
     List<PostDto> expectedPostDtos =
         List.of(postDtosOfJoleneHornsey.getLast(), postDtosOfShreeji.getLast());
-    thenResultShouldContainAllPosts(listResult, expectedPostDtos);
+    thenResultShouldContainAllPosts(listResult.getContent(), expectedPostDtos);
+
+    listResult = whenListNearbyAllPosts(location, 1, 1);
+    expectedPostDtos = List.of(postDtosOfShreeji.getLast());
+    thenResultShouldContainAllPosts(listResult.getContent(), expectedPostDtos);
   }
 
   @Test
@@ -67,10 +73,14 @@ public class PostReadServiceImplListTest {
         postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
     List<PostDto> postDtosOfShreeji = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
     Point location = postDtosOfShreeji.getFirst().getUser().getLocation();
-    List<PostDto> listResult = whenListNearbyAllPosts(location);
+    Page<PostDto> listResult = whenListNearbyAllPosts(location, 0, 5);
     List<PostDto> expectedPostDtos =
         List.of(postDtosOfShreeji.getLast(), postDtosOfJoleneHornsey.getLast());
-    thenResultShouldContainAllPosts(listResult, expectedPostDtos);
+    thenResultShouldContainAllPosts(listResult.getContent(), expectedPostDtos);
+
+    listResult = whenListNearbyAllPosts(location, 1, 1);
+    expectedPostDtos = List.of(postDtosOfJoleneHornsey.getLast());
+    thenResultShouldContainAllPosts(listResult.getContent(), expectedPostDtos);
   }
 
   @Test
@@ -85,8 +95,8 @@ public class PostReadServiceImplListTest {
 
   @Test
   void testListPostWithinZeroBoundShouldReturnEmptyResult() {
-    List<PostDto> posts1 = postTestsDataCreator.givenPostDtosShreejiAfterCreated();
-    List<PostDto> posts2 = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
+    postTestsDataCreator.givenPostDtosShreejiAfterCreated();
+    postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
     Point[] bound = emptyBound();
     List<PostDto> result = whenListWithin(bound);
     thenResultShouldBeEmpty(result);
@@ -119,8 +129,8 @@ public class PostReadServiceImplListTest {
     return underTests.listNearby(location.getY(), location.getX(), Integer.MAX_VALUE);
   }
 
-  private List<PostDto> whenListNearbyAllPosts(Point location) {
-    return underTests.listNearbyAll(location.getY(), location.getX());
+  private Page<PostDto> whenListNearbyAllPosts(Point location, int page, int pageSize) {
+    return underTests.listNearbyAll(location.getY(), location.getX(), PageRequest.of(page, pageSize));
   }
 
   private List<PostDto> whenListWithin(Point[] bound) {

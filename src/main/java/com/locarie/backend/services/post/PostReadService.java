@@ -1,6 +1,9 @@
 package com.locarie.backend.services.post;
 
 import com.locarie.backend.domain.dto.post.PostDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +14,7 @@ public interface PostReadService {
 
   List<PostDto> listNearby(double latitude, double longitude, double distance);
 
-  List<PostDto> listNearbyAll(double latitude, double longitude);
+  Page<PostDto> listNearbyAll(double latitude, double longitude, Pageable pageable);
 
   List<PostDto> listUserPosts(Long id);
 

@@ -2,6 +2,7 @@ package com.locarie.backend.services.post.impl;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.entities.PostEntity;
+import com.locarie.backend.mapper.Mapper;
 import com.locarie.backend.mapper.impl.post.PostEntityDtoMapper;
 import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.services.post.PostReadService;
@@ -10,6 +11,8 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 import lombok.extern.log4j.Log4j2;
 import org.locationtech.jts.geom.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class PostReadServiceImpl implements PostReadService {
   private final PostRepository repository;
 
-  private final PostEntityDtoMapper mapper;
+  private final Mapper<PostEntity, PostDto> mapper;
 
   public PostReadServiceImpl(PostRepository repository, PostEntityDtoMapper mapper) {
     this.repository = repository;
@@ -47,8 +50,8 @@ public class PostReadServiceImpl implements PostReadService {
   }
 
   @Override
-  public List<PostDto> listNearbyAll(double latitude, double longitude) {
-    return repository.findNearbyAll(latitude, longitude).stream().map(mapper::mapTo).toList();
+  public Page<PostDto> listNearbyAll(double latitude, double longitude, Pageable pageable) {
+    return repository.findNearbyAll(latitude, longitude, pageable).map(mapper::mapTo);
   }
 
   @Override
