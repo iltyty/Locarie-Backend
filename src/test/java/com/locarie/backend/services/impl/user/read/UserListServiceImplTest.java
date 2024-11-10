@@ -41,18 +41,22 @@ public class UserListServiceImplTest {
     List<UserDto> dtos = givenUserDtos(entities);
     Page<UserDto> result =
         whenListBusinesses(
-            entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), 0, 2);
+            entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), "", 0, 2);
     thenListResultShouldContainsAllDtos(result, dtos.subList(1, 3));
 
     result =
         whenListBusinesses(
-            entities.get(2).getLocation().getY(), entities.get(2).getLocation().getX(), 0, 2);
+            entities.get(2).getLocation().getY(), entities.get(2).getLocation().getX(), "", 0, 2);
     thenListResultShouldContainsAllDtos(result, dtos.subList(1, 3).reversed());
 
     result =
         whenListBusinesses(
-            entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), 1, 1);
+            entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), "", 1, 1);
     thenListResultShouldContainsAllDtos(result, dtos.subList(2, 3));
+
+    result = whenListBusinesses(
+        entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), entities.get(1).getBusinessName(), 0, 2);
+    thenListResultShouldContainsAllDtos(result, dtos.subList(1, 2));
   }
 
   @Test
@@ -81,8 +85,8 @@ public class UserListServiceImplTest {
   }
 
   private Page<UserDto> whenListBusinesses(
-      double latitude, double longitude, Integer page, Integer pageSize) {
-    return underTests.listBusinesses(latitude, longitude, PageRequest.of(page, pageSize));
+      double latitude, double longitude, String name, Integer page, Integer pageSize) {
+    return underTests.listBusinesses(latitude, longitude, name, PageRequest.of(page, pageSize));
   }
 
   private List<UserLocationDto> whenListAllBusinesses() {

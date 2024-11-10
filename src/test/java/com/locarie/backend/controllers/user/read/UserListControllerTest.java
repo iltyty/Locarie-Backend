@@ -62,6 +62,11 @@ public class UserListControllerTest {
     List<UserDto> dtos = givenUserRegistrationDtosAfterCreated();
     MockHttpServletRequestBuilder request = givenListAllBusinessesRequest();
     ResultActions result = whenPerformRequest(request);
+    result.andDo(
+        res -> {
+          System.out.println(res.getResponse().getContentAsString());
+        }
+    );
     resultExpectUtil.thenResultShouldBeOk(result);
     thenListAllBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
   }

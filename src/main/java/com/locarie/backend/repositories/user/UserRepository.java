@@ -20,10 +20,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   @Query(
       value =
-          "select * from users u where u.type = 'BUSINESS' order by ST_DISTANCE_SPHERE(u.location,"
+          "select * from users u where u.type = 'BUSINESS' and u.business_name like :name order by ST_DISTANCE_SPHERE(u.location,"
               + " Point(:longitude, :latitude)), u.id",
       nativeQuery = true)
-  Page<UserEntity> listBusinesses(double latitude, double longitude, Pageable pageable);
+  Page<UserEntity> listBusinesses(double latitude, double longitude, String name, Pageable pageable);
 
   Optional<UserEntity> findByEmail(String email);
 

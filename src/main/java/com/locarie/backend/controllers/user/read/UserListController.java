@@ -29,8 +29,9 @@ public class UserListController {
   public Page<UserDto> listBusinesses(
       @RequestParam(value = "latitude") double latitude,
       @RequestParam(value = "longitude") double longitude,
+      @RequestParam(value = "name", defaultValue = "") String name,
       Pageable pageable) {
-    return service.listBusinesses(latitude, longitude, pageable);
+    return service.listBusinesses(latitude, longitude, name, pageable);
   }
 
   @GetMapping("/businesses/all")

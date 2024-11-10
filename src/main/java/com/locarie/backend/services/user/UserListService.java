@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 public interface UserListService {
   Page<UserDto> list(Pageable pageable);
 
-  Page<UserDto> listBusinesses(double latitude, double longitude, Pageable pageable);
+  Page<UserDto> listBusinesses(double latitude, double longitude, String name, Pageable pageable);
 
   List<UserLocationDto> listAllBusinesses();
 }
