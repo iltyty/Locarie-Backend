@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,7 +33,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " and p.id = (select id from posts where user_id = u.id order by time desc, id desc"
               + " limit 1)",
       nativeQuery = true)
-  List<PostEntity> findNearby(double latitude, double longitude, double distance);
+  List<PostEntity> findNearby(@Param(value = "latitude") double latitude, @Param(value = "longitude") double longitude, @Param(value = "distance") double distance);
 
   @Query(
       value =
@@ -43,27 +44,27 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
       countQuery = "select count(p.id) from posts p join users u on p.user_id = u.id"
               + " where p.id = (select id from posts where user_id = u.id order by time desc, id desc limit 1)",
       nativeQuery = true)
-  Page<PostEntity> findNearbyAll(double latitude, double longitude, Pageable pageable);
+  Page<PostEntity> findNearbyAll(@Param(value = "latitude") double latitude, @Param(value = "longitude") double longitude, Pageable pageable);
 
   @Query(value = "select p from PostEntity p where p.user.id = :id")
-  List<PostEntity> findByUserId(Long id);
+  List<PostEntity> findByUserId(@Param("id") Long id);
 
   @Query(
       value =
           "select p1 from PostEntity p1 where p1.id in (select max(p2.id) from PostEntity p2 where"
               + " p2.user.id in :ids group by p2.user.id)")
-  List<PostEntity> findByUserIds(List<Long> ids);
+  List<PostEntity> findByUserIds(@Param(value = "ids") List<Long> ids);
 
   @Query(
       value =
           "select count(p) from PostEntity p join p.favoredBy u where p.id = :postId and u.id ="
               + " :userId")
-  int hasBeenSaved(Long userId, Long postId);
+  int hasBeenSaved(@Param(value = "userId") Long userId, @Param(value = "postId") Long postId);
 
   @Query(
       value =
           "select p from PostEntity p where p.id = (select p1.id from PostEntity p1 where p1.user ="
               + " p.user order by p1.time desc, p1.id desc limit 1) and within(p.user.location,"
               + " :bound) = true")
-  List<PostEntity> findWithin(Geometry bound);
+  List<PostEntity> findWithin(@Param(value = "bound") Geometry bound);
 }

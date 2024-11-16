@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,7 +24,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
           "select * from users u where u.type = 'BUSINESS' and u.business_name like :name order by ST_DISTANCE_SPHERE(u.location,"
               + " Point(:longitude, :latitude)), u.id",
       nativeQuery = true)
-  Page<UserEntity> listBusinesses(double latitude, double longitude, String name, Pageable pageable);
+  Page<UserEntity> listBusinesses(
+      @Param(value = "latitude") double latitude,
+      @Param(value = "longitude") double longitude,
+      @Param(value = "name") String name,
+      Pageable pageable);
 
   Optional<UserEntity> findByEmail(String email);
 
@@ -31,11 +36,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
       value =
           "select count(u) from UserEntity u join u.favoredBy b where u.id = :businessId and b.id ="
               + " :userId")
-  int hasBeenFollowed(Long userId, Long businessId);
+  int hasBeenFollowed(@Param(value = "userId") Long userId, @Param(value = "businessId") Long businessId);
 
   @Modifying
   @Query(value = "update UserEntity u set u.password = :password where u.email = :email")
-  void updatePassword(String email, String password);
+  void updatePassword(@Param(value = "email") String email, @Param(value = "password") String password);
 
   boolean existsByEmailAndPassword(String email, String password);
 }
