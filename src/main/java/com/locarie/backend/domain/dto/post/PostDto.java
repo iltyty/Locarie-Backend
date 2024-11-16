@@ -21,7 +21,6 @@ public class PostDto {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   private Instant time;
 
-  @NotEmpty(message = "content cannot be empty")
   private String content;
 
   private int favoredByCount;
