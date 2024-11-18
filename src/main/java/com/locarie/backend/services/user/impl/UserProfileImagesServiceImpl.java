@@ -51,6 +51,9 @@ public class UserProfileImagesServiceImpl implements UserProfileImagesService {
   }
 
   private List<String> storeProfileImages(Long userId, MultipartFile[] images) {
+    if (images == null) {
+      return new ArrayList<>();
+    }
     String dirname = String.format("user_%d/profile_images", userId);
     return new ArrayList<>(
         Arrays.stream(images).map(image -> storageService.store(image, dirname)).toList());
