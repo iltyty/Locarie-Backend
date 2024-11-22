@@ -1,7 +1,11 @@
 package com.locarie.backend.repositories.post;
 
 import com.locarie.backend.domain.entities.PostEntity;
+
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,4 +71,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " p.user order by p1.time desc, p1.id desc limit 1) and within(p.user.location,"
               + " :bound) = true")
   List<PostEntity> findWithin(@Param(value = "bound") Geometry bound);
+
+  @Query(value="select p.time from PostEntity p where p.user.id = :userId order by p.time desc limit 1")
+  Optional<Instant> findLatestPostTimeByUserId(@Param(value="userId") Long userId);
 }
