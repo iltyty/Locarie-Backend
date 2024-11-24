@@ -41,7 +41,26 @@ public class UserListServiceImpl implements UserListService {
   @Override
   public List<UserLocationDto> listAllBusinesses() {
     return repository.findByType(UserEntity.Type.BUSINESS).stream()
+        .filter(this::isProfileComplete)
         .map(entityLocationDtoMapper::mapTo)
         .toList();
+  }
+
+  private boolean isProfileComplete(UserEntity user) {
+    return notEmpty(user.getProfileImageUrls())
+        && notEmpty(user.getAvatarUrl())
+        && notEmpty(user.getBusinessName())
+        && notEmpty(user.getCategories())
+        && notEmpty(user.getIntroduction())
+        && notEmpty(user.getBusinessHours())
+        && user.getLocation() != null;
+  }
+
+  private boolean notEmpty(String s) {
+    return s != null && !s.isEmpty();
+  }
+
+  private boolean notEmpty(List<?> list) {
+    return list != null && !list.isEmpty();
   }
 }
