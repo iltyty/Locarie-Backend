@@ -15,7 +15,7 @@ public interface PostReadService {
 
   Page<PostDto> listNearbyAll(double latitude, double longitude, Pageable pageable);
 
-  List<PostDto> listUserPosts(Long id);
+  Page<PostDto> listUserPosts(Long id, Pageable pageable);
 
   List<PostDto> listWithin(
       double minLatitude, double maxLatitude, double minLongitude, double maxLongitude);

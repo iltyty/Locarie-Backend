@@ -40,7 +40,7 @@ public class UserDeleteServiceImpl implements UserDeleteService {
   }
 
   private void deleteAllUserPosts(UserEntity user) {
-    postRepository.deleteAll(postRepository.findByUserId(user.getId()));
+    postRepository.deleteByUserId(user.getId());
   }
 
   private void updatePostsFavoredBy(UserEntity user) {

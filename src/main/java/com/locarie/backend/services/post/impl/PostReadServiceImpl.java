@@ -55,11 +55,8 @@ public class PostReadServiceImpl implements PostReadService {
   }
 
   @Override
-  public List<PostDto> listUserPosts(Long id) {
-    return repository.findByUserId(id).stream()
-        .map(mapper::mapTo)
-        .sorted((a, b) -> b.getTime().compareTo(a.getTime()))
-        .toList();
+  public Page<PostDto> listUserPosts(Long id, Pageable pageable) {
+    return repository.findByUserId(id, pageable).map(mapper::mapTo);
   }
 
   @Override

@@ -109,8 +109,9 @@ public class PostReadServiceImplListTest {
   @Test
   void testListUserPostsShouldReturnAllPostsOfUser() {
     List<PostDto> dtos = postTestsDataCreator.givenPostDtosJoleneHornseyAfterCreated();
-    List<PostDto> listResult = underTests.listUserPosts(dtos.getFirst().getUser().getId());
-    thenResultShouldContainAllPosts(listResult, dtos);
+    Page<PostDto> listResult =
+        underTests.listUserPosts(dtos.getFirst().getUser().getId(), PageRequest.of(0, 10));
+    thenResultShouldContainAllPosts(listResult.getContent(), dtos);
   }
 
   private Point givenEmptyLocation() {

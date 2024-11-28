@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 @Transactional
@@ -75,7 +76,7 @@ public class UserDeleteIntegrationTests {
   }
 
   private void thenUserPostsShouldBeEmpty(Long userId) {
-    assertThat(postRepository.findByUserId(userId).isEmpty()).isTrue();
+    assertThat(postRepository.findByUserId(userId, PageRequest.of(0, 1)).isEmpty()).isTrue();
   }
 
   private void thenPostFavoredByCountShouldBeZero(Long postId) {

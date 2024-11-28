@@ -57,7 +57,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
       Pageable pageable);
 
   @Query(value = "select p from PostEntity p where p.user.id = :id")
-  List<PostEntity> findByUserId(@Param("id") Long id);
+  Page<PostEntity> findByUserId(@Param("id") Long id, Pageable pageable);
 
   @Query(
       value =
@@ -94,4 +94,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
       value =
           "select p.time from PostEntity p where p.user.id = :userId order by p.time desc limit 1")
   Optional<Instant> findLatestPostTimeByUserId(@Param(value = "userId") Long userId);
+
+  @Query(value = "delete from PostEntity p where p.user.id = :userId")
+  void deleteByUserId(@Param(value = "userId") Long userId);
 }

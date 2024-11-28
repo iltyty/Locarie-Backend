@@ -48,8 +48,8 @@ public class PostReadController {
   }
 
   @GetMapping("/user/{id}")
-  public List<PostDto> listUserPosts(@PathVariable("id") Long id) {
-    return service.listUserPosts(id);
+  public Page<PostDto> listUserPosts(@PathVariable("id") Long id, Pageable pageable) {
+    return service.listUserPosts(id, pageable);
   }
 
   @GetMapping("within")
