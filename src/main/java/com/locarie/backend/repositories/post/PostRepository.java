@@ -1,11 +1,9 @@
 package com.locarie.backend.repositories.post;
 
 import com.locarie.backend.domain.entities.PostEntity;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +35,10 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " and p.id = (select id from posts where user_id = u.id order by time desc, id desc"
               + " limit 1)",
       nativeQuery = true)
-  List<PostEntity> findNearby(@Param(value = "latitude") double latitude, @Param(value = "longitude") double longitude, @Param(value = "distance") double distance);
+  List<PostEntity> findNearby(
+      @Param(value = "latitude") double latitude,
+      @Param(value = "longitude") double longitude,
+      @Param(value = "distance") double distance);
 
   @Query(
       value =
@@ -45,10 +46,14 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " dist from posts p join users u on p.user_id = u.id where p.id = (select id from"
               + " posts where user_id = u.id order by time desc, id desc limit 1) order by p.time"
               + " desc, dist",
-      countQuery = "select count(p.id) from posts p join users u on p.user_id = u.id"
-              + " where p.id = (select id from posts where user_id = u.id order by time desc, id desc limit 1)",
+      countQuery =
+          "select count(p.id) from posts p join users u on p.user_id = u.id where p.id = (select id"
+              + " from posts where user_id = u.id order by time desc, id desc limit 1)",
       nativeQuery = true)
-  Page<PostEntity> findNearbyAll(@Param(value = "latitude") double latitude, @Param(value = "longitude") double longitude, Pageable pageable);
+  Page<PostEntity> findNearbyAll(
+      @Param(value = "latitude") double latitude,
+      @Param(value = "longitude") double longitude,
+      Pageable pageable);
 
   @Query(value = "select p from PostEntity p where p.user.id = :id")
   List<PostEntity> findByUserId(@Param("id") Long id);
@@ -72,6 +77,8 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
               + " :bound) = true")
   List<PostEntity> findWithin(@Param(value = "bound") Geometry bound);
 
-  @Query(value="select p.time from PostEntity p where p.user.id = :userId order by p.time desc limit 1")
-  Optional<Instant> findLatestPostTimeByUserId(@Param(value="userId") Long userId);
+  @Query(
+      value =
+          "select p.time from PostEntity p where p.user.id = :userId order by p.time desc limit 1")
+  Optional<Instant> findLatestPostTimeByUserId(@Param(value = "userId") Long userId);
 }

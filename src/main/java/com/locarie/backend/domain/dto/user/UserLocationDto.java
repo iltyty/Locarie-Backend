@@ -5,12 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.locarie.backend.serialization.deserializers.JtsPointDeserializer;
 import com.locarie.backend.serialization.serializers.JtsPointSerializer;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
-
-import java.time.Instant;
 
 @Data
 @AllArgsConstructor

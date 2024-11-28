@@ -2,10 +2,9 @@ package com.locarie.backend.services.favorite;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface FavoriteBusinessService {
   void favoriteBusiness(Long userId, Long businessId);

@@ -85,14 +85,16 @@ public class FavoriteBusinessServiceImplTest {
   @Test
   void testListFavoriteAfterFavoriteShouldReturnCorrectData() {
     UserDto[] users = favoriteBusinessAfterCreatingUsers();
-    Page<UserDto> favoriteBusinesses = underTests.listFavoriteBusinesses(users[0].getId(), PageRequest.of(0, 10));
+    Page<UserDto> favoriteBusinesses =
+        underTests.listFavoriteBusinesses(users[0].getId(), PageRequest.of(0, 10));
     thenResultShouldBeExactly(favoriteBusinesses.getContent(), users[1]);
   }
 
   @Test
   void testListFavoredByAfterFavoriteShouldReturnCorrectData() {
     UserDto[] users = favoriteBusinessAfterCreatingUsers();
-    List<UserDto> favoredBy = underTests.listFavoredBy(users[1].getId(), PageRequest.of(0, 10)).getContent();
+    List<UserDto> favoredBy =
+        underTests.listFavoredBy(users[1].getId(), PageRequest.of(0, 10)).getContent();
     thenResultShouldBeExactly(favoredBy, users[0]);
   }
 

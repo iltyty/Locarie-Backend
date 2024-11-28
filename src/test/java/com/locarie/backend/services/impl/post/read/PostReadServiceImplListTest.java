@@ -130,7 +130,8 @@ public class PostReadServiceImplListTest {
   }
 
   private Page<PostDto> whenListNearbyAllPosts(Point location, int page, int pageSize) {
-    return underTests.listNearbyAll(location.getY(), location.getX(), PageRequest.of(page, pageSize));
+    return underTests.listNearbyAll(
+        location.getY(), location.getX(), PageRequest.of(page, pageSize));
   }
 
   private List<PostDto> whenListWithin(Point[] bound) {

@@ -295,7 +295,8 @@ public class FavoriteBusinessControllerTest {
     return params;
   }
 
-  private MultiValueMap<String, String> preparePostParams(Long userId, Long businessId, int page, int pageSize) {
+  private MultiValueMap<String, String> preparePostParams(
+      Long userId, Long businessId, int page, int pageSize) {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("userId", userId.toString());
     params.add("businessId", businessId.toString());

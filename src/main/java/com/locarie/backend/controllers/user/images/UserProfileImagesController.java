@@ -16,7 +16,8 @@ public class UserProfileImagesController {
 
   @PostMapping("/{id}/profile-images")
   public List<String> uploadProfileImages(
-      @PathVariable("id") Long id, @RequestPart(value = "images", required = false) MultipartFile[] profileImages) {
+      @PathVariable("id") Long id,
+      @RequestPart(value = "images", required = false) MultipartFile[] profileImages) {
     return service.uploadProfileImages(id, profileImages);
   }
 

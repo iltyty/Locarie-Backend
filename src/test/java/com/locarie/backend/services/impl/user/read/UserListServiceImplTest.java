@@ -54,8 +54,13 @@ public class UserListServiceImplTest {
             entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), "", 1, 1);
     thenListResultShouldContainsAllDtos(result, dtos.subList(2, 3));
 
-    result = whenListBusinesses(
-        entities.get(1).getLocation().getY(), entities.get(1).getLocation().getX(), entities.get(1).getBusinessName(), 0, 2);
+    result =
+        whenListBusinesses(
+            entities.get(1).getLocation().getY(),
+            entities.get(1).getLocation().getX(),
+            entities.get(1).getBusinessName(),
+            0,
+            2);
     thenListResultShouldContainsAllDtos(result, dtos.subList(1, 2));
   }
 

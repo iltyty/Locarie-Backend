@@ -3,7 +3,6 @@ package com.locarie.backend.controllers.post.read;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.services.post.PostReadService;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

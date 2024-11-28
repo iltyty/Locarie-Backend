@@ -65,8 +65,7 @@ public class UserListControllerTest {
     result.andDo(
         res -> {
           System.out.println(res.getResponse().getContentAsString());
-        }
-    );
+        });
     resultExpectUtil.thenResultShouldBeOk(result);
     thenListAllBusinessesResultShouldBeExact(result, dtos.subList(1, 3));
   }
@@ -83,7 +82,9 @@ public class UserListControllerTest {
   }
 
   MockHttpServletRequestBuilder givenListBusinessesRequest() {
-    return MockMvcRequestBuilders.get(LIST_BUSINESSES_ENDPOINT).param("latitude", "0").param("longitude", "0");
+    return MockMvcRequestBuilders.get(LIST_BUSINESSES_ENDPOINT)
+        .param("latitude", "0")
+        .param("longitude", "0");
   }
 
   MockHttpServletRequestBuilder givenListAllBusinessesRequest() {

@@ -5,10 +5,9 @@ import com.locarie.backend.domain.entities.UserEntity;
 import com.locarie.backend.repositories.post.PostRepository;
 import com.locarie.backend.repositories.user.UserRepository;
 import com.locarie.backend.services.post.PostDeleteService;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostDeleteServiceImpl implements PostDeleteService {
