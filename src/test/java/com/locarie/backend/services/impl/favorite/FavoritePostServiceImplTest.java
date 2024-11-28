@@ -17,6 +17,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 
 @SpringBootTest
@@ -92,15 +94,17 @@ public class FavoritePostServiceImplTest {
   @Test
   void testListFavoriteAfterFavoriteShouldReturnCorrectResult() {
     Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
-    List<PostDto> favoritePosts = underTests.listFavoritePosts(pair.getFirst().getId());
-    thenUserFavoritePostsShouldBeExactly(favoritePosts, pair.getSecond());
+    Page<PostDto> favoritePosts =
+        underTests.listFavoritePosts(pair.getFirst().getId(), PageRequest.of(0, 10));
+    thenUserFavoritePostsShouldBeExactly(favoritePosts.getContent(), pair.getSecond());
   }
 
   @Test
   void testListFavoredByAfterFavoriteShouldReturnCorrectData() {
     Pair<UserDto, PostDto> pair = favoritePostAfterCreatingUserAndPost();
-    List<UserDto> favoredBy = underTests.listFavoredBy(pair.getSecond().getId());
-    thenPostFavoredByShouldBeExactly(favoredBy, pair.getFirst());
+    Page<UserDto> favoredBy =
+        underTests.listFavoredBy(pair.getSecond().getId(), PageRequest.of(0, 10));
+    thenPostFavoredByShouldBeExactly(favoredBy.getContent(), pair.getFirst());
   }
 
   @Test

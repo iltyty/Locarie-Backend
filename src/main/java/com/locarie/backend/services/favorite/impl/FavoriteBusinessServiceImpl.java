@@ -152,12 +152,10 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   @Override
-  public List<PostDto> getLatestPostsOfFavoriteBusinesses(Long userId) {
+  public Page<PostDto> getLatestPostsOfFavoriteBusinesses(Long userId, Pageable pageable) {
     UserEntity user = userFindUtils.findUserById(userId);
     List<Long> favoriteBusinessIds =
         user.getFavoriteBusinesses().stream().map(UserEntity::getId).toList();
-    return postRepository.findByUserIds(favoriteBusinessIds).stream()
-        .map(postMapper::mapTo)
-        .toList();
+    return postRepository.findByUserIds(favoriteBusinessIds, pageable).map(postMapper::mapTo);
   }
 }

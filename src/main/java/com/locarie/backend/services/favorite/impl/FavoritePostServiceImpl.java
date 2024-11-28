@@ -14,6 +14,8 @@ import com.locarie.backend.services.utils.UserFindUtils;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -126,33 +128,23 @@ public class FavoritePostServiceImpl implements FavoritePostService {
   }
 
   @Override
-  public List<UserDto> listFavoredBy(Long postId) {
-    PostEntity post = postFindUtils.findPostById(postId);
-    List<UserEntity> favoredBy = post.getFavoredBy();
-    if (favoredBy == null) {
-      favoredBy = new ArrayList<>();
-    }
-    return favoredBy.stream().map(userMapper::mapTo).toList();
+  public Page<UserDto> listFavoredBy(Long postId, Pageable pageable) {
+    return postRepository.listFavoredBy(postId, pageable).map(userMapper::mapTo);
   }
 
   @Override
-  public List<PostDto> listFavoritePosts(Long userId) {
-    UserEntity user = userFindUtils.findUserById(userId);
-    List<PostEntity> favoritePosts = user.getFavoritePosts();
-    if (favoritePosts == null) {
-      favoritePosts = new ArrayList<>();
-    }
-    return favoritePosts.stream().map(postMapper::mapTo).toList();
+  public Page<PostDto> listFavoritePosts(Long userId, Pageable pageable) {
+    return postRepository.listFavoritePosts(userId, pageable).map(postMapper::mapTo);
   }
 
   @Override
   public int countFavoredBy(Long postId) {
-    return listFavoredBy(postId).size();
+    return postRepository.countFavoredBy(postId);
   }
 
   @Override
   public int countFavoritePosts(Long userId) {
-    return listFavoritePosts(userId).size();
+    return postRepository.countFavoritePosts(userId);
   }
 
   @Override

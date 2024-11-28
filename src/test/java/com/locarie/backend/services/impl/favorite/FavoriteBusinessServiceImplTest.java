@@ -132,7 +132,10 @@ public class FavoriteBusinessServiceImplTest {
   void testGetLatestPostsOfFavoriteBusinessesShouldReturnCorrectData() {
     UserDto[] users = favoriteBusinessAfterCreatingUsers();
     PostDto post = postTestsDataCreator.givenPostDtoJoleneHornsey1AfterCreated();
-    List<PostDto> latestPosts = underTests.getLatestPostsOfFavoriteBusinesses(users[0].getId());
+    List<PostDto> latestPosts =
+        underTests
+            .getLatestPostsOfFavoriteBusinesses(users[0].getId(), PageRequest.of(0, 1))
+            .getContent();
     thenListBeExactly(latestPosts, post);
   }
 

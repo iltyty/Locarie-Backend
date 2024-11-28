@@ -1,6 +1,7 @@
 package com.locarie.backend.repositories.post;
 
 import com.locarie.backend.domain.entities.PostEntity;
+import com.locarie.backend.domain.entities.UserEntity;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +63,19 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
       value =
           "select p1 from PostEntity p1 where p1.id in (select max(p2.id) from PostEntity p2 where"
               + " p2.user.id in :ids group by p2.user.id)")
-  List<PostEntity> findByUserIds(@Param(value = "ids") List<Long> ids);
+  Page<PostEntity> findByUserIds(@Param(value = "ids") List<Long> ids, Pageable pageable);
+
+  @Query(value = "select p.favoredBy from PostEntity p where p.id = :postId")
+  Page<UserEntity> listFavoredBy(@Param(value = "postId") Long postId, Pageable pageable);
+
+  @Query(value = "select u.favoritePosts from UserEntity u where u.id = :userId")
+  Page<PostEntity> listFavoritePosts(@Param(value = "userId") Long userId, Pageable pageable);
+
+  @Query(value = "select count(p.user) from PostEntity p where p.id = :postId")
+  int countFavoredBy(@Param(value = "postId") Long postId);
+
+  @Query(value = "select count(elements(u.favoritePosts)) from UserEntity u where u.id = :userId")
+  int countFavoritePosts(@Param(value = "userId") Long userId);
 
   @Query(
       value =

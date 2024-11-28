@@ -3,7 +3,6 @@ package com.locarie.backend.controllers.favorite;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.services.favorite.FavoriteBusinessService;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -40,8 +39,9 @@ public class FavoriteBusinessController {
   }
 
   @GetMapping("/favorite/posts")
-  public List<PostDto> getLatestPostsOfFavoriteBusinesses(@RequestParam("userId") Long userId) {
-    return service.getLatestPostsOfFavoriteBusinesses(userId);
+  public Page<PostDto> getLatestPostsOfFavoriteBusinesses(
+      @RequestParam("userId") Long userId, Pageable pageable) {
+    return service.getLatestPostsOfFavoriteBusinesses(userId, pageable);
   }
 
   @GetMapping("/favored-by")

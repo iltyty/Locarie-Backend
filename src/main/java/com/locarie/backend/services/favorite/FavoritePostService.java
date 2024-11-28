@@ -2,16 +2,17 @@ package com.locarie.backend.services.favorite;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FavoritePostService {
   void favoritePost(Long userId, Long postId);
 
   void unfavoritePost(Long userId, Long postId);
 
-  List<UserDto> listFavoredBy(Long postId);
+  Page<UserDto> listFavoredBy(Long postId, Pageable pageable);
 
-  List<PostDto> listFavoritePosts(Long userId);
+  Page<PostDto> listFavoritePosts(Long userId, Pageable pageable);
 
   int countFavoredBy(Long postId);
 

@@ -3,7 +3,8 @@ package com.locarie.backend.controllers.favorite;
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
 import com.locarie.backend.services.favorite.FavoritePostService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,13 @@ public class FavoritePostController {
   }
 
   @GetMapping("/favorite")
-  public List<PostDto> listFavoritePosts(@RequestParam("userId") Long userId) {
-    return service.listFavoritePosts(userId);
+  public Page<PostDto> listFavoritePosts(@RequestParam("userId") Long userId, Pageable pageable) {
+    return service.listFavoritePosts(userId, pageable);
   }
 
   @GetMapping("/favored-by")
-  public List<UserDto> listFavoredByPosts(@RequestParam("postId") Long postId) {
-    return service.listFavoredBy(postId);
+  public Page<UserDto> listFavoredByPosts(@RequestParam("postId") Long postId, Pageable pageable) {
+    return service.listFavoredBy(postId, pageable);
   }
 
   @GetMapping("/favorite/count")
