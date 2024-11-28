@@ -53,7 +53,7 @@ class PostReadControllerTest {
     PostDto post2 = dataCreator.givenPostDtoJoleneHornsey2AfterCreated();
     ResultActions result = mockMvc.perform(request);
     expectUtil.thenResultShouldBeOk(result);
-    thenResultShouldBeList(result, List.of(post2, post1));
+    thenResultShouldBeNonPaginatedList(result, List.of(post2, post1));
   }
 
   @Test
@@ -87,7 +87,7 @@ class PostReadControllerTest {
         givenListUserPostsRequest(posts.getFirst().getUser().getId());
     ResultActions result = mockMvc.perform(request);
     expectUtil.thenResultShouldBeOk(result);
-    thenResultShouldBeList(result, posts.reversed());
+    thenResultShouldBePaginatedList(result, posts.reversed());
   }
 
   @Test
@@ -100,7 +100,7 @@ class PostReadControllerTest {
 
     ResultActions result = mockMvc.perform(request);
     expectUtil.thenResultShouldBeOk(result);
-    thenResultShouldBeList(result, expect);
+    thenResultShouldBeNonPaginatedList(result, expect);
   }
 
   private MockHttpServletRequestBuilder givenListPostRequest() {
@@ -136,15 +136,24 @@ class PostReadControllerTest {
     result.andExpect(jsonPath("$.data").doesNotExist());
   }
 
-  private void thenResultShouldBeList(ResultActions result, List<PostDto> expect) throws Exception {
+  private void thenResultShouldBePaginatedList(ResultActions result, List<PostDto> expect) throws Exception {
+    thenResultShouldBeList(result, expect, "$.data.content");
+  }
+
+  private void thenResultShouldBeNonPaginatedList(ResultActions result, List<PostDto> expect) throws Exception {
+
+    thenResultShouldBeList(result, expect, "$.data");
+  }
+
+  private void thenResultShouldBeList(ResultActions result, List<PostDto> expect, String dataJsonPath) throws Exception {
     result
-        .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data.length()").value(expect.size()));
+        .andExpect(jsonPath(dataJsonPath).isArray())
+        .andExpect(jsonPath(dataJsonPath + ".length()").value(expect.size()));
     for (int i = 0; i < expect.size(); i++) {
       PostDto dto = expect.get(i);
       result
-          .andExpect(jsonPath("$.data[" + i + "].id").value(dto.getId()))
-          .andExpect(jsonPath("$.data[" + i + "].content").value(dto.getContent()));
+          .andExpect(jsonPath(dataJsonPath + "[" + i + "].id").value(dto.getId()))
+          .andExpect(jsonPath(dataJsonPath + "[" + i + "].content").value(dto.getContent()));
     }
   }
 

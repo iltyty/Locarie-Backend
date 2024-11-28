@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -56,7 +57,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
       @Param(value = "longitude") double longitude,
       Pageable pageable);
 
-  @Query(value = "select p from PostEntity p where p.user.id = :id")
+  @Query(value = "select p from PostEntity p where p.user.id = :id order by p.time desc, p.id desc")
   Page<PostEntity> findByUserId(@Param("id") Long id, Pageable pageable);
 
   @Query(
@@ -95,6 +96,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
           "select p.time from PostEntity p where p.user.id = :userId order by p.time desc limit 1")
   Optional<Instant> findLatestPostTimeByUserId(@Param(value = "userId") Long userId);
 
+  @Modifying
   @Query(value = "delete from PostEntity p where p.user.id = :userId")
   void deleteByUserId(@Param(value = "userId") Long userId);
 }
