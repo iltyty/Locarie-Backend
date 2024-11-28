@@ -49,7 +49,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
       ClassPathResource resource = new ClassPathResource("classpath:welcome.txt");
       InputStream inputStream = resource.getInputStream();
       String body = new String(inputStream.readAllBytes());
-      return String.format(body, firstName, firstName);
+      return String.format(body, firstName);
     } catch (IOException e) {
       log.error(e.getMessage());
       return "Welcome to Locarie!";
