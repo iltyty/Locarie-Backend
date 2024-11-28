@@ -2,6 +2,9 @@ package com.locarie.backend.services.favorite;
 
 import com.locarie.backend.domain.dto.post.PostDto;
 import com.locarie.backend.domain.dto.user.UserDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface FavoriteBusinessService {
@@ -9,9 +12,9 @@ public interface FavoriteBusinessService {
 
   void unfavoriteBusiness(Long userId, Long businessId);
 
-  List<UserDto> listFavoredBy(Long businessId);
+  Page<UserDto> listFavoredBy(Long businessId, Pageable pageable);
 
-  List<UserDto> listFavoriteBusinesses(Long userId);
+  Page<UserDto> listFavoriteBusinesses(Long userId, Pageable pageable);
 
   int countFavoredBy(Long businessId);
 

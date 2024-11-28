@@ -30,6 +30,18 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
       @Param(value = "name") String name,
       Pageable pageable);
 
+  @Query(value = "select u.favoredBy from UserEntity u where u.id = :businessId")
+  Page<UserEntity> listFavoredBy(@Param(value = "businessId") Long businessId, Pageable pageable);
+
+  @Query(value = "select u.favoriteBusinesses from UserEntity u where u.id = :userId")
+  Page<UserEntity> listFavoriteBusinesses(@Param(value = "userId") Long userId, Pageable pageable);
+
+  @Query(value = "select count(u.id) from UserEntity u where u.id = :businessId")
+  int countFavoredBy(@Param(value = "businessId") Long businessId);
+
+  @Query(value = "select count(u.id) from UserEntity u where u.id = :userId")
+  int countFavoriteBusinesses(@Param(value = "userId") Long userId);
+
   Optional<UserEntity> findByEmail(String email);
 
   @Query(

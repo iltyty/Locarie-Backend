@@ -262,18 +262,18 @@ public class FavoriteBusinessControllerTest {
 
   private void thenListResultShouldBeExact(ResultActions result, UserDto user) throws Exception {
     result
-        .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data[0].id").value(user.getId()))
-        .andExpect(jsonPath("$.data[0].username").value(user.getUsername()))
-        .andExpect(jsonPath("$.data[0].firstName").value(user.getFirstName()))
-        .andExpect(jsonPath("$.data[0].lastName").value(user.getLastName()))
-        .andExpect(jsonPath("$.data[0].email").value(user.getEmail()))
-        .andExpect(jsonPath("$.data[0].businessName").value(user.getBusinessName()));
+        .andExpect(jsonPath("$.data.content").isArray())
+        .andExpect(jsonPath("$.data.content.[0].id").value(user.getId()))
+        .andExpect(jsonPath("$.data.content.[0].username").value(user.getUsername()))
+        .andExpect(jsonPath("$.data.content.[0].firstName").value(user.getFirstName()))
+        .andExpect(jsonPath("$.data.content.[0].lastName").value(user.getLastName()))
+        .andExpect(jsonPath("$.data.content.[0].email").value(user.getEmail()))
+        .andExpect(jsonPath("$.data.content.[0].businessName").value(user.getBusinessName()));
   }
 
   private void thenListResultShouldBeEmpty(ResultActions result) throws Exception {
-    result.andExpect(jsonPath("$.data").isArray());
-    result.andExpect(jsonPath("$.data").isEmpty());
+    result.andExpect(jsonPath("$.data.content").isArray());
+    result.andExpect(jsonPath("$.data.content").isEmpty());
   }
 
   private void thenCountResultShouldBeOne(ResultActions result) throws Exception {
@@ -292,6 +292,15 @@ public class FavoriteBusinessControllerTest {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("userId", userId.toString());
     params.add("businessId", businessId.toString());
+    return params;
+  }
+
+  private MultiValueMap<String, String> preparePostParams(Long userId, Long businessId, int page, int pageSize) {
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("userId", userId.toString());
+    params.add("businessId", businessId.toString());
+    params.add("page", String.valueOf(page));
+    params.add("size", String.valueOf(pageSize));
     return params;
   }
 }

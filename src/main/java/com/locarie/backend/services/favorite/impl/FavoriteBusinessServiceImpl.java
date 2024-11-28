@@ -12,6 +12,8 @@ import com.locarie.backend.services.utils.UserFindUtils;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Log4j2
@@ -125,33 +127,23 @@ public class FavoriteBusinessServiceImpl implements FavoriteBusinessService {
   }
 
   @Override
-  public List<UserDto> listFavoredBy(Long businessId) {
-    UserEntity businessUser = userFindUtils.findUserById(businessId);
-    List<UserEntity> favoredBy = businessUser.getFavoredBy();
-    if (favoredBy == null) {
-      return new ArrayList<>();
-    }
-    return favoredBy.stream().map(userMapper::mapTo).toList();
+  public Page<UserDto> listFavoredBy(Long businessId, Pageable pageable) {
+    return userRepository.listFavoredBy(businessId, pageable).map(userMapper::mapTo);
   }
 
   @Override
-  public List<UserDto> listFavoriteBusinesses(Long userId) {
-    UserEntity user = userFindUtils.findUserById(userId);
-    List<UserEntity> favoriteBusinesses = user.getFavoriteBusinesses();
-    if (favoriteBusinesses == null) {
-      return new ArrayList<>();
-    }
-    return favoriteBusinesses.stream().map(userMapper::mapTo).toList();
+  public Page<UserDto> listFavoriteBusinesses(Long userId, Pageable pageable) {
+    return userRepository.listFavoriteBusinesses(userId, pageable).map(userMapper::mapTo);
   }
 
   @Override
   public int countFavoredBy(Long businessId) {
-    return listFavoredBy(businessId).size();
+    return userRepository.countFavoredBy(businessId);
   }
 
   @Override
   public int countFavoriteBusinesses(Long userId) {
-    return listFavoriteBusinesses(userId).size();
+    return userRepository.countFavoriteBusinesses(userId);
   }
 
   @Override

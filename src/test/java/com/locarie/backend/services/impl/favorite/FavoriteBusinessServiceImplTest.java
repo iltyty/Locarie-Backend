@@ -15,6 +15,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 @Transactional
@@ -83,14 +85,14 @@ public class FavoriteBusinessServiceImplTest {
   @Test
   void testListFavoriteAfterFavoriteShouldReturnCorrectData() {
     UserDto[] users = favoriteBusinessAfterCreatingUsers();
-    List<UserDto> favoriteBusinesses = underTests.listFavoriteBusinesses(users[0].getId());
-    thenResultShouldBeExactly(favoriteBusinesses, users[1]);
+    Page<UserDto> favoriteBusinesses = underTests.listFavoriteBusinesses(users[0].getId(), PageRequest.of(0, 10));
+    thenResultShouldBeExactly(favoriteBusinesses.getContent(), users[1]);
   }
 
   @Test
   void testListFavoredByAfterFavoriteShouldReturnCorrectData() {
     UserDto[] users = favoriteBusinessAfterCreatingUsers();
-    List<UserDto> favoredBy = underTests.listFavoredBy(users[1].getId());
+    List<UserDto> favoredBy = underTests.listFavoredBy(users[1].getId(), PageRequest.of(0, 10)).getContent();
     thenResultShouldBeExactly(favoredBy, users[0]);
   }
 
