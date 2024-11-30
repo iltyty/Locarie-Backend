@@ -5,6 +5,8 @@ import com.locarie.backend.domain.entities.UserEntity;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Transactional
 public interface PostRepository extends CrudRepository<PostEntity, Long> {
   /**
    * Retrieves all posts near a specified geographical location.
@@ -97,6 +100,7 @@ public interface PostRepository extends CrudRepository<PostEntity, Long> {
   Optional<Instant> findLatestPostTimeByUserId(@Param(value = "userId") Long userId);
 
   @Modifying
+  @Transactional
   @Query(value = "delete from PostEntity p where p.user.id = :userId")
   void deleteByUserId(@Param(value = "userId") Long userId);
 }
