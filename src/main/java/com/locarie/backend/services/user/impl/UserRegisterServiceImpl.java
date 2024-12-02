@@ -34,7 +34,9 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     }
     UserEntity user = mapper.mapFrom(dto);
     UserEntity savedUser = repository.save(user);
-    sendRegistrationSuccessEmail(user.getEmail(), user.getFirstName());
+    if (user.getType() != UserEntity.Type.BUSINESS) {
+      sendRegistrationSuccessEmail(user.getEmail(), user.getFirstName());
+    }
     return mapper.mapTo(savedUser);
   }
 
